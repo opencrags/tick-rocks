@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+  tick-rocks-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - ./prod.config.json:/usr/share/nginx/html/config.json
+    ports:
+      - "3000:3000"

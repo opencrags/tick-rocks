@@ -1,0 +1,7 @@
+Dockerfile
+.dockerignore
+README.md
+.cache
+PACKAGR_TOKEN
+data
+public/config.json

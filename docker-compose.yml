@@ -1,0 +1,32 @@
+version: "3"
+
+services:
+  # tick-rocks-frontend-dev:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   restart: always
+  #   volumes:
+  #     - ./public/config.json:/usr/share/nginx/html/config.json
+  #   depends_on:
+  #     - opencrags-rest-api-dev
+  #   ports:
+  #     - "3000:3000"
+
+  opencrags-rest-api-dev:
+    image: opencrags/opencrags-rest-api:r3
+    restart: always
+    depends_on:
+      - opencrags-mongo-dev
+    environment:
+      DB: "mongodb://opencrags-mongo-dev:27017"
+      AUTH0_DOMAIN: "dev-opencrags.eu.auth0.com"
+      AUTH0_API_AUDIENCE: "opencrags-dev"
+    ports:
+      - "8000:8000"
+
+  opencrags-mongo-dev:
+    image: mongo:4.4.5
+    restart: always
+    volumes:
+      - ./data/db:/data/db
