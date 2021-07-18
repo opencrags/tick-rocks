@@ -7,6 +7,7 @@ import {
   Spacer,
   useColorModeValue,
   Link,
+  Image,
 } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import React from "react";
@@ -15,11 +16,17 @@ export function NavBar() {
   const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
 
   return (
-    <Box bg={useColorModeValue("gray.100", "gray.900")} px={4}>
+    <Box bg={useColorModeValue("brand.100", "gray.900")} px={4}>
       <Flex>
-        <Box>
+        {/* <Box>
           <Center height="80px" width="180px">
             <Heading size="sm">Tick Rocks</Heading>
+          </Center>
+        </Box> */}
+        <Box>
+          <Center height="80px">
+            <Image src="/favicon-64.png" />
+            <Heading size="sm" color="brand.200">Tick Rocks</Heading>
           </Center>
         </Box>
         <Spacer />
@@ -44,8 +51,8 @@ export function NavBar() {
         <Box>
           <Center height="80px" marginRight="20px">
             <Heading size="sm">
-              <Link as={RouterLink} to="/create-crag">
-                Create crag
+              <Link as={RouterLink} to="/add-crag">
+                Add crag
               </Link>
             </Heading>
           </Center>

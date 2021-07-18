@@ -32,34 +32,25 @@ import { Link as RouterLink } from "react-router-dom";
 import useSwr from "swr";
 import { useConfig, useToken, useAuthorizedFetcher } from "../utils/backend.js";
 
-export default function CreateCrag() {
+export default function AddSector(props) {
+  const cragId = props.match.params.cragId;
   const { authorizedFetcher, error } = useAuthorizedFetcher();
-  const [cragName, setCragName] = useState("");
+  const [sectorName, setSectorName] = useState("");
 
-  const voteCragName = (cragId) =>
-    authorizedFetcher(`/crags/${cragId}/name_votes`, {
+  const voteSectorName = (sectorId) =>
+    authorizedFetcher(`/sectors/${sectorId}/name_votes`, {
       method: "POST",
       body: JSON.stringify({
-        value: cragName,
+        value: sectorName,
+        public: true,
       }),
     });
 
-  const createCrag = () =>
-    authorizedFetcher("/crags", {
+  const addSector = () =>
+    authorizedFetcher("/sectors", {
       method: "POST",
-      body: JSON.stringify({}),
-    })
-      .then((json) => voteCragName(json["id"]));
-
-  if (!authorizedFetcher) {
-    return (
-      <Container maxW="container.md">
-        <Center>
-          <Spinner margin="20px" />
-        </Center>
-      </Container>
-    );
-  }
+      body: JSON.stringify({ crag_id: cragId }),
+    }).then((json) => voteSectorName(json["id"]));
 
   if (error) {
     return (
@@ -71,17 +62,27 @@ export default function CreateCrag() {
     );
   }
 
+  if (!authorizedFetcher) {
+    return (
+      <Container maxW="container.md">
+        <Center>
+          <Spinner margin="20px" />
+        </Center>
+      </Container>
+    );
+  }
+
   return (
     <Container maxW="container.md">
-      <Heading>Create crag</Heading>
-      <FormControl id="crag-name" isRequired>
-        <FormLabel>Crag name</FormLabel>
+      <Heading>Add sector</Heading>
+      <FormControl id="sector-name" isRequired>
+        <FormLabel>Sector name</FormLabel>
         <Input
-          placeholder="Crag name"
-          onChange={(event) => setCragName(event.target.value)}
+          placeholder="Sector name"
+          onChange={(event) => setSectorName(event.target.value)}
         />
       </FormControl>
-      <Button onClick={createCrag}>Submit</Button>
+      <Button onClick={addSector}>Submit</Button>
     </Container>
   );
 }

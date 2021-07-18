@@ -38,23 +38,26 @@ import {
 } from "../utils/backend.js";
 
 export default function Crags() {
-  const { data: crags, error: error } = useBackend("/crags");
-
-  if (crags === undefined) {
-    return (
-      <Container maxW="container.md">
-        <Center>
-          <Spinner margin="20px" />
-        </Center>
-      </Container>
-    );
-  }
+  const { data: crags, error: error } = useBackend("/crags/query?limit=20&offset=0", {
+    method: "POST",
+    body: JSON.stringify({}),
+  });
 
   if (error) {
     return (
       <Container maxW="container.md">
         <Center>
           <Text margin="20px">Failed to load crags.</Text>
+        </Center>
+      </Container>
+    );
+  }
+
+  if (crags === undefined) {
+    return (
+      <Container maxW="container.md">
+        <Center>
+          <Spinner margin="20px" />
         </Center>
       </Container>
     );
@@ -77,7 +80,9 @@ export default function Crags() {
           .filter((crag) => crag.name_votes.length >= 1)
           .map((crag) => (
             <ListItem key={crag.id}>
-              <Text>{crag.name_votes[0].value}</Text>
+              <Link as={RouterLink} to={`/crags/${crag.id}`}>
+                <Text>{crag.name_votes[0].value}</Text>
+              </Link>
             </ListItem>
           ))}
       </UnorderedList>
