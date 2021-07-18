@@ -29,10 +29,30 @@ import useSwr from "swr";
 import backend, { authorizedFetcher } from "../utils/backend.js";
 
 export default function Landing() {
+  const { isAuthenticated, loginWithRedirect } = useAuth0();
   return (
     <Container maxW="container.md">
       <Center marginTop="20px">
-        <Text>You are logged in.</Text>
+        {isAuthenticated ? (
+          <Text>You are logged in.</Text>
+        ) : (
+          <Text>
+            You need to{" "}
+            <Link
+              onClick={() =>
+                loginWithRedirect({
+                  appState: {
+                    returnTo: window.location.pathname,
+                  },
+                })
+              }
+              color="teal.500"
+            >
+              login
+            </Link>{" "}
+            to add stuff and vote.
+          </Text>
+        )}
       </Center>
     </Container>
   );

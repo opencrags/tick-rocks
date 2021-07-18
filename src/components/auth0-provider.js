@@ -1,7 +1,7 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 import { Auth0Provider } from "@auth0/auth0-react";
-import { useConfig } from "../utils/config";
+import { useConfig } from "../utils/backend";
 
 const Auth0ProviderWithHistory = ({ children }) => {
   const { config, isLoading, error } = useConfig();

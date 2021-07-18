@@ -23,27 +23,43 @@ export function NavBar() {
           </Center>
         </Box>
         <Spacer />
+        <Box>
+          <Center height="80px" marginRight="20px">
+            <Heading size="sm">
+              <Link as={RouterLink} to="/">
+                Landing
+              </Link>
+            </Heading>
+          </Center>
+        </Box>
+        <Box>
+          <Center height="80px" marginRight="20px">
+            <Heading size="sm">
+              <Link as={RouterLink} to="/crags">
+                Crags
+              </Link>
+            </Heading>
+          </Center>
+        </Box>
+        <Box>
+          <Center height="80px" marginRight="20px">
+            <Heading size="sm">
+              <Link as={RouterLink} to="/create-crag">
+                Create crag
+              </Link>
+            </Heading>
+          </Center>
+        </Box>
         {isAuthenticated ? (
-          <>
-            <Box>
-              <Center height="80px" marginRight="20px">
-                <Heading size="sm">
-                  <Link as={RouterLink} to="/">
-                    Landing
-                  </Link>
-                </Heading>
-              </Center>
-            </Box>
-            <Box>
-              <Center height="80px" marginRight="20px">
-                <Heading size="sm">
-                  <Link href="" onClick={logout}>
-                    Logout
-                  </Link>
-                </Heading>
-              </Center>
-            </Box>
-          </>
+          <Box>
+            <Center height="80px" marginRight="20px">
+              <Heading size="sm">
+                <Link href="" onClick={logout}>
+                  Logout
+                </Link>
+              </Heading>
+            </Center>
+          </Box>
         ) : (
           <Box>
             <Center height="80px" marginRight="20px">

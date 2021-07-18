@@ -11,9 +11,10 @@ import { Route, Switch } from "react-router";
 import theme from "../styles/theme";
 import { NavBar } from "./navbar.js";
 import Landing from "./landing.js";
+import Crags from "./crags.js";
+import CreateCrag from "./create-crag";
 
 function App() {
-  const { isAuthenticated, loginWithRedirect } = useAuth0();
   return (
     <ChakraProvider resetCSS theme={theme}>
       <ColorModeProvider
@@ -22,33 +23,11 @@ function App() {
         }}
       >
         <NavBar />
-        {isAuthenticated ? (
-          <Switch>
-            {/* <Route path="/measurements" component={Measurements} /> */}
-            <Route path="/" component={Landing} />
-          </Switch>
-        ) : (
-          <Container>
-            <Center marginTop="20px">
-              <Text>
-                You need to{" "}
-                <Link
-                  onClick={() =>
-                    loginWithRedirect({
-                      appState: {
-                        returnTo: window.location.pathname,
-                      },
-                    })
-                  }
-                  color="teal.500"
-                >
-                  login
-                </Link>{" "}
-                to add stuff and vote.
-              </Text>
-            </Center>
-          </Container>
-        )}
+        <Switch>
+          <Route path="/crags" component={Crags} />
+          <Route path="/create-crag" component={CreateCrag} />
+          <Route path="/" component={Landing} />
+        </Switch>
       </ColorModeProvider>
     </ChakraProvider>
   );
