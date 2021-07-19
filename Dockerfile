@@ -1,5 +1,5 @@
 # Install dependencies only when needed
-FROM node:14.16.1-alpine3.13 AS deps
+FROM node:15.14.0-alpine3.13 AS deps
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
