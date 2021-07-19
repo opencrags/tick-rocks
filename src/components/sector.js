@@ -38,12 +38,15 @@ export default function Sector(props) {
   const { data: sector, error: errorSector } = useBackend(
     `/sectors/${sectorId}`
   );
-  const { data: climbs, error: errorClimbs } = useBackend(`/climbs/query?limit=20&offset=0`, {
-    method: "POST",
-    body: JSON.stringify({
-      sector_id: sectorId
-    }),
-  });
+  const { data: climbs, error: errorClimbs } = useBackend(
+    `/climbs/query?limit=20&offset=0`,
+    {
+      method: "POST",
+      body: JSON.stringify({
+        sector_id: sectorId,
+      }),
+    }
+  );
 
   if (errorCrag || errorSector) {
     return (
@@ -67,21 +70,35 @@ export default function Sector(props) {
 
   return (
     <Container maxW="container.md">
-      <Heading>{crag.name_votes[0].value}</Heading>
-      <Heading size="sm">{sector.name_votes[0].value}</Heading>
+      <Link as={RouterLink} to={`/crags/${cragId}`}>
+        <Heading size="md">{crag.name_votes[0].value}</Heading>
+      </Link>
+      <Heading>{sector.name_votes.length >= 1 ? sector.name_votes[0].value : "No name votes"}</Heading>
+      {sector.coordinate_votes.length >= 1 && (
+        <Heading size="xs">
+          {sector.coordinate_votes[0].value[0]},{" "}
+          {sector.coordinate_votes[0].value[1]}
+        </Heading>
+      )}
       <Heading size="sm">Climbs</Heading>
       <UnorderedList>
         {climbs
           .filter((climb) => climb.name_votes.length >= 1)
           .map((climb) => (
             <ListItem key={climb.id}>
-              <Link as={RouterLink} to={`/crags/${cragId}/sectors/${sectorId}/climbs/${climb.id}`}>
+              <Link
+                as={RouterLink}
+                to={`/crags/${cragId}/sectors/${sectorId}/climbs/${climb.id}`}
+              >
                 <Text>{climb.name_votes[0].value}</Text>
               </Link>
             </ListItem>
           ))}
       </UnorderedList>
-      <Link as={RouterLink} to={`/crags/${cragId}/sectors/${sectorId}/add-climb`}>
+      <Link
+        as={RouterLink}
+        to={`/crags/${cragId}/sectors/${sectorId}/add-climb`}
+      >
         <Text>Add climb</Text>
       </Link>
     </Container>

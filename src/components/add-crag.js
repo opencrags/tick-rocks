@@ -28,13 +28,20 @@ import {
   Button,
 } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useHistory } from "react-router-dom";
 import useSwr from "swr";
 import { useConfig, useToken, useAuthorizedFetcher } from "../utils/backend.js";
 
 export default function AddCrag() {
   const { authorizedFetcher, error } = useAuthorizedFetcher();
+  const history = useHistory();
   const [cragName, setCragName] = useState("");
+
+  const addCrag = () =>
+    authorizedFetcher("/crags", {
+      method: "POST",
+      body: JSON.stringify({}),
+    });
 
   const voteCragName = (cragId) =>
     authorizedFetcher(`/crags/${cragId}/name_votes`, {
@@ -45,11 +52,13 @@ export default function AddCrag() {
       }),
     });
 
-  const addCrag = () =>
-    authorizedFetcher("/crags", {
-      method: "POST",
-      body: JSON.stringify({}),
-    }).then((json) => voteCragName(json["id"]));
+  const navigateToAddedCrag = (cragId) =>
+    history.replace(`/crags/${cragId}`);
+
+  const handleSubmit = () =>
+    addCrag().then((climb) =>
+      voteCragName(climb.id).then((_) => navigateToAddedCrag(climb.id))
+    );
 
   if (error) {
     return (
@@ -78,10 +87,11 @@ export default function AddCrag() {
         <FormLabel>Crag name</FormLabel>
         <Input
           placeholder="Crag name"
+          value={cragName}
           onChange={(event) => setCragName(event.target.value)}
         />
       </FormControl>
-      <Button onClick={addCrag}>Submit</Button>
+      <Button onClick={handleSubmit}>Submit</Button>
     </Container>
   );
 }

@@ -32,6 +32,7 @@ import useSwr from "swr";
 import {
   authorizedFetcher,
   config,
+  fetcher,
   useBackend,
   useConfig,
   useToken,

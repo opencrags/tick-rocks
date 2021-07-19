@@ -28,15 +28,22 @@ import {
   Button,
 } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useHistory } from "react-router-dom";
 import useSwr from "swr";
 import { useConfig, useToken, useAuthorizedFetcher } from "../utils/backend.js";
 
 export default function AddClimb(props) {
   const cragId = props.match.params.cragId;
   const sectorId = props.match.params.sectorId;
+  const history = useHistory();
   const { authorizedFetcher, error } = useAuthorizedFetcher();
   const [climbName, setClimbName] = useState("");
+
+  const addClimb = () =>
+    authorizedFetcher("/climbs", {
+      method: "POST",
+      body: JSON.stringify({ sector_id: sectorId }),
+    });
 
   const voteClimbName = (climbId) =>
     authorizedFetcher(`/climbs/${climbId}/name_votes`, {
@@ -47,11 +54,13 @@ export default function AddClimb(props) {
       }),
     });
 
-  const addClimb = () =>
-    authorizedFetcher("/climbs", {
-      method: "POST",
-      body: JSON.stringify({ sector_id: sectorId }),
-    }).then((json) => voteClimbName(json["id"]));
+  const navigateToAddedClimb = (climbId) =>
+    history.replace(`/crags/${cragId}/sectors/${sectorId}/climbs/${climbId}`);
+
+  const handleSubmit = () =>
+    addClimb().then((climb) =>
+      voteClimbName(climb.id).then((_) => navigateToAddedClimb(climb.id))
+    );
 
   if (error) {
     return (
@@ -83,7 +92,7 @@ export default function AddClimb(props) {
           onChange={(event) => setClimbName(event.target.value)}
         />
       </FormControl>
-      <Button onClick={addClimb}>Submit</Button>
+      <Button onClick={handleSubmit}>Submit</Button>
     </Container>
   );
 }

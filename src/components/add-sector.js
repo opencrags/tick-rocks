@@ -26,16 +26,28 @@ import {
   FormControl,
   FormLabel,
   Button,
+  NumberInput,
+  NumberInputField,
 } from "@chakra-ui/react";
+import Loader from "./loader.js";
 import React, { useCallback, useEffect, useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useHistory } from "react-router-dom";
 import useSwr from "swr";
 import { useConfig, useToken, useAuthorizedFetcher } from "../utils/backend.js";
 
 export default function AddSector(props) {
   const cragId = props.match.params.cragId;
   const { authorizedFetcher, error } = useAuthorizedFetcher();
+  const history = useHistory();
   const [sectorName, setSectorName] = useState("");
+  const [latitude, setLatitude] = useState(null);
+  const [longitude, setLongitude] = useState(null);
+
+  const addSector = () =>
+    authorizedFetcher("/sectors", {
+      method: "POST",
+      body: JSON.stringify({ crag_id: cragId }),
+    });
 
   const voteSectorName = (sectorId) =>
     authorizedFetcher(`/sectors/${sectorId}/name_votes`, {
@@ -46,11 +58,26 @@ export default function AddSector(props) {
       }),
     });
 
-  const addSector = () =>
-    authorizedFetcher("/sectors", {
+  const voteSectorCoordinates = (sectorId) =>
+    latitude && longitude &&
+    authorizedFetcher(`/sectors/${sectorId}/coordinate_votes`, {
       method: "POST",
-      body: JSON.stringify({ crag_id: cragId }),
-    }).then((json) => voteSectorName(json["id"]));
+      body: JSON.stringify({
+        value: [parseFloat(longitude), parseFloat(latitude)],
+        public: true,
+      }),
+    });
+
+  const navigateToAddedSector = (sectorId) =>
+    history.replace(`/crags/${cragId}/sectors/${sectorId}`);
+
+  const handleSubmit = () =>
+    addSector().then((sector) =>
+      Promise.all([
+        voteSectorName(sector.id),
+        voteSectorCoordinates(sector.id),
+      ]).then((_) => navigateToAddedSector(sector.id))
+    );
 
   if (error) {
     return (
@@ -63,13 +90,7 @@ export default function AddSector(props) {
   }
 
   if (!authorizedFetcher) {
-    return (
-      <Container maxW="container.md">
-        <Center>
-          <Spinner margin="20px" />
-        </Center>
-      </Container>
-    );
+    return <Loader />;
   }
 
   return (
@@ -82,7 +103,19 @@ export default function AddSector(props) {
           onChange={(event) => setSectorName(event.target.value)}
         />
       </FormControl>
-      <Button onClick={addSector}>Submit</Button>
+      <FormControl id="longitude">
+        <FormLabel>Latitude</FormLabel>
+        <NumberInput precision={7}>
+          <NumberInputField onChange={(event) => setLatitude(event.target.value)} />
+        </NumberInput>
+      </FormControl>
+      <FormControl id="longitude">
+        <FormLabel>Longitude</FormLabel>
+        <NumberInput precision={7}>
+          <NumberInputField onChange={(event) => setLongitude(event.target.value)} />
+        </NumberInput>
+      </FormControl>
+      <Button onClick={handleSubmit}>Submit</Button>
     </Container>
   );
 }
