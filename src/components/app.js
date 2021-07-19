@@ -2,7 +2,6 @@ import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
 import {
   Center,
   ChakraProvider,
-  ColorModeProvider,
   Container,
   Link,
   Text,
@@ -22,39 +21,33 @@ import AddClimb from "./add-climb.js";
 function App() {
   return (
     <ChakraProvider resetCSS theme={theme}>
-      <ColorModeProvider
-        options={{
-          useSystemColorMode: true,
-        }}
-      >
-        <NavBar />
-        <Switch>
-          <Route exact path="/crags" component={Crags} />
-          <Route exact path="/crags/:cragId?" component={Crag} />
-          <Route
-            exact
-            path="/crags/:cragId?/add-sector"
-            component={AddSector}
-          />
-          <Route
-            exact
-            path="/crags/:cragId?/sectors/:sectorId?"
-            component={Sector}
-          />
-          <Route
-            exact
-            path="/crags/:cragId?/sectors/:sectorId?/add-climb"
-            component={AddClimb}
-          />
-          <Route
-            exact
-            path="/crags/:cragId?/sectors/:sectorId?/climbs/:climbId?"
-            component={Climb}
-          />
-          <Route path="/add-crag" component={AddCrag} />
-          <Route path="/" component={Landing} />
-        </Switch>
-      </ColorModeProvider>
+      <NavBar />
+      <Switch>
+        <Route exact path="/crags" component={Crags} />
+        <Route exact path="/crags/:cragId?" component={Crag} />
+        <Route
+          exact
+          path="/crags/:cragId?/add-sector"
+          component={AddSector}
+        />
+        <Route
+          exact
+          path="/crags/:cragId?/sectors/:sectorId?"
+          component={Sector}
+        />
+        <Route
+          exact
+          path="/crags/:cragId?/sectors/:sectorId?/add-climb"
+          component={AddClimb}
+        />
+        <Route
+          exact
+          path="/crags/:cragId?/sectors/:sectorId?/climbs/:climbId?"
+          component={Climb}
+        />
+        <Route path="/add-crag" component={AddCrag} />
+        <Route path="/" component={Landing} />
+      </Switch>
     </ChakraProvider>
   );
 }

@@ -5,7 +5,6 @@ import {
   Flex,
   Heading,
   Spacer,
-  useColorModeValue,
   Link,
   Image,
 } from "@chakra-ui/react";
@@ -16,13 +15,8 @@ export function NavBar() {
   const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
 
   return (
-    <Box bg={useColorModeValue("brand.100", "gray.900")} px={4}>
+    <Box bg="brand.100" px={4}>
       <Flex>
-        {/* <Box>
-          <Center height="80px" width="180px">
-            <Heading size="sm">Tick Rocks</Heading>
-          </Center>
-        </Box> */}
         <Box>
           <Center height="80px">
             <Image src="/favicon-64.png" />
