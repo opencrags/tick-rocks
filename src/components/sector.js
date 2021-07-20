@@ -56,8 +56,17 @@ export default function Sector(props) {
       }),
     }
   );
+  const { data: lines, error: errorLines } = useBackend(
+    `/lines/query?limit=20&offset=0`,
+    {
+      method: "POST",
+      body: JSON.stringify({
+        sector_id: sectorId,
+      }),
+    }
+  );
 
-  if (errorCrag || errorSector) {
+  if (errorCrag || errorSector || errorLines) {
     return (
       <Container maxW="container.md">
         <Center>
@@ -67,7 +76,7 @@ export default function Sector(props) {
     );
   }
 
-  if (crag === undefined || sector === undefined || climbs === undefined) {
+  if (crag === undefined || sector === undefined || climbs === undefined || lines == undefined) {
     return (
       <Container maxW="container.md">
         <Center>
@@ -104,6 +113,12 @@ export default function Sector(props) {
             </ListItem>
           ))}
       </UnorderedList>
+      <Link
+        as={RouterLink}
+        to={`/crags/${cragId}/sectors/${sectorId}/add-climb`}
+      >
+        <Text>Add climb</Text>
+      </Link>
       <Heading size="sm">Images</Heading>
       <UnorderedList>
         {images && images
@@ -120,16 +135,24 @@ export default function Sector(props) {
       </UnorderedList>
       <Link
         as={RouterLink}
-        to={`/crags/${cragId}/sectors/${sectorId}/add-climb`}
-      >
-        <Text>Add climb</Text>
-      </Link>
-      <Link
-        as={RouterLink}
         to={`/crags/${cragId}/sectors/${sectorId}/add-image`}
       >
         <Text>Add image</Text>
       </Link>
+      <Heading size="sm">Lines</Heading>
+      <UnorderedList>
+        {lines && lines
+          .map((line) => (
+            <ListItem key={line.id}>
+              <Link
+                as={RouterLink}
+                to={`/crags/${cragId}/sectors/${sectorId}/lines/${line.id}`}
+              >
+                <Text>{line.id}</Text>
+              </Link>
+            </ListItem>
+          ))}
+      </UnorderedList>
     </Container>
   );
 }

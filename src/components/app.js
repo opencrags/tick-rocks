@@ -15,10 +15,12 @@ import Crag from "./crag.js";
 import Sector from "./sector.js";
 import Climb from "./climb.js";
 import RockImage from "./image.js";
+import Line from "./line.js";
 import AddCrag from "./add-crag.js";
 import AddSector from "./add-sector.js";
 import AddClimb from "./add-climb.js";
 import AddImage from "./add-image.js";
+import AddLine from "./add-line.js";
 
 function App() {
   return (
@@ -57,6 +59,16 @@ function App() {
           exact
           path="/crags/:cragId?/sectors/:sectorId?/images/:imageId?"
           component={RockImage}
+        />
+        <Route
+          exact
+          path="/crags/:cragId?/sectors/:sectorId?/images/:imageId?/add-line"
+          component={AddLine}
+        />
+        <Route
+          exact
+          path="/crags/:cragId?/sectors/:sectorId?/lines/:lineId?"
+          component={Line}
         />
         <Route path="/" component={Landing} />
       </Switch>
