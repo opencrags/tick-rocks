@@ -101,6 +101,12 @@ export default function Sector(props) {
       >
         <Text>Add climb</Text>
       </Link>
+      <Link
+        as={RouterLink}
+        to={`/crags/${cragId}/sectors/${sectorId}/add-image`}
+      >
+        <Text>Add image</Text>
+      </Link>
     </Container>
   );
 }

@@ -14,9 +14,11 @@ import Crags from "./crags.js";
 import Crag from "./crag.js";
 import Sector from "./sector.js";
 import Climb from "./climb.js";
+import RockImage from "./image.js";
 import AddCrag from "./add-crag.js";
 import AddSector from "./add-sector.js";
 import AddClimb from "./add-climb.js";
+import AddImage from "./add-image.js";
 
 function App() {
   return (
@@ -25,6 +27,7 @@ function App() {
       <Switch>
         <Route exact path="/crags" component={Crags} />
         <Route exact path="/crags/:cragId?" component={Crag} />
+        <Route path="/add-crag" component={AddCrag} />
         <Route
           exact
           path="/crags/:cragId?/add-sector"
@@ -45,7 +48,16 @@ function App() {
           path="/crags/:cragId?/sectors/:sectorId?/climbs/:climbId?"
           component={Climb}
         />
-        <Route path="/add-crag" component={AddCrag} />
+        <Route
+          exact
+          path="/crags/:cragId?/sectors/:sectorId?/add-image"
+          component={AddImage}
+        />
+        <Route
+          exact
+          path="/crags/:cragId?/sectors/:sectorId?/images/:imageId?"
+          component={RockImage}
+        />
         <Route path="/" component={Landing} />
       </Switch>
     </ChakraProvider>

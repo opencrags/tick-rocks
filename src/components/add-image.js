@@ -28,28 +28,52 @@ import {
   Button,
 } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
+import Dropzone from "react-dropzone";
+import { Link as RouterLink, useHistory } from "react-router-dom";
 import useSwr from "swr";
 import { useConfig, useToken, useAuthorizedFetcher } from "../utils/backend.js";
 
-export default function AddCrag() {
+export default function AddImage(props) {
+  const cragId = props.match.params.cragId;
+  const sectorId = props.match.params.sectorId;
+  const history = useHistory();
   const { authorizedFetcher, error } = useAuthorizedFetcher();
-  const [cragName, setCragName] = useState("");
+  const [imageName, setImageName] = useState("");
 
-  const voteCragName = (cragId) =>
-    authorizedFetcher(`/crags/${cragId}/name_votes`, {
+  const addImage = (base64Image) =>
+    authorizedFetcher("/images", {
       method: "POST",
       body: JSON.stringify({
-        value: cragName,
-        public: true,
+        sector_id: sectorId,
+        base64_image: base64Image,
       }),
     });
 
-  const addCrag = () =>
-    authorizedFetcher("/crags", {
-      method: "POST",
-      body: JSON.stringify({}),
-    }).then((json) => voteCragName(json["id"]));
+  const navigateToSector = () =>
+    history.replace(`/crags/${cragId}/sectors/${sectorId}`);
+
+  const navigateToAddedImage = (imageId) =>
+    history.replace(`/crags/${cragId}/sectors/${sectorId}/images/${imageId}`);
+
+  const onDropImages = (files) => {
+    Promise.all(
+      files.map((file) =>
+        new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onabort = () => reject("File reading was aborted");
+          reader.onerror = () => reject("File reading has failed");
+          reader.onload = () => resolve(reader.result);
+          reader.readAsDataURL(file);
+        }).then(addImage)
+      )
+    )
+      .then((images) =>
+        images.length >= 2
+          ? navigateToSector()
+          : navigateToAddedImage(images[0].id)
+      )
+      .catch(console.error);
+  };
 
   if (error) {
     return (
@@ -73,15 +97,24 @@ export default function AddCrag() {
 
   return (
     <Container maxW="container.md">
-      <Heading>Add crag</Heading>
-      <FormControl id="crag-name" isRequired>
-        <FormLabel>Crag name</FormLabel>
-        <Input
-          placeholder="Crag name"
-          onChange={(event) => setCragName(event.target.value)}
-        />
-      </FormControl>
-      <Button onClick={addCrag}>Submit</Button>
+      <Heading>Add image</Heading>
+      <Dropzone accept={["image/jpeg"]} onDrop={onDropImages}>
+        {({ getRootProps, getInputProps }) => (
+          <Box
+            border="1px dashed"
+            borderColor="brand.200"
+            padding="20px"
+            marginTop="10px"
+          >
+            <Center {...getRootProps()}>
+              <input {...getInputProps()} />
+              <Text>
+                Drag and drop images here or click to select (only jpeg allowed)
+              </Text>
+            </Center>
+          </Box>
+        )}
+      </Dropzone>
     </Container>
   );
 }
