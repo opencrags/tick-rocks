@@ -47,6 +47,15 @@ export default function Sector(props) {
       }),
     }
   );
+  const { data: images, error: errorImages } = useBackend(
+    `/images/query?limit=20&offset=0`,
+    {
+      method: "POST",
+      body: JSON.stringify({
+        sector_id: sectorId,
+      }),
+    }
+  );
 
   if (errorCrag || errorSector) {
     return (
@@ -91,6 +100,20 @@ export default function Sector(props) {
                 to={`/crags/${cragId}/sectors/${sectorId}/climbs/${climb.id}`}
               >
                 <Text>{climb.name_votes[0].value}</Text>
+              </Link>
+            </ListItem>
+          ))}
+      </UnorderedList>
+      <Heading size="sm">Images</Heading>
+      <UnorderedList>
+        {images && images
+          .map((image) => (
+            <ListItem key={image.id}>
+              <Link
+                as={RouterLink}
+                to={`/crags/${cragId}/sectors/${sectorId}/images/${image.id}`}
+              >
+                <Text>{image.id}</Text>
               </Link>
             </ListItem>
           ))}

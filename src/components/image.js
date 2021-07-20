@@ -70,7 +70,6 @@ export default function RockImage(props) {
       <Link as={RouterLink} to={`/crags/${cragId}/sectors/${sectorId}`}>
         <Heading size="md">{sector.name_votes[0].value}</Heading>
       </Link>
-      {/* <Heading>{image.name_votes[0].value}</Heading> */}
       <Image src={image.base64_image} maxWidth="100%" maxHeight="600px" />
     </Container>
   );

@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import useSwr from "swr";
 import { useAuth0 } from "@auth0/auth0-react";
 
@@ -63,13 +64,19 @@ const useAuthorizedFetcher = () => {
   const { isAuthenticated, isLoading } = useAuth0();
   const { config, errorConfig } = useConfig();
   const { token, errorToken } = useToken();
+  const [isFetching, setIsFetching] = useState(false);
   return {
+    isLoading,
+    isAuthenticated,
     authorizedFetcher:
       config && token
-        ? (...args) => authorizedFetcher(token, config, ...args)
+        ? (...args) => {
+          setIsFetching(true);
+          return authorizedFetcher(token, config, ...args).finally(() => setIsFetching(false))
+        }
         : null,
-    isAuthenticated,
     error: errorConfig || errorToken,
+    isFetching,
   };
 };
 
@@ -86,7 +93,7 @@ const useBackend = (key, ...args) => {
 const useAuthorizedBackend = (key, ...args) => {
   const { token, errorToken } = useToken();
   const { config, errorConfig } = useConfig();
-  return useSwr(token ? key : null, (key) =>
+  return useSwr(token && config ? key : null, (key) =>
     authorizedFetcher(token, config, key, ...args)
   );
 };
