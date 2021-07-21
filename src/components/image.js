@@ -26,6 +26,7 @@ import {
   UnorderedList,
   ListItem,
   Image,
+  Button,
 } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
@@ -65,17 +66,17 @@ export default function RockImage(props) {
   return (
     <Container maxW="container.md">
       <Link as={RouterLink} to={`/crags/${cragId}`}>
-        <Heading size="sm">{crag.name_votes[0].value}</Heading>
+        <Heading size="md">Crag: {crag.name_votes[0].value}</Heading>
       </Link>
       <Link as={RouterLink} to={`/crags/${cragId}/sectors/${sectorId}`}>
-        <Heading size="md">{sector.name_votes[0].value}</Heading>
+        <Heading size="md">Sector: {sector.name_votes[0].value}</Heading>
       </Link>
       <Image src={image.base64_image} maxWidth="100%" maxHeight="600px" />
       <Link
         as={RouterLink}
         to={`/crags/${cragId}/sectors/${sectorId}/images/${imageId}/add-line`}
       >
-        <Text>Add line</Text>
+        <Button>Add line</Button>
       </Link>
     </Container>
   );

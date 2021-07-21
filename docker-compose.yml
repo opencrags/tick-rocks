@@ -20,8 +20,8 @@ services:
       - opencrags-mongo-dev
     environment:
       DB: "mongodb://opencrags-mongo-dev:27017"
-      AUTH0_DOMAIN: "dev-opencrags.eu.auth0.com"
-      AUTH0_API_AUDIENCE: "opencrags-dev"
+    env_file:
+      - dev.env
     ports:
       - "8000:8000"
 

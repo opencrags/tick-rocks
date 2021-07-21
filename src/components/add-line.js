@@ -96,7 +96,7 @@ export default function AddLine(props) {
       </Container>
     );
   }
-  console.log(climbs)
+
   return (
     <Container maxW="container.md">
       <Heading>Add line</Heading>

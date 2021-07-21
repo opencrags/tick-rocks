@@ -76,7 +76,12 @@ export default function Sector(props) {
     );
   }
 
-  if (crag === undefined || sector === undefined || climbs === undefined || lines == undefined) {
+  if (
+    crag === undefined ||
+    sector === undefined ||
+    climbs === undefined ||
+    lines == undefined
+  ) {
     return (
       <Container maxW="container.md">
         <Center>
@@ -89,13 +94,18 @@ export default function Sector(props) {
   return (
     <Container maxW="container.md">
       <Link as={RouterLink} to={`/crags/${cragId}`}>
-        <Heading size="md">{crag.name_votes[0].value}</Heading>
+        <Heading size="md">Crag: {crag.name_votes[0].value}</Heading>
       </Link>
-      <Heading>{sector.name_votes.length >= 1 ? sector.name_votes[0].value : "No name votes"}</Heading>
+      <Heading size="md">
+        Sector:{" "}
+        {sector.name_votes.length >= 1
+          ? sector.name_votes[0].value
+          : "No name votes"}
+      </Heading>
       {sector.coordinate_votes.length >= 1 && (
         <Heading size="xs">
-          {sector.coordinate_votes[0].value[0]},{" "}
-          {sector.coordinate_votes[0].value[1]}
+          Coordinates: {sector.coordinate_votes[0].value[1]},{" "}
+          {sector.coordinate_votes[0].value[0]}
         </Heading>
       )}
       <Heading size="sm">Climbs</Heading>
@@ -121,8 +131,8 @@ export default function Sector(props) {
       </Link>
       <Heading size="sm">Images</Heading>
       <UnorderedList>
-        {images && images
-          .map((image) => (
+        {images &&
+          images.map((image) => (
             <ListItem key={image.id}>
               <Link
                 as={RouterLink}
@@ -141,8 +151,8 @@ export default function Sector(props) {
       </Link>
       <Heading size="sm">Lines</Heading>
       <UnorderedList>
-        {lines && lines
-          .map((line) => (
+        {lines &&
+          lines.map((line) => (
             <ListItem key={line.id}>
               <Link
                 as={RouterLink}

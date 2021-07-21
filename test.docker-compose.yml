@@ -1,0 +1,32 @@
+version: "3"
+
+services:
+  tick-rocks-frontend-test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - ./public/config.json:/usr/share/nginx/html/config.json
+    depends_on:
+      - opencrags-rest-api-test
+    ports:
+      - "3000:3000"
+
+  opencrags-rest-api-test:
+    image: opencrags/opencrags-rest-api:r13
+    restart: always
+    depends_on:
+      - opencrags-mongo-test
+    environment:
+      DB: "mongodb://opencrags-mongo-test:27017"
+    env_file:
+      - dev.env
+    ports:
+      - "8000:8000"
+
+  opencrags-mongo-test:
+    image: mongo:4.4.5
+    restart: always
+    volumes:
+      - ./data:/data/db
