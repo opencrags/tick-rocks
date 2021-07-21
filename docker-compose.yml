@@ -14,7 +14,7 @@ services:
   #     - "3000:3000"
 
   opencrags-rest-api-dev:
-    image: opencrags/opencrags-rest-api:r13
+    image: opencrags/opencrags-rest-api:r14
     restart: always
     depends_on:
       - opencrags-mongo-dev
