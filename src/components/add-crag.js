@@ -1,39 +1,20 @@
-import { useAuth0 } from "@auth0/auth0-react";
 import {
-  Alert,
-  AlertIcon,
-  AlertTitle,
-  AlertDescription,
-  AspectRatio,
   Container,
   Center,
   Heading,
-  HStack,
-  Link,
-  Textarea,
-  Spinner,
-  Tag,
-  TagLabel,
-  Select,
-  VStack,
-  Tooltip,
-  Box,
-  List,
-  Badge,
-  Checkbox,
   Text,
   Input,
   FormControl,
   FormLabel,
   Button,
 } from "@chakra-ui/react";
-import React, { useCallback, useEffect, useState } from "react";
-import { Link as RouterLink, useHistory } from "react-router-dom";
+import { useState } from "react";
+import { useHistory } from "react-router-dom";
 import Loader from "./loader.js";
 import { useAuthorizedFetcher } from "../utils/backend.js";
 
 export default function AddCrag() {
-  const { authorizedFetcher, isAuthenticated, isLoading, error } = useAuthorizedFetcher();
+  const { authorizedFetcher, isLoading, error } = useAuthorizedFetcher();
   const history = useHistory();
   const [cragName, setCragName] = useState("");
 
