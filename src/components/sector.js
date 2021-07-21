@@ -1,32 +1,13 @@
-import { useAuth0 } from "@auth0/auth0-react";
 import {
-  Alert,
-  AlertIcon,
-  AlertTitle,
-  AlertDescription,
-  AspectRatio,
   Container,
   Center,
   Heading,
-  HStack,
   Link,
-  Textarea,
-  Spinner,
-  Tag,
-  TagLabel,
-  Select,
-  VStack,
-  Tooltip,
-  Box,
-  List,
-  Badge,
-  Checkbox,
   Text,
-  useTab,
   UnorderedList,
   ListItem,
+  Button,
 } from "@chakra-ui/react";
-import React, { useCallback, useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import Loader from "./loader.js";
 import { useCrag, useSector, useClimbs, useImages, useLines } from "../utils/backend.js";
@@ -99,7 +80,7 @@ export default function Sector(props) {
         as={RouterLink}
         to={`/crags/${cragId}/sectors/${sectorId}/add-climb`}
       >
-        <Text>Add climb</Text>
+        <Button>Add climb</Button>
       </Link>
       <Heading size="sm">Images</Heading>
       <UnorderedList>
@@ -119,7 +100,7 @@ export default function Sector(props) {
         as={RouterLink}
         to={`/crags/${cragId}/sectors/${sectorId}/add-image`}
       >
-        <Text>Add image</Text>
+        <Button>Add image</Button>
       </Link>
       <Heading size="sm">Lines</Heading>
       <UnorderedList>

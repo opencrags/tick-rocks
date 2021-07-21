@@ -1,35 +1,16 @@
-import { useAuth0 } from "@auth0/auth0-react";
 import {
-  Alert,
-  AlertIcon,
-  AlertTitle,
-  AlertDescription,
-  AspectRatio,
   Container,
   Center,
   Heading,
-  HStack,
   Link,
-  Textarea,
-  Spinner,
-  Tag,
-  TagLabel,
-  Select,
-  VStack,
-  Tooltip,
-  Box,
-  List,
-  Badge,
-  Checkbox,
   Text,
-  useTab,
-  UnorderedList,
-  ListItem,
+  VStack,
+  Image,
+  Box,
 } from "@chakra-ui/react";
-import React, { useCallback, useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import Loader from "./loader.js";
-import { useCrag, useSector, useClimb } from "../utils/backend.js";
+import { useCrag, useSector, useClimb, useLines, useImage } from "../utils/backend.js";
 
 export default function Climb(props) {
   const cragId = props.match.params.cragId;
@@ -38,6 +19,9 @@ export default function Climb(props) {
   const { crag, error: errorCrag } = useCrag(cragId);
   const { sector, error: errorSector } = useSector(sectorId);
   const { climb, error: errorClimb } = useClimb(climbId);
+  const { lines, error: errorLines } = useLines(
+    climbId ? { climb_id: climbId } : null
+  );
 
   if (errorCrag || errorSector || errorClimb) {
     return (
@@ -50,20 +34,53 @@ export default function Climb(props) {
   }
 
   if (crag === undefined || sector === undefined || climb === undefined) {
-    return (
-      <Loader />
-    );
+    return <Loader />;
   }
 
   return (
     <Container maxWidth="container.md">
       <Link as={RouterLink} to={`/crags/${cragId}`}>
-        <Heading size="sm">{crag.name_votes[0].value}</Heading>
+        <Heading size="sm">Crag: {crag.name_votes[0].value}</Heading>
       </Link>
       <Link as={RouterLink} to={`/crags/${cragId}/sectors/${sectorId}`}>
-        <Heading size="md">{sector.name_votes[0].value}</Heading>
+        <Heading size="sm">Sector: {sector.name_votes[0].value}</Heading>
       </Link>
-      <Heading>{climb.name_votes[0].value}</Heading>
+      <Heading size="md">{climb.name_votes[0].value}</Heading>
+      <VStack>
+        {lines.map((line) => (
+          <Line crag={crag} sector={sector} climb={climb} line={line} />
+        ))}
+      </VStack>
     </Container>
+  );
+}
+
+function Line(props) {
+  const line = props.line;
+  const { image, error: errorImage } = useImage(line.image_id);
+
+  if (errorImage) {
+    return (
+      <Center>
+        <Text margin="20px">Failed to load image.</Text>
+      </Center>
+    );
+  }
+
+  if (image === undefined) {
+    return <Loader />;
+  }
+
+  return (
+    <Box>
+      <Link
+        as={RouterLink}
+        to={`/crags/${props.crag.id}/sectors/${props.sector.id}/lines/${line.id}`}
+      >
+        <Heading size="sm">{line.id}</Heading>
+      </Link>
+      <Image src={image.base64_image} maxWidth="100%" maxHeight="600px" />
+      <Text>Line path: {line.line_path_votes[0].value}</Text>
+    </Box>
   );
 }

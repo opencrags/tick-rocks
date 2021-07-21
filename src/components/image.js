@@ -1,34 +1,12 @@
-import { useAuth0 } from "@auth0/auth0-react";
 import {
-  Alert,
-  AlertIcon,
-  AlertTitle,
-  AlertDescription,
-  AspectRatio,
   Container,
   Center,
   Heading,
-  HStack,
   Link,
-  Textarea,
-  Spinner,
-  Tag,
-  TagLabel,
-  Select,
-  VStack,
-  Tooltip,
-  Box,
-  List,
-  Badge,
-  Checkbox,
   Text,
-  useTab,
-  UnorderedList,
-  ListItem,
   Image,
   Button,
 } from "@chakra-ui/react";
-import React, { useCallback, useEffect, useState } from "react";
 import Loader from "./loader.js";
 import { Link as RouterLink } from "react-router-dom";
 import { useCrag, useSector, useImage } from "../utils/backend.js";

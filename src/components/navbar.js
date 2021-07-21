@@ -6,7 +6,9 @@ import {
   Heading,
   Spacer,
   Link,
+  LinkBox,
   Image,
+  HStack,
 } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import React from "react";
@@ -19,8 +21,14 @@ export function NavBar() {
       <Flex>
         <Box>
           <Center height="80px">
-            <Image src="/favicon-64.png" />
-            <Heading size="sm" color="brand.200">Tick Rocks</Heading>
+            <LinkBox as={RouterLink} to="/">
+              <HStack>
+                <Image src="/favicon-64.png" />
+                <Heading size="sm" color="brand.200">
+                  Tick Rocks
+                </Heading>
+              </HStack>
+            </LinkBox>
           </Center>
         </Box>
         <Spacer />
