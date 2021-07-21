@@ -29,7 +29,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link as RouterLink, useHistory } from "react-router-dom";
-import useSwr from "swr";
+import Loader from "./loader.js";
 import { useAuthorizedFetcher } from "../utils/backend.js";
 
 export default function AddCrag() {
@@ -62,7 +62,7 @@ export default function AddCrag() {
 
   if (error) {
     return (
-      <Container maxW="container.md">
+      <Container maxWidth="container.md">
         <Center>
           <Text margin="20px">Failed to load auth token.</Text>
         </Center>
@@ -72,7 +72,7 @@ export default function AddCrag() {
 
   if(!authorizedFetcher && !isLoading){
     return (
-      <Container maxW="container.md">
+      <Container maxWidth="container.md">
         <Center>
           <Text margin="20px">
             You need to login to add stuff and vote.
@@ -84,16 +84,12 @@ export default function AddCrag() {
 
   if (!authorizedFetcher && isLoading) {
     return (
-      <Container maxW="container.md">
-        <Center>
-          <Spinner margin="20px" />
-        </Center>
-      </Container>
+      <Loader />
     );
   }
 
   return (
-    <Container maxW="container.md">
+    <Container maxWidth="container.md">
       <Heading>Add crag</Heading>
       <FormControl id="crag-name" isRequired>
         <FormLabel>Crag name</FormLabel>

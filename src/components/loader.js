@@ -6,7 +6,7 @@ import {
 
 export default function Loader() {
   return (
-      <Container maxW="container.md">
+      <Container maxWidth="container.md">
         <Center>
           <Spinner margin="20px" />
         </Center>

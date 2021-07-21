@@ -34,7 +34,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
-import useSwr from "swr";
+import Loader from "./loader.js";
 import { useCrags, useSectors, useClimbs } from "../utils/backend.js";
 
 export default function Crags() {
@@ -42,7 +42,7 @@ export default function Crags() {
 
   if (error) {
     return (
-      <Container maxW="container.md">
+      <Container maxWidth="container.md">
         <Center>
           <Text margin="20px">Failed to load crags.</Text>
         </Center>
@@ -52,17 +52,13 @@ export default function Crags() {
 
   if (crags === undefined) {
     return (
-      <Container maxW="container.md">
-        <Center>
-          <Spinner margin="20px" />
-        </Center>
-      </Container>
+      <Loader />
     );
   }
 
   if (crags.length == 0) {
     return (
-      <Container maxW="container.md">
+      <Container maxWidth="container.md">
         <Center>
           <Text margin="20px">There are no crags to show.</Text>
         </Center>

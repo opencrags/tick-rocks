@@ -29,7 +29,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
-import useSwr from "swr";
+import Loader from "./loader.js";
 import { useCrag, useSector, useLine, useClimb, useImage } from "../utils/backend.js";
 
 export default function Line(props) {
@@ -44,7 +44,7 @@ export default function Line(props) {
 
   if (errorCrag || errorSector || errorClimb || errorImage || errorLine) {
     return (
-      <Container maxW="container.md">
+      <Container maxWidth="container.md">
         <Center>
           <Text margin="20px">Failed to load line.</Text>
         </Center>
@@ -60,16 +60,12 @@ export default function Line(props) {
     line === undefined
   ) {
     return (
-      <Container maxW="container.md">
-        <Center>
-          <Spinner margin="20px" />
-        </Center>
-      </Container>
+      <Loader />
     );
   }
 
   return (
-    <Container maxW="container.md">
+    <Container maxWidth="container.md">
       <Link as={RouterLink} to={`/crags/${cragId}`}>
         <Heading size="sm">Crag: {crag.name_votes[0].value}</Heading>
       </Link>
