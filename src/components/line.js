@@ -30,20 +30,17 @@ import {
 import React, { useCallback, useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import useSwr from "swr";
-import { useBackend } from "../utils/backend.js";
+import { useCrag, useSector, useLine, useClimb, useImage } from "../utils/backend.js";
 
 export default function Line(props) {
   const cragId = props.match.params.cragId;
   const sectorId = props.match.params.sectorId;
   const lineId = props.match.params.lineId;
-  const { data: crag, error: errorCrag } = useBackend(`/crags/${cragId}`);
-  const { data: sector, error: errorSector } = useBackend(
-    `/sectors/${sectorId}`
-  );
-  const { data: line, error: errorLine } = useBackend(`/lines/${lineId}`);
-  const { data: climb, error: errorClimb } = useBackend(line ? `/climbs/${line.climb_id}` : null);
-  const { data: image, error: errorImage } = useBackend(line ? `/images/${line.image_id}` : null);
-  
+  const { crag, error: errorCrag } = useCrag(cragId);
+  const { sector, error: errorSector } = useSector(sectorId);
+  const { line, error: errorLine } = useLine(lineId);
+  const { climb, error: errorClimb } = useClimb(line ? line.climb_id : null);
+  const { image, error: errorImage } = useImage(line ? line.image_id : null);  
 
   if (errorCrag || errorSector || errorClimb || errorImage || errorLine) {
     return (

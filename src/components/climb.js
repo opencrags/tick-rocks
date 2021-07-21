@@ -28,18 +28,15 @@ import {
 } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
-import useSwr from "swr";
-import { useBackend } from "../utils/backend.js";
+import { useCrag, useSector, useClimb } from "../utils/backend.js";
 
 export default function Climb(props) {
   const cragId = props.match.params.cragId;
   const sectorId = props.match.params.sectorId;
   const climbId = props.match.params.climbId;
-  const { data: crag, error: errorCrag } = useBackend(`/crags/${cragId}`);
-  const { data: sector, error: errorSector } = useBackend(
-    `/sectors/${sectorId}`
-  );
-  const { data: climb, error: errorClimb } = useBackend(`/climbs/${climbId}`);
+  const { crag, error: errorCrag } = useCrag(cragId);
+  const { sector, error: errorSector } = useSector(sectorId);
+  const { climb, error: errorClimb } = useClimb(climbId);
 
   if (errorCrag || errorSector || errorClimb) {
     return (

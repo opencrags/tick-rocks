@@ -30,18 +30,15 @@ import {
 } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
-import useSwr from "swr";
-import { useBackend } from "../utils/backend.js";
+import { useCrag, useSector, useImage } from "../utils/backend.js";
 
 export default function RockImage(props) {
   const cragId = props.match.params.cragId;
   const sectorId = props.match.params.sectorId;
   const imageId = props.match.params.imageId;
-  const { data: crag, error: errorCrag } = useBackend(`/crags/${cragId}`);
-  const { data: sector, error: errorSector } = useBackend(
-    `/sectors/${sectorId}`
-  );
-  const { data: image, error: errorImage } = useBackend(`/images/${imageId}`);
+  const { crag, error: errorCrag } = useCrag(cragId);
+  const { sector, error: errorSector } = useSector(sectorId);
+  const { image, error: errorImage } = useImage(imageId);
 
   if (errorCrag || errorSector || errorImage) {
     return (

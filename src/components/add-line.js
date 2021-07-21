@@ -30,7 +30,7 @@ import {
 import React, { useCallback, useEffect, useState } from "react";
 import { Link as RouterLink, useHistory } from "react-router-dom";
 import useSwr from "swr";
-import { useConfig, useToken, useAuthorizedFetcher, useBackend } from "../utils/backend.js";
+import { useAuthorizedFetcher, useClimbs } from "../utils/backend.js";
 
 export default function AddLine(props) {
   const cragId = props.match.params.cragId;
@@ -38,14 +38,9 @@ export default function AddLine(props) {
   const imageId = props.match.params.imageId;
   const history = useHistory();
   const { authorizedFetcher, error } = useAuthorizedFetcher();
-  const { data: climbs, error: errorClimbs } = useBackend(
-    `/climbs/query?limit=20&offset=0`,
-    {
-      method: "POST",
-      body: JSON.stringify({
-        sector_id: sectorId,
-      }),
-    }
+  const { climbs, error: errorClimbs } = useClimbs(
+    { sector_id: sectorId },
+    100
   );
   const [climbId, setClimbId] = useState("");
   const [linePath, setLinePath] = useState("");
@@ -102,7 +97,10 @@ export default function AddLine(props) {
       <Heading>Add line</Heading>
       <FormControl isRequired>
         <FormLabel>Climb</FormLabel>
-        <Select placeholder="Select climb" onChange={(event) => setClimbId(event.target.value)}>
+        <Select
+          placeholder="Select climb"
+          onChange={(event) => setClimbId(event.target.value)}
+        >
           {climbs.map((climb) => (
             <option key={climb.id} value={climb.id}>
               {climb.name_votes[0].value}

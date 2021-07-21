@@ -29,15 +29,12 @@ import {
 import React, { useCallback, useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import useSwr from "swr";
-import { useBackend } from "../utils/backend.js";
+import { useCrag, useSectors } from "../utils/backend.js";
 
 export default function Crag(props) {
   const cragId = props.match.params.cragId;
-  const { data: crag, error: errorCrag } = useBackend(`/crags/${cragId}`);
-  const { data: sectors, error: errorSectors } = useBackend("/sectors/query?limit=20&offset=0", {
-    method: "POST",
-    body: JSON.stringify({ crag_id: cragId }),
-  });
+  const { crag, error: errorCrag } = useCrag(cragId);
+  const { sectors, error: errorSectors } = useSectors({ crag_id: cragId }, 100);
 
   if (errorCrag || errorSectors) {
     return (
@@ -68,7 +65,10 @@ export default function Crag(props) {
           .filter((sector) => sector.name_votes.length >= 1)
           .map((sector) => (
             <ListItem key={sector.id}>
-              <Link as={RouterLink} to={`/crags/${crag.id}/sectors/${sector.id}`}>
+              <Link
+                as={RouterLink}
+                to={`/crags/${crag.id}/sectors/${sector.id}`}
+              >
                 <Text>{sector.name_votes[0].value}</Text>
               </Link>
             </ListItem>

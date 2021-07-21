@@ -104,68 +104,67 @@ const useCrag = (cragId) => {
   const { data: crag, error } = useBackend(cragId ? `/crags/${cragId}` : null);
   return { crag, error };
 };
+
 const useSector = (sectorId) => {
   const { data: sector, error } = useBackend(
     sectorId ? `/sectors/${sectorId}` : null
   );
   return { sector, error };
 };
+
 const useClimb = (climbId) => {
   const { data: climb, error } = useBackend(
     climbId ? `/climbs/${climbId}` : null
   );
   return { climb, error };
 };
+
 const useImage = (imageId) => {
   const { data: image, error } = useBackend(
     imageId ? `/images/${imageId}` : null
   );
   return { image, error };
 };
+
 const useLine = (lineId) => {
   const { data: line, error } = useBackend(lineId ? `/lines/${lineId}` : null);
   return { line, error };
 };
+
 const useQuery = (collection, query, limit, offset) =>
   useBackend(
-    query ? `/${collection}/query?limit=${limit}&offset=${offset}` : null,
+    collection && query ? `/${collection}/query?limit=${limit}&offset=${offset}` : null,
     {
       method: "POST",
       body: JSON.stringify(query),
     }
   );
+
 const useCrags = (query, limit = 20, offset = 0) => {
   const { data: crags, error } = useQuery("crags", query, limit, offset);
   return { crags, error };
 };
+
 const useSectors = (query, limit = 20, offset = 0) => {
   const { data: sectors, error } = useQuery("sectors", query, limit, offset);
   return { sectors, error };
 };
+
 const useClimbs = (query, limit = 20, offset = 0) => {
   const { data: climbs, error } = useQuery("climbs", query, limit, offset);
   return { climbs, error };
 };
+
 const useImages = (query, limit = 20, offset = 0) => {
   const { data: images, error } = useQuery("images", query, limit, offset);
   return { images, error };
 };
+
 const useLines = (query, limit = 20, offset = 0) => {
   const { data: lines, error } = useQuery("lines", query, limit, offset);
   return { lines, error };
 };
 
-export default {
-  useToken,
-  config,
-  useConfig,
-  fetcher,
-  authorizedFetcher,
-  autoAuthorizedFetcher,
-  useAuthorizedFetcher,
-  useBackend,
-  useAuthorizedBackend,
-};
 export {
   useToken,
   config,
@@ -176,4 +175,14 @@ export {
   useAuthorizedFetcher,
   useBackend,
   useAuthorizedBackend,
+  useCrag,
+  useSector,
+  useClimb,
+  useImage,
+  useLine,
+  useCrags,
+  useSectors,
+  useClimbs,
+  useImages,
+  useLines,
 };

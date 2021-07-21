@@ -35,23 +35,10 @@ import {
 import React, { useCallback, useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import useSwr from "swr";
-import {
-  authorizedFetcher,
-  config,
-  fetcher,
-  useBackend,
-  useConfig,
-  useToken,
-} from "../utils/backend.js";
+import { useCrags, useSectors, useClimbs } from "../utils/backend.js";
 
 export default function Crags() {
-  const { data: crags, error: error } = useBackend(
-    "/crags/query?limit=20&offset=0",
-    {
-      method: "POST",
-      body: JSON.stringify({}),
-    }
-  );
+  const { crags, error: error } = useCrags({});
 
   if (error) {
     return (
@@ -106,21 +93,8 @@ export default function Crags() {
 
 function Crag(props) {
   const cragId = props.crag.id;
-  const { data: sectors, error: errorSectors } = useBackend(
-    "/sectors/query?limit=20&offset=0",
-    {
-      method: "POST",
-      body: JSON.stringify({ crag_id: cragId }),
-    }
-  );
-
-  const { data: climbs, error: errorClimbs } = useBackend(
-    "/climbs/query?limit=20&offset=0",
-    {
-      method: "POST",
-      body: JSON.stringify({ crag_id: cragId }),
-    }
-  );
+  const { sectors, error: errorSectors } = useSectors({ crag_id: cragId });
+  const { climbs, error: errorClimbs } = useClimbs({ crag_id: cragId });
 
   return (
     <Box key={cragId}>

@@ -26,7 +26,7 @@ import {
 import React, { useCallback, useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import useSwr from "swr";
-import backend, { authorizedFetcher } from "../utils/backend.js";
+import { authorizedFetcher } from "../utils/backend.js";
 
 export default function Landing() {
   const { isLoading, isAuthenticated, loginWithRedirect } = useAuth0();

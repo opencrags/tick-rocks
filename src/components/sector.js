@@ -29,42 +29,18 @@ import {
 import React, { useCallback, useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import useSwr from "swr";
-import { useBackend } from "../utils/backend.js";
+import { useCrag, useSector, useClimbs, useImages, useLines } from "../utils/backend.js";
 
 export default function Sector(props) {
   const cragId = props.match.params.cragId;
   const sectorId = props.match.params.sectorId;
-  const { data: crag, error: errorCrag } = useBackend(`/crags/${cragId}`);
-  const { data: sector, error: errorSector } = useBackend(
-    `/sectors/${sectorId}`
-  );
-  const { data: climbs, error: errorClimbs } = useBackend(
-    `/climbs/query?limit=20&offset=0`,
-    {
-      method: "POST",
-      body: JSON.stringify({
-        sector_id: sectorId,
-      }),
-    }
-  );
-  const { data: images, error: errorImages } = useBackend(
-    `/images/query?limit=20&offset=0`,
-    {
-      method: "POST",
-      body: JSON.stringify({
-        sector_id: sectorId,
-      }),
-    }
-  );
-  const { data: lines, error: errorLines } = useBackend(
-    `/lines/query?limit=20&offset=0`,
-    {
-      method: "POST",
-      body: JSON.stringify({
-        sector_id: sectorId,
-      }),
-    }
-  );
+  const { crag, error: errorCrag } = useCrag(cragId);
+  const { sector, error: errorSector } = useSector(sectorId);
+  const { climbs, error: errorClimbs } = useClimbs({ sector_id: sectorId });
+  const { images, error: errorImages } = useImages({
+    sector_id: sectorId,
+  });
+  const { lines, error: errorLines } = useLines({ sector_id: sectorId });
 
   if (errorCrag || errorSector || errorLines) {
     return (

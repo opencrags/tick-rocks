@@ -31,14 +31,13 @@ import React, { useCallback, useEffect, useState } from "react";
 import Dropzone from "react-dropzone";
 import { Link as RouterLink, useHistory } from "react-router-dom";
 import useSwr from "swr";
-import { useConfig, useToken, useAuthorizedFetcher } from "../utils/backend.js";
+import { useAuthorizedFetcher } from "../utils/backend.js";
 
 export default function AddImage(props) {
   const cragId = props.match.params.cragId;
   const sectorId = props.match.params.sectorId;
   const history = useHistory();
   const { authorizedFetcher, isAuthenticated, isLoading, error } = useAuthorizedFetcher();
-  const [imageName, setImageName] = useState("");
 
   const addImage = (base64Image) =>
     authorizedFetcher("/images", {

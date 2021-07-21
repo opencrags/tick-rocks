@@ -30,7 +30,7 @@ import {
 import React, { useCallback, useEffect, useState } from "react";
 import { Link as RouterLink, useHistory } from "react-router-dom";
 import useSwr from "swr";
-import { useConfig, useToken, useAuthorizedFetcher } from "../utils/backend.js";
+import { useAuthorizedFetcher } from "../utils/backend.js";
 
 export default function AddCrag() {
   const { authorizedFetcher, isAuthenticated, isLoading, error } = useAuthorizedFetcher();

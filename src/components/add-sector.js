@@ -33,7 +33,7 @@ import Loader from "./loader.js";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link as RouterLink, useHistory } from "react-router-dom";
 import useSwr from "swr";
-import { useConfig, useToken, useAuthorizedFetcher } from "../utils/backend.js";
+import { useAuthorizedFetcher } from "../utils/backend.js";
 
 export default function AddSector(props) {
   const cragId = props.match.params.cragId;
