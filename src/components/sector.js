@@ -28,7 +28,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
-import useSwr from "swr";
+import Loader from "./loader.js";
 import { useCrag, useSector, useClimbs, useImages, useLines } from "../utils/backend.js";
 
 export default function Sector(props) {
@@ -44,7 +44,7 @@ export default function Sector(props) {
 
   if (errorCrag || errorSector || errorLines) {
     return (
-      <Container maxW="container.md">
+      <Container maxWidth="container.md">
         <Center>
           <Text margin="20px">Failed to load sector.</Text>
         </Center>
@@ -59,16 +59,12 @@ export default function Sector(props) {
     lines == undefined
   ) {
     return (
-      <Container maxW="container.md">
-        <Center>
-          <Spinner margin="20px" />
-        </Center>
-      </Container>
+      <Loader />
     );
   }
 
   return (
-    <Container maxW="container.md">
+    <Container maxWidth="container.md">
       <Link as={RouterLink} to={`/crags/${cragId}`}>
         <Heading size="md">Crag: {crag.name_votes[0].value}</Heading>
       </Link>

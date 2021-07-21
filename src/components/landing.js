@@ -25,7 +25,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
-import useSwr from "swr";
+import Loader from "./loader.js";
 import { authorizedFetcher } from "../utils/backend.js";
 
 export default function Landing() {
@@ -33,17 +33,12 @@ export default function Landing() {
 
   if (isLoading) {
     return (
-      <Container maxW="container.md">
-        <Center>
-          <Spinner margin="20px" />
-        </Center>
-      </Container>
-    );
+      <Loader />
   }
 
   if (!isAuthenticated && !isLoading) {
     return (
-      <Container maxW="container.md">
+      <Container maxWidth="container.md">
         <Center marginTop="20px">
           <Text>
             You need to{" "}
@@ -66,7 +61,7 @@ export default function Landing() {
     );
   } else {
     return (
-      <Container maxW="container.md">
+      <Container maxWidth="container.md">
         <Center marginTop="20px">
           <Text>You are logged in.</Text>
         </Center>

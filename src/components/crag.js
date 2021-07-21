@@ -29,6 +29,7 @@ import {
 import React, { useCallback, useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import useSwr from "swr";
+import Loader from "./loader.js";
 import { useCrag, useSectors } from "../utils/backend.js";
 
 export default function Crag(props) {
@@ -38,7 +39,7 @@ export default function Crag(props) {
 
   if (errorCrag || errorSectors) {
     return (
-      <Container maxW="container.md">
+      <Container maxWidth="container.md">
         <Center>
           <Text margin="20px">Failed to load crag.</Text>
         </Center>
@@ -48,16 +49,12 @@ export default function Crag(props) {
 
   if (crag === undefined || sectors === undefined) {
     return (
-      <Container maxW="container.md">
-        <Center>
-          <Spinner margin="20px" />
-        </Center>
-      </Container>
+      <Loader />
     );
   }
 
   return (
-    <Container maxW="container.md">
+    <Container maxWidth="container.md">
       <Heading>{crag.name_votes[0].value}</Heading>
       <Heading size="sm">Sectors</Heading>
       <UnorderedList>

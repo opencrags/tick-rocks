@@ -83,7 +83,7 @@ export default function AddSector(props) {
 
   if (error) {
     return (
-      <Container maxW="container.md">
+      <Container maxWidth="container.md">
         <Center>
           <Text margin="20px">Failed to load auth token.</Text>
         </Center>
@@ -93,7 +93,7 @@ export default function AddSector(props) {
 
   if (!authorizedFetcher && !isLoading) {
     return (
-      <Container maxW="container.md">
+      <Container maxWidth="container.md">
         <Center>
           <Text margin="20px">You need to login to add stuff and vote.</Text>
         </Center>
@@ -106,7 +106,7 @@ export default function AddSector(props) {
   }
 
   return (
-    <Container maxW="container.md">
+    <Container maxWidth="container.md">
       <Heading>Add sector</Heading>
       <FormControl id="sector-name" isRequired>
         <FormLabel>Sector name</FormLabel>

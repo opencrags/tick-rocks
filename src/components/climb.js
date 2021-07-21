@@ -28,6 +28,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
+import Loader from "./loader.js";
 import { useCrag, useSector, useClimb } from "../utils/backend.js";
 
 export default function Climb(props) {
@@ -40,7 +41,7 @@ export default function Climb(props) {
 
   if (errorCrag || errorSector || errorClimb) {
     return (
-      <Container maxW="container.md">
+      <Container maxWidth="container.md">
         <Center>
           <Text margin="20px">Failed to load climb.</Text>
         </Center>
@@ -50,16 +51,12 @@ export default function Climb(props) {
 
   if (crag === undefined || sector === undefined || climb === undefined) {
     return (
-      <Container maxW="container.md">
-        <Center>
-          <Spinner margin="20px" />
-        </Center>
-      </Container>
+      <Loader />
     );
   }
 
   return (
-    <Container maxW="container.md">
+    <Container maxWidth="container.md">
       <Link as={RouterLink} to={`/crags/${cragId}`}>
         <Heading size="sm">{crag.name_votes[0].value}</Heading>
       </Link>

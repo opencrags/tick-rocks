@@ -29,6 +29,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useState } from "react";
+import Loader from "./loader.js";
 import { Link as RouterLink } from "react-router-dom";
 import { useCrag, useSector, useImage } from "../utils/backend.js";
 
@@ -42,7 +43,7 @@ export default function RockImage(props) {
 
   if (errorCrag || errorSector || errorImage) {
     return (
-      <Container maxW="container.md">
+      <Container maxWidth="container.md">
         <Center>
           <Text margin="20px">Failed to load image.</Text>
         </Center>
@@ -52,16 +53,12 @@ export default function RockImage(props) {
 
   if (crag === undefined || sector === undefined || image === undefined) {
     return (
-      <Container maxW="container.md">
-        <Center>
-          <Spinner margin="20px" />
-        </Center>
-      </Container>
+      <Loader />
     );
   }
 
   return (
-    <Container maxW="container.md">
+    <Container maxWidth="container.md">
       <Link as={RouterLink} to={`/crags/${cragId}`}>
         <Heading size="md">Crag: {crag.name_votes[0].value}</Heading>
       </Link>

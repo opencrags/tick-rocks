@@ -29,7 +29,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link as RouterLink, useHistory } from "react-router-dom";
-import useSwr from "swr";
+import Loader from "./loader.js";
 import { useAuthorizedFetcher, useClimbs } from "../utils/backend.js";
 
 export default function AddLine(props) {
@@ -74,7 +74,7 @@ export default function AddLine(props) {
 
   if (error) {
     return (
-      <Container maxW="container.md">
+      <Container maxWidth="container.md">
         <Center>
           <Text margin="20px">Failed to load auth token.</Text>
         </Center>
@@ -84,16 +84,12 @@ export default function AddLine(props) {
 
   if (!authorizedFetcher || !climbs) {
     return (
-      <Container maxW="container.md">
-        <Center>
-          <Spinner margin="20px" />
-        </Center>
-      </Container>
+      <Loader />
     );
   }
 
   return (
-    <Container maxW="container.md">
+    <Container maxWidth="container.md">
       <Heading>Add line</Heading>
       <FormControl isRequired>
         <FormLabel>Climb</FormLabel>
