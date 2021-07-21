@@ -36,7 +36,8 @@ export default function AddClimb(props) {
   const cragId = props.match.params.cragId;
   const sectorId = props.match.params.sectorId;
   const history = useHistory();
-  const { authorizedFetcher, error } = useAuthorizedFetcher();
+  const { authorizedFetcher, isAuthenticated, isLoading, error } =
+    useAuthorizedFetcher();
   const [climbName, setClimbName] = useState("");
 
   const addClimb = () =>
@@ -72,7 +73,17 @@ export default function AddClimb(props) {
     );
   }
 
-  if (!authorizedFetcher) {
+  if (!authorizedFetcher && !isLoading) {
+    return (
+      <Container maxW="container.md">
+        <Center>
+          <Text margin="20px">You need to login to add stuff and vote.</Text>
+        </Center>
+      </Container>
+    );
+  }
+
+  if (!authorizedFetcher && isLoading) {
     return (
       <Container maxW="container.md">
         <Center>

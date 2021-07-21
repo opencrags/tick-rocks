@@ -61,7 +61,7 @@ const autoAuthorizedFetcher = (getAccessTokenSilently, ...args) => {
 };
 
 const useAuthorizedFetcher = () => {
-  const { isAuthenticated, isLoading } = useAuth0();
+  const { isAuthenticated, isLoading, error: errorAuth } = useAuth0();
   const { config, errorConfig } = useConfig();
   const { token, errorToken } = useToken();
   const [isFetching, setIsFetching] = useState(false);
@@ -71,12 +71,14 @@ const useAuthorizedFetcher = () => {
     authorizedFetcher:
       config && token
         ? (...args) => {
-          setIsFetching(true);
-          return authorizedFetcher(token, config, ...args).finally(() => setIsFetching(false))
-        }
+            setIsFetching(true);
+            return authorizedFetcher(token, config, ...args).finally(() =>
+              setIsFetching(false)
+            );
+          }
         : null,
-    error: errorConfig || errorToken,
     isFetching,
+    error: errorConfig || errorToken || errorAuth,
   };
 };
 

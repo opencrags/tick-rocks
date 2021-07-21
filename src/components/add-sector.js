@@ -37,7 +37,8 @@ import { useConfig, useToken, useAuthorizedFetcher } from "../utils/backend.js";
 
 export default function AddSector(props) {
   const cragId = props.match.params.cragId;
-  const { authorizedFetcher, error } = useAuthorizedFetcher();
+  const { authorizedFetcher, isAuthenticated, isLoading, error } =
+    useAuthorizedFetcher();
   const history = useHistory();
   const [sectorName, setSectorName] = useState("");
   const [latitude, setLatitude] = useState(null);
@@ -59,7 +60,8 @@ export default function AddSector(props) {
     });
 
   const voteSectorCoordinates = (sectorId) =>
-    latitude && longitude &&
+    latitude &&
+    longitude &&
     authorizedFetcher(`/sectors/${sectorId}/coordinate_votes`, {
       method: "POST",
       body: JSON.stringify({
@@ -89,7 +91,17 @@ export default function AddSector(props) {
     );
   }
 
-  if (!authorizedFetcher) {
+  if (!authorizedFetcher && !isLoading) {
+    return (
+      <Container maxW="container.md">
+        <Center>
+          <Text margin="20px">You need to login to add stuff and vote.</Text>
+        </Center>
+      </Container>
+    );
+  }
+
+  if (!authorizedFetcher && isLoading) {
     return <Loader />;
   }
 
@@ -106,13 +118,17 @@ export default function AddSector(props) {
       <FormControl id="longitude">
         <FormLabel>Latitude</FormLabel>
         <NumberInput precision={7}>
-          <NumberInputField onChange={(event) => setLatitude(event.target.value)} />
+          <NumberInputField
+            onChange={(event) => setLatitude(event.target.value)}
+          />
         </NumberInput>
       </FormControl>
       <FormControl id="longitude">
         <FormLabel>Longitude</FormLabel>
         <NumberInput precision={7}>
-          <NumberInputField onChange={(event) => setLongitude(event.target.value)} />
+          <NumberInputField
+            onChange={(event) => setLongitude(event.target.value)}
+          />
         </NumberInput>
       </FormControl>
       <Button onClick={handleSubmit}>Submit</Button>

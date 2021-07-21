@@ -37,7 +37,7 @@ export default function AddImage(props) {
   const cragId = props.match.params.cragId;
   const sectorId = props.match.params.sectorId;
   const history = useHistory();
-  const { authorizedFetcher, error } = useAuthorizedFetcher();
+  const { authorizedFetcher, isAuthenticated, isLoading, error } = useAuthorizedFetcher();
   const [imageName, setImageName] = useState("");
 
   const addImage = (base64Image) =>
@@ -85,7 +85,17 @@ export default function AddImage(props) {
     );
   }
 
-  if (!authorizedFetcher) {
+  if (!authorizedFetcher && !isLoading) {
+    return (
+      <Container maxW="container.md">
+        <Center>
+          <Text margin="20px">You need to login to add stuff and vote.</Text>
+        </Center>
+      </Container>
+    );
+  }
+
+  if (!authorizedFetcher && isLoading) {
     return (
       <Container maxW="container.md">
         <Center>
