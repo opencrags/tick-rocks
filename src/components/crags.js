@@ -96,7 +96,7 @@ export default function Crags() {
           {crags
             .filter((crag) => crag.name_votes.length >= 1)
             .map((crag) => (
-              <Crag crag={crag} />
+              <Crag key={crag.id} crag={crag} />
             ))}
         </VStack>
       </Center>

@@ -8,7 +8,6 @@ RUN npm ci
 FROM node:16.5.0-alpine3.13 AS builder
 WORKDIR /app
 COPY . .
-RUN rm /app/public/config.json
 COPY --from=deps /app/node_modules ./node_modules
 RUN npm run build
 

@@ -42,26 +42,28 @@ export default function Landing() {
   }
 
   if (!isAuthenticated && !isLoading) {
-    <Container maxW="container.md">
-      <Center marginTop="20px">
-        <Text>
-          You need to{" "}
-          <Link
-            onClick={() =>
-              loginWithRedirect({
-                appState: {
-                  returnTo: window.location.pathname,
-                },
-              })
-            }
-            color="teal.500"
-          >
-            login
-          </Link>{" "}
-          to add stuff and vote.
-        </Text>
-      </Center>
-    </Container>;
+    return (
+      <Container maxW="container.md">
+        <Center marginTop="20px">
+          <Text>
+            You need to{" "}
+            <Link
+              onClick={() =>
+                loginWithRedirect({
+                  appState: {
+                    returnTo: window.location.pathname,
+                  },
+                })
+              }
+              color="teal.500"
+            >
+              login
+            </Link>{" "}
+            to add stuff and vote.
+          </Text>
+        </Center>
+      </Container>
+    );
   } else {
     return (
       <Container maxW="container.md">

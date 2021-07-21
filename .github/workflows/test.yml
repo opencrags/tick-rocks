@@ -1,0 +1,18 @@
+name: Test
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-18.04
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build and run tests
+      env:
+        AUTH0_DOMAIN: ${{ secrets.AUTH0_DOMAIN }}
+        AUTH0_API_AUDIENCE: ${{ secrets.AUTH0_API_AUDIENCE }}
+      run: |
+        echo export AUTH0_DOMAIN=\"$AUTH0_DOMAIN\" >> dev.env
+        echo export AUTH0_API_AUDIENCE=\"$AUTH0_API_AUDIENCE\" >> dev.env
+        docker-compose -f test.docker-compose.yml build
