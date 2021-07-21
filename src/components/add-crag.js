@@ -33,7 +33,7 @@ import useSwr from "swr";
 import { useConfig, useToken, useAuthorizedFetcher } from "../utils/backend.js";
 
 export default function AddCrag() {
-  const { authorizedFetcher, error } = useAuthorizedFetcher();
+  const { authorizedFetcher, isAuthenticated, isLoading, error } = useAuthorizedFetcher();
   const history = useHistory();
   const [cragName, setCragName] = useState("");
 
@@ -70,7 +70,19 @@ export default function AddCrag() {
     );
   }
 
-  if (!authorizedFetcher) {
+  if(!authorizedFetcher && !isLoading){
+    return (
+      <Container maxW="container.md">
+        <Center>
+          <Text margin="20px">
+            You need to login to add stuff and vote.
+          </Text>
+        </Center>
+      </Container>
+    );
+  }
+
+  if (!authorizedFetcher && isLoading) {
     return (
       <Container maxW="container.md">
         <Center>
