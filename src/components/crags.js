@@ -7,6 +7,7 @@ import {
   AspectRatio,
   Container,
   Center,
+  Divider,
   Heading,
   HStack,
   Link,
@@ -15,6 +16,10 @@ import {
   Tag,
   TagLabel,
   Select,
+  Skeleton,
+  Stat,
+  StatLabel,
+  StatNumber,
   VStack,
   Tooltip,
   Box,
@@ -25,6 +30,7 @@ import {
   useTab,
   UnorderedList,
   ListItem,
+  StackDivider,
 } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
@@ -39,10 +45,13 @@ import {
 } from "../utils/backend.js";
 
 export default function Crags() {
-  const { data: crags, error: error } = useBackend("/crags/query?limit=20&offset=0", {
-    method: "POST",
-    body: JSON.stringify({}),
-  });
+  const { data: crags, error: error } = useBackend(
+    "/crags/query?limit=20&offset=0",
+    {
+      method: "POST",
+      body: JSON.stringify({}),
+    }
+  );
 
   if (error) {
     return (
@@ -75,18 +84,65 @@ export default function Crags() {
   }
 
   return (
-    <Container maxW="container.md">
-      <UnorderedList>
-        {crags
-          .filter((crag) => crag.name_votes.length >= 1)
-          .map((crag) => (
-            <ListItem key={crag.id}>
-              <Link as={RouterLink} to={`/crags/${crag.id}`}>
-                <Text>{crag.name_votes[0].value}</Text>
-              </Link>
-            </ListItem>
-          ))}
-      </UnorderedList>
+    <Container maxWidth="container.sm">
+      <Center>
+        <VStack
+          marginTop="20px"
+          divider={<StackDivider borderColor="gray.200" />}
+          spacing={6}
+          alignItems="left"
+          width="100%"
+        >
+          {crags
+            .filter((crag) => crag.name_votes.length >= 1)
+            .map((crag) => (
+              <Crag crag={crag} />
+            ))}
+        </VStack>
+      </Center>
     </Container>
+  );
+}
+
+function Crag(props) {
+  const cragId = props.crag.id;
+  const { data: sectors, error: errorSectors } = useBackend(
+    "/sectors/query?limit=20&offset=0",
+    {
+      method: "POST",
+      body: JSON.stringify({ crag_id: cragId }),
+    }
+  );
+
+  const { data: climbs, error: errorClimbs } = useBackend(
+    "/climbs/query?limit=20&offset=0",
+    {
+      method: "POST",
+      body: JSON.stringify({ crag_id: cragId }),
+    }
+  );
+
+  return (
+    <Box key={cragId}>
+      <VStack alignItems="left">
+        <Box>
+          <Link as={RouterLink} to={`/crags/${cragId}`}>
+            <Heading size="md">{props.crag.name_votes[0].value}</Heading>
+          </Link>
+          <Skeleton isLoaded={sectors && climbs}>
+            <HStack>
+              <Stat size="sm">
+                <StatLabel>Sectors</StatLabel>
+                <StatNumber>{sectors ? sectors.length : "?"}</StatNumber>
+              </Stat>
+              <Stat size="sm">
+                <StatLabel>Climbs</StatLabel>
+                <StatNumber>{climbs ? climbs.length : "?"}</StatNumber>
+              </Stat>
+            </HStack>
+          </Skeleton>
+        </Box>
+      </VStack>
+    </Box>
   );
 }

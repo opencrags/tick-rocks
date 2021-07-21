@@ -43,7 +43,7 @@ export default function AddClimb(props) {
   const addClimb = () =>
     authorizedFetcher("/climbs", {
       method: "POST",
-      body: JSON.stringify({ sector_id: sectorId }),
+      body: JSON.stringify({ crag_id: cragId, sector_id: sectorId }),
     });
 
   const voteClimbName = (climbId) =>

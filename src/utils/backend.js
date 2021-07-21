@@ -85,7 +85,7 @@ const useAuthorizedFetcher = () => {
 const useBackend = (key, ...args) => {
   const { token, errorToken } = useToken();
   const { config, errorConfig } = useConfig();
-  return useSwr([key, token], (key) =>
+  return useSwr([key, token, JSON.stringify(args)], (key) =>
     token
       ? authorizedFetcher(token, config, key, ...args)
       : fetcher(config, key, ...args)
