@@ -33,7 +33,7 @@ export default function Climb(props) {
     );
   }
 
-  if (crag === undefined || sector === undefined || climb === undefined) {
+  if (crag === undefined || sector === undefined || climb === undefined || lines === undefined) {
     return <Loader />;
   }
 

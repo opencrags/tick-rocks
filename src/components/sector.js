@@ -37,7 +37,7 @@ export default function Sector(props) {
     crag === undefined ||
     sector === undefined ||
     climbs === undefined ||
-    lines == undefined
+    lines === undefined
   ) {
     return (
       <Loader />
@@ -116,6 +116,7 @@ export default function Sector(props) {
             </ListItem>
           ))}
       </UnorderedList>
+      <Text>Go to an image to add a line.</Text>
     </Container>
   );
 }

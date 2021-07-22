@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import useSwr from "swr";
 import { useAuth0 } from "@auth0/auth0-react";
 
@@ -133,7 +133,9 @@ const useLine = (lineId) => {
 
 const useQuery = (collection, query, limit, offset) =>
   useBackend(
-    collection && query ? `/${collection}/query?limit=${limit}&offset=${offset}` : null,
+    collection && query
+      ? `/${collection}/query?limit=${limit}&offset=${offset}`
+      : null,
     {
       method: "POST",
       body: JSON.stringify(query),
@@ -165,6 +167,22 @@ const useLines = (query, limit = 20, offset = 0) => {
   return { lines, error };
 };
 
+const countVotes = (votes) => {
+  const countedVotes = Object.entries(
+    votes.reduce((count, vote) => {
+      if (vote.value in count) {
+        count[vote.value] += 1;
+      }
+      else {
+        count[vote.value] = 1;
+      }
+      return count;
+    }, {})
+  ).map(([value, votes]) => ({ value: value, count: votes }));
+  countedVotes.sort((countA, countB) => (countA.count > countB.count ? 1 : -1));
+  return countedVotes;
+};
+
 export {
   useToken,
   config,
@@ -185,4 +203,5 @@ export {
   useClimbs,
   useImages,
   useLines,
+  countVotes,
 };
