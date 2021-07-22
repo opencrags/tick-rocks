@@ -1,10 +1,5 @@
-import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
 import {
-  Center,
   ChakraProvider,
-  Container,
-  Link,
-  Text,
 } from "@chakra-ui/react";
 import { Route, Switch } from "react-router";
 import theme from "../styles/theme";
@@ -21,6 +16,7 @@ import AddSector from "./add-sector.js";
 import AddClimb from "./add-climb.js";
 import AddImage from "./add-image.js";
 import AddLine from "./add-line.js";
+import VoteCragName from "./vote-crag-name";
 
 function App() {
   return (
@@ -29,6 +25,7 @@ function App() {
       <Switch>
         <Route exact path="/crags" component={Crags} />
         <Route exact path="/crags/:cragId?" component={Crag} />
+        <Route path="/crags/:cragId?/vote-crag-name" component={VoteCragName} />
         <Route path="/add-crag" component={AddCrag} />
         <Route
           exact

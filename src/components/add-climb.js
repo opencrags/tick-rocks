@@ -17,7 +17,7 @@ export default function AddClimb(props) {
   const cragId = props.match.params.cragId;
   const sectorId = props.match.params.sectorId;
   const history = useHistory();
-  const { authorizedFetcher, isAuthenticated, isLoading, error } =
+  const { authorizedFetcher, isLoading, error } =
     useAuthorizedFetcher();
   const [climbName, setClimbName] = useState("");
 

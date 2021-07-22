@@ -37,8 +37,8 @@ export default function AddCrag() {
     history.replace(`/crags/${cragId}`);
 
   const handleSubmit = () =>
-    addCrag().then((climb) =>
-      voteCragName(climb.id).then((_) => navigateToAddedCrag(climb.id))
+    addCrag().then((crag) =>
+      voteCragName(crag.id).then((_) => navigateToAddedCrag(crag.id))
     );
 
   if (error) {

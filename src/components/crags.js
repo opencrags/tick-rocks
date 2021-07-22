@@ -18,7 +18,7 @@ import Loader from "./loader.js";
 import { useCrags, useSectors, useClimbs } from "../utils/backend.js";
 
 export default function Crags() {
-  const { crags, error: error } = useCrags({});
+  const { crags, error } = useCrags({});
 
   if (error) {
     return (
@@ -36,7 +36,7 @@ export default function Crags() {
     );
   }
 
-  if (crags.length == 0) {
+  if (crags.length === 0) {
     return (
       <Container maxWidth="container.md">
         <Center>
