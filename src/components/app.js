@@ -17,6 +17,7 @@ import AddClimb from "./add-climb.js";
 import AddImage from "./add-image.js";
 import AddLine from "./add-line.js";
 import VoteCragName from "./vote-crag-name";
+import VoteSectorName from "./vote-sector-name";
 
 function App() {
   return (
@@ -25,7 +26,7 @@ function App() {
       <Switch>
         <Route exact path="/crags" component={Crags} />
         <Route exact path="/crags/:cragId?" component={Crag} />
-        <Route path="/crags/:cragId?/vote-crag-name" component={VoteCragName} />
+        <Route path="/crags/:cragId?/vote-name" component={VoteCragName} />
         <Route path="/add-crag" component={AddCrag} />
         <Route
           exact
@@ -36,6 +37,11 @@ function App() {
           exact
           path="/crags/:cragId?/sectors/:sectorId?"
           component={Sector}
+        />
+        <Route
+          exact
+          path="/crags/:cragId?/sectors/:sectorId?/vote-name"
+          component={VoteSectorName}
         />
         <Route
           exact

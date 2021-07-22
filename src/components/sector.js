@@ -10,7 +10,14 @@ import {
 } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import Loader from "./loader.js";
-import { useCrag, useSector, useClimbs, useImages, useLines } from "../utils/backend.js";
+import EditButton from "./edit-button.js";
+import {
+  useCrag,
+  useSector,
+  useClimbs,
+  useImages,
+  useLines,
+} from "../utils/backend.js";
 
 export default function Sector(props) {
   const cragId = props.match.params.cragId;
@@ -39,21 +46,23 @@ export default function Sector(props) {
     climbs === undefined ||
     lines === undefined
   ) {
-    return (
-      <Loader />
-    );
+    return <Loader />;
   }
 
   return (
     <Container maxWidth="container.md">
       <Link as={RouterLink} to={`/crags/${cragId}`}>
-        <Heading size="md">Crag: {crag.name_votes[0].value}</Heading>
+        <Heading size="lg">
+          Crag: {crag.name_votes[0].value}
+          <EditButton to={`/crags/${cragId}/vote-name`} />
+        </Heading>
       </Link>
-      <Heading size="md">
+      <Heading size="lg">
         Sector:{" "}
         {sector.name_votes.length >= 1
           ? sector.name_votes[0].value
           : "No name votes"}
+        <EditButton to={`/crags/${cragId}/sectors/${sectorId}/vote-name`} />
       </Heading>
       {sector.coordinate_votes.length >= 1 && (
         <Heading size="xs">

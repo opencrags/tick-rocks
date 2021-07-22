@@ -48,7 +48,7 @@ export default function Climb(props) {
       <Heading size="md">{climb.name_votes[0].value}</Heading>
       <VStack>
         {lines.map((line) => (
-          <Line crag={crag} sector={sector} climb={climb} line={line} />
+          <Line key={line.id} crag={crag} sector={sector} climb={climb} line={line} />
         ))}
       </VStack>
     </Container>

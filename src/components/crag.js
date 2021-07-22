@@ -7,11 +7,7 @@ import {
   UnorderedList,
   ListItem,
   Button,
-  IconButton,
-  Icon,
-  LinkBox,
 } from "@chakra-ui/react";
-import { MdEdit } from 'react-icons/md';
 import { Link as RouterLink } from "react-router-dom";
 import Loader from "./loader.js";
 import EditButton from "./edit-button.js";
@@ -40,7 +36,7 @@ export default function Crag(props) {
     <Container maxWidth="container.md">
       <Heading size="xl" marginTop="20px">
         {crag.name_votes[0].value}
-        <EditButton to={`/crags/${crag.id}/vote-crag-name`} />
+        <EditButton to={`/crags/${crag.id}/vote-name`} />
       </Heading>
       <Heading size="sm">Sectors</Heading>
       <UnorderedList>
