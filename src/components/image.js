@@ -6,33 +6,40 @@ import {
   Text,
   Image,
   Button,
-} from "@chakra-ui/react";
-import Loader from "./loader.js";
-import { Link as RouterLink } from "react-router-dom";
-import { useCrag, useSector, useImage } from "../utils/backend.js";
+} from '@chakra-ui/react'
+import Loader from './loader.js'
+import { Link as RouterLink } from 'react-router-dom'
+import { useCrag, useSector, useImage, useLines } from '../utils/backend.js'
+import LineImage from './line-image.js'
 
 export default function RockImage(props) {
-  const cragId = props.match.params.cragId;
-  const sectorId = props.match.params.sectorId;
-  const imageId = props.match.params.imageId;
-  const { crag, error: errorCrag } = useCrag(cragId);
-  const { sector, error: errorSector } = useSector(sectorId);
-  const { image, error: errorImage } = useImage(imageId);
+  const cragId = props.match.params.cragId
+  const sectorId = props.match.params.sectorId
+  const imageId = props.match.params.imageId
+  const { crag, error: errorCrag } = useCrag(cragId)
+  const { sector, error: errorSector } = useSector(sectorId)
+  const { image, error: errorImage } = useImage(imageId)
+  const { lines, error: errorLines } = useLines(
+    imageId ? { image_id: imageId } : null
+  )
 
-  if (errorCrag || errorSector || errorImage) {
+  if (errorCrag || errorSector || errorImage || errorLines) {
     return (
       <Container maxWidth="container.md">
         <Center>
           <Text margin="20px">Failed to load image.</Text>
         </Center>
       </Container>
-    );
+    )
   }
 
-  if (crag === undefined || sector === undefined || image === undefined) {
-    return (
-      <Loader />
-    );
+  if (
+    crag === undefined ||
+    sector === undefined ||
+    image === undefined ||
+    lines === undefined
+  ) {
+    return <Loader />
   }
 
   return (
@@ -43,7 +50,7 @@ export default function RockImage(props) {
       <Link as={RouterLink} to={`/crags/${cragId}/sectors/${sectorId}`}>
         <Heading size="md">Sector: {sector.name_votes[0].value}</Heading>
       </Link>
-      <Image src={image.base64_image} maxWidth="100%" maxHeight="600px" />
+      <LineImage image={image} lines={lines} />
       <Link
         as={RouterLink}
         to={`/crags/${cragId}/sectors/${sectorId}/images/${imageId}/add-line`}
@@ -51,5 +58,5 @@ export default function RockImage(props) {
         <Button>Add line</Button>
       </Link>
     </Container>
-  );
+  )
 }
