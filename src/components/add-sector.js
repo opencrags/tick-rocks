@@ -17,8 +17,7 @@ import { useAuthorizedFetcher } from "../utils/backend.js";
 
 export default function AddSector(props) {
   const cragId = props.match.params.cragId;
-  const { authorizedFetcher, isLoading, error } =
-    useAuthorizedFetcher();
+  const { authorizedFetcher, isLoading, error } = useAuthorizedFetcher();
   const history = useHistory();
   const [sectorName, setSectorName] = useState("");
   const [latitude, setLatitude] = useState(null);
@@ -45,7 +44,10 @@ export default function AddSector(props) {
     authorizedFetcher(`/sectors/${sectorId}/coordinate_votes`, {
       method: "POST",
       body: JSON.stringify({
-        value: [parseFloat(longitude), parseFloat(latitude)],
+        value: {
+          type: "Point",
+          coordinates: [parseFloat(longitude), parseFloat(latitude)],
+        },
         public: true,
       }),
     });

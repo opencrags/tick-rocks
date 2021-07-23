@@ -67,7 +67,7 @@ export default function Sector(props) {
       {sector.coordinate_votes.length >= 1 && (
         <Heading size="xs">
           Coordinates: {sector.coordinate_votes[0].value[1]},{" "}
-          {sector.coordinate_votes[0].value[0]}
+          {sector.coordinate_votes[0].value.coordinates[0]}
         </Heading>
       )}
       <Heading size="sm">Climbs</Heading>
