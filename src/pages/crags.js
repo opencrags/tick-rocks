@@ -14,7 +14,7 @@ import {
   StackDivider,
 } from '@chakra-ui/react'
 import { Link as RouterLink, useParams } from 'react-router-dom'
-import Loader from './loader.js'
+import Loader from '../components/loader.js'
 import { useCrags, useSectors, useClimbs } from '../utils/backend.js'
 
 export default function Crags() {

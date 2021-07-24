@@ -8,7 +8,7 @@ import {
   Box,
 } from '@chakra-ui/react'
 import { Link as RouterLink, useParams } from 'react-router-dom'
-import Loader from './loader.js'
+import Loader from '../components/loader.js'
 import {
   useCrag,
   useSector,
@@ -16,16 +16,14 @@ import {
   useLines,
   useImage,
 } from '../utils/backend.js'
-import LineImage from './line-image.js'
+import LineImage from '../components/line-image.js'
 
 export default function Climb() {
   const { cragId, sectorId, climbId } = useParams()
   const { crag, error: errorCrag } = useCrag(cragId)
   const { sector, error: errorSector } = useSector(sectorId)
   const { climb, error: errorClimb } = useClimb(climbId)
-  const { lines, error: errorLines } = useLines(
-    climbId ? { climb_id: climbId } : null
-  )
+  const { lines, error: errorLines } = useLines({ climb_id: climbId })
 
   if (errorCrag || errorSector || errorClimb || errorLines) {
     return (
@@ -46,21 +44,21 @@ export default function Climb() {
     return <Loader />
   }
 
-  const linesSortedByImage = lines.reduce(
-    (sorted, line) =>
-      sorted[line.image_id]
-        ? {
-            ...sorted,
-            [line.image_id]: [...sorted[line.image_id], line],
-          }
-        : { ...sorted, [line.image_id]: [line] },
-    {}
-  )
+  // const linesSortedByImage = lines.reduce(
+  //   (sorted, line) =>
+  //     sorted[line.image_id]
+  //       ? {
+  //           ...sorted,
+  //           [line.image_id]: [...sorted[line.image_id], line],
+  //         }
+  //       : { ...sorted, [line.image_id]: [line] },
+  //   {}
+  // )
 
-  const imagesWithLines = Object.entries(linesSortedByImage).map(
-    ([id, lines]) => ({ id, lines })
-  )
-
+  // const imagesWithLines = Object.entries(linesSortedByImage).map(
+  //   ([id, lines]) => ({ id, lines })
+  // )
+  console.log(lines);
   return (
     <Container maxWidth="container.md">
       <Link as={RouterLink} to={`/crags/${cragId}`}>
@@ -71,12 +69,13 @@ export default function Climb() {
       </Link>
       <Heading size="md">{climb.name_votes[0].value}</Heading>
       <VStack>
-        {imagesWithLines.map((imageWithLines) => (
+        {lines.map((line) => (
           <ImageWithLines
-            key={imageWithLines.id}
+            key={line.id}
             crag={crag}
             sector={sector}
-            imageWithLines={imageWithLines}
+            climb={climb}
+            line={line}
           />
         ))}
       </VStack>
@@ -84,13 +83,14 @@ export default function Climb() {
   )
 }
 
-function ImageWithLines({ crag, sector, imageWithLines }) {
-  const { image, error: errorImage } = useImage(imageWithLines.id)
+function ImageWithLines({ crag, sector, climb, line }) {
+  const { image, error: errorImage } = useImage(line.image_id)
+  // const { lines: otherLines, error: errorOtherLines } = useLines({ image_id: line.image_id })
 
   if (errorImage) {
     return (
       <Center>
-        <Text margin="20px">Failed to load image.</Text>
+        <Text margin="20px">Failed to load image/lines.</Text>
       </Center>
     )
   }
@@ -101,16 +101,7 @@ function ImageWithLines({ crag, sector, imageWithLines }) {
 
   return (
     <Box>
-      <Link
-        as={RouterLink}
-        to={`/crags/${crag.id}/sectors/${sector.id}/images/${image.id}`}
-      >
-        <Heading size="sm">{image.id}</Heading>
-      </Link>
-      <LineImage image={image} lines={imageWithLines.lines} />
-      {imageWithLines.lines.map((line) => (
-        <Text key={line.id}>Line path: {line.line_path_votes[0].value}</Text>
-      ))}
+      <LineImage image={image} lines={[line]} />
     </Box>
   )
 }

@@ -1,6 +1,6 @@
 import { useAuth0 } from '@auth0/auth0-react'
 import { Container, Center, Link, Text } from '@chakra-ui/react'
-import Loader from './loader.js'
+import Loader from '../components/loader.js'
 
 export default function Landing() {
   const { isLoading, isAuthenticated, loginWithRedirect } = useAuth0()

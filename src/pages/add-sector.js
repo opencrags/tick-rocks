@@ -10,7 +10,7 @@ import {
   NumberInput,
   NumberInputField,
 } from '@chakra-ui/react'
-import Loader from './loader.js'
+import Loader from '../components/loader.js'
 import { useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { useAuthorizedFetcher } from '../utils/backend.js'

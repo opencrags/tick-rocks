@@ -13,25 +13,21 @@ import {
 } from '@chakra-ui/react'
 import { useState, useEffect, useCallback } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import Loader from './loader.js'
+import Loader from '../components/loader.js'
 import { useAuth0 } from '@auth0/auth0-react'
-import {
-  useSector,
-  useAuthorizedFetcher,
-  countVotes,
-} from '../utils/backend.js'
+import { useCrag, useAuthorizedFetcher, countVotes } from '../utils/backend.js'
 
-export default function VoteSectorName() {
-  const { cragId, sectorId } = useParams()
-  const { sector, error: errorSector } = useSector(sectorId)
+export default function VoteCragName() {
+  const { cragId } = useParams()
+  const { crag, error: errorCrag } = useCrag(cragId)
   const { user } = useAuth0()
   const { authorizedFetcher, isLoading, error } = useAuthorizedFetcher()
   const history = useHistory()
-  const [sectorName, setSectorName] = useState('')
+  const [cragName, setCragName] = useState('')
   const [publicVote, setPublicVote] = useState(true)
 
   const userVote = useCallback(() => {
-    const userVotes = sector.name_votes.filter(
+    const userVotes = crag.name_votes.filter(
       (name_vote) => name_vote.user_id === user.sub
     )
     if (userVotes.length === 1) {
@@ -39,38 +35,37 @@ export default function VoteSectorName() {
     } else {
       return null
     }
-  }, [sector?.name_votes, user?.sub])
+  }, [crag?.name_votes, user?.sub])
 
   useEffect(() => {
-    if (sector !== undefined && user && sectorName === '' && userVote()) {
+    if (crag !== undefined && user && cragName === '' && userVote()) {
       const userVote_ = userVote()
-      setSectorName(userVote_.value)
+      setCragName(userVote_.value)
       setPublicVote(userVote_.public)
     }
-  }, [sector, user, sectorName, userVote])
+  }, [crag, user, cragName, userVote])
 
-  const voteSectorName = (sectorId) =>
+  const voteCragName = (cragId) =>
     userVote()
-      ? authorizedFetcher(`/sectors/${sectorId}/name_votes/${userVote().id}`, {
+      ? authorizedFetcher(`/crags/${cragId}/name_votes/${userVote().id}`, {
           method: 'PUT',
           body: JSON.stringify({
-            value: sectorName,
+            value: cragName,
             public: publicVote,
           }),
         })
-      : authorizedFetcher(`/sectors/${sectorId}/name_votes`, {
+      : authorizedFetcher(`/crags/${cragId}/name_votes`, {
           method: 'POST',
           body: JSON.stringify({
-            value: sectorName,
+            value: cragName,
             public: publicVote,
           }),
         })
 
-  const navigateToSector = (sectorId) =>
-    history.replace(`/crags/${cragId}/sectors/${sectorId}`)
+  const navigateToCrag = (cragId) => history.replace(`/crags/${cragId}`)
 
   const handleSubmit = () =>
-    voteSectorName(sectorId).then((_) => navigateToSector(sectorId))
+    voteCragName(cragId).then((_) => navigateToCrag(cragId))
 
   if (error) {
     return (
@@ -92,16 +87,16 @@ export default function VoteSectorName() {
     )
   }
 
-  if (!sector) {
+  if (!crag) {
     return <Loader />
   }
 
-  const countedVotes = countVotes(sector.name_votes)
+  const countedVotes = countVotes(crag.name_votes)
   const maxVoteCount = Math.max(Object.values(countedVotes))
 
   return (
     <Container maxWidth="container.md">
-      <Heading>Vote for sector name</Heading>
+      <Heading>Vote for crag name</Heading>
       <Box
         border="1px"
         borderColor="gray.300"
@@ -121,11 +116,11 @@ export default function VoteSectorName() {
       </Box>
       <Heading size="sm">Your vote</Heading>
       <FormControl isRequired>
-        <FormLabel>Sector name</FormLabel>
+        <FormLabel>Crag name</FormLabel>
         <Input
-          placeholder="Sector name"
-          value={sectorName}
-          onChange={(event) => setSectorName(event.target.value)}
+          placeholder="Crag name"
+          value={cragName}
+          onChange={(event) => setCragName(event.target.value)}
         />
       </FormControl>
       <FormControl>
