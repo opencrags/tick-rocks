@@ -9,8 +9,8 @@ import {
   Button,
 } from '@chakra-ui/react'
 import { Link as RouterLink, useParams } from 'react-router-dom'
-import Loader from './loader.js'
-import EditButton from './edit-button.js'
+import Loader from '../components/loader.js'
+import EditButton from '../components/edit-button.js'
 import { useCrag, useSectors } from '../utils/backend.js'
 
 export default function Crag() {

@@ -1,7 +1,7 @@
 import { Container, Center, Heading, Box, Text } from '@chakra-ui/react'
 import Dropzone from 'react-dropzone'
 import { useHistory, useParams } from 'react-router-dom'
-import Loader from './loader.js'
+import Loader from '../components/loader.js'
 import { useAuthorizedFetcher } from '../utils/backend.js'
 
 export default function AddImage() {

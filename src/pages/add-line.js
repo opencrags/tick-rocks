@@ -12,15 +12,15 @@ import {
 } from '@chakra-ui/react'
 import { useCallback, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import Loader from './loader.js'
+import Loader from '../components/loader.js'
 import {
   useAuthorizedFetcher,
   useClimbs,
   useImage,
   useLines,
 } from '../utils/backend.js'
-import LineDrawerModal from './line-drawer-modal.js'
-import LineImage from './line-image.js'
+import LineDrawerModal from '../components/line-drawer-modal.js'
+import LineImage from '../components/line-image.js'
 import { drawBeizerSplines } from '../utils/splines.js'
 
 export default function AddLine() {

@@ -9,35 +9,37 @@ import {
   Button,
 } from '@chakra-ui/react'
 import { useState } from 'react'
-import { useHistory } from 'react-router-dom'
-import Loader from './loader.js'
+import { useHistory, useParams } from 'react-router-dom'
+import Loader from '../components/loader.js'
 import { useAuthorizedFetcher } from '../utils/backend.js'
 
-export default function AddCrag() {
-  const { authorizedFetcher, isLoading, error } = useAuthorizedFetcher()
+export default function AddClimb() {
+  const { cragId, sectorId } = useParams()
   const history = useHistory()
-  const [cragName, setCragName] = useState('')
+  const { authorizedFetcher, isLoading, error } = useAuthorizedFetcher()
+  const [climbName, setClimbName] = useState('')
 
-  const addCrag = () =>
-    authorizedFetcher('/crags', {
+  const addClimb = () =>
+    authorizedFetcher('/climbs', {
       method: 'POST',
-      body: JSON.stringify({}),
+      body: JSON.stringify({ crag_id: cragId, sector_id: sectorId }),
     })
 
-  const voteCragName = (cragId) =>
-    authorizedFetcher(`/crags/${cragId}/name_votes`, {
+  const voteClimbName = (climbId) =>
+    authorizedFetcher(`/climbs/${climbId}/name_votes`, {
       method: 'POST',
       body: JSON.stringify({
-        value: cragName,
+        value: climbName,
         public: true,
       }),
     })
 
-  const navigateToAddedCrag = (cragId) => history.replace(`/crags/${cragId}`)
+  const navigateToAddedClimb = (climbId) =>
+    history.replace(`/crags/${cragId}/sectors/${sectorId}/climbs/${climbId}`)
 
   const handleSubmit = () =>
-    addCrag().then((crag) =>
-      voteCragName(crag.id).then((_) => navigateToAddedCrag(crag.id))
+    addClimb().then((climb) =>
+      voteClimbName(climb.id).then((_) => navigateToAddedClimb(climb.id))
     )
 
   if (error) {
@@ -66,13 +68,12 @@ export default function AddCrag() {
 
   return (
     <Container maxWidth="container.md">
-      <Heading>Add crag</Heading>
-      <FormControl id="crag-name" isRequired>
-        <FormLabel>Crag name</FormLabel>
+      <Heading>Add climb</Heading>
+      <FormControl isRequired>
+        <FormLabel>Climb name</FormLabel>
         <Input
-          placeholder="Crag name"
-          value={cragName}
-          onChange={(event) => setCragName(event.target.value)}
+          placeholder="Climb name"
+          onChange={(event) => setClimbName(event.target.value)}
         />
       </FormControl>
       <Button onClick={handleSubmit}>Submit</Button>
