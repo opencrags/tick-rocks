@@ -4,18 +4,15 @@ import {
   Heading,
   Link,
   Text,
-  Image,
   Button,
 } from '@chakra-ui/react'
 import Loader from './loader.js'
-import { Link as RouterLink } from 'react-router-dom'
+import { Link as RouterLink, useParams } from 'react-router-dom'
 import { useCrag, useSector, useImage, useLines } from '../utils/backend.js'
 import LineImage from './line-image.js'
 
-export default function RockImage(props) {
-  const cragId = props.match.params.cragId
-  const sectorId = props.match.params.sectorId
-  const imageId = props.match.params.imageId
+export default function RockImage() {
+  const { cragId, sectorId, imageId } = useParams()
   const { crag, error: errorCrag } = useCrag(cragId)
   const { sector, error: errorSector } = useSector(sectorId)
   const { image, error: errorImage } = useImage(imageId)

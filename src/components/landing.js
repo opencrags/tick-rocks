@@ -1,19 +1,12 @@
-import { useAuth0 } from "@auth0/auth0-react";
-import {
-  Container,
-  Center,
-  Link,
-  Text,
-} from "@chakra-ui/react";
-import Loader from "./loader.js";
+import { useAuth0 } from '@auth0/auth0-react'
+import { Container, Center, Link, Text } from '@chakra-ui/react'
+import Loader from './loader.js'
 
 export default function Landing() {
-  const { isLoading, isAuthenticated, loginWithRedirect } = useAuth0();
+  const { isLoading, isAuthenticated, loginWithRedirect } = useAuth0()
 
   if (isLoading) {
-    return (
-      <Loader />
-    )
+    return <Loader />
   }
 
   if (!isAuthenticated && !isLoading) {
@@ -21,7 +14,7 @@ export default function Landing() {
       <Container maxWidth="container.md">
         <Center marginTop="20px">
           <Text>
-            You need to{" "}
+            You need to{' '}
             <Link
               onClick={() =>
                 loginWithRedirect({
@@ -33,12 +26,12 @@ export default function Landing() {
               color="teal.500"
             >
               login
-            </Link>{" "}
+            </Link>{' '}
             to add stuff and vote.
           </Text>
         </Center>
       </Container>
-    );
+    )
   } else {
     return (
       <Container maxWidth="container.md">
@@ -46,6 +39,6 @@ export default function Landing() {
           <Text>You are logged in.</Text>
         </Center>
       </Container>
-    );
+    )
   }
 }

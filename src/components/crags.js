@@ -12,13 +12,13 @@ import {
   Box,
   Text,
   StackDivider,
-} from "@chakra-ui/react";
-import { Link as RouterLink } from "react-router-dom";
-import Loader from "./loader.js";
-import { useCrags, useSectors, useClimbs } from "../utils/backend.js";
+} from '@chakra-ui/react'
+import { Link as RouterLink, useParams } from 'react-router-dom'
+import Loader from './loader.js'
+import { useCrags, useSectors, useClimbs } from '../utils/backend.js'
 
 export default function Crags() {
-  const { crags, error } = useCrags({});
+  const { crags, error } = useCrags({})
 
   if (error) {
     return (
@@ -27,13 +27,11 @@ export default function Crags() {
           <Text margin="20px">Failed to load crags.</Text>
         </Center>
       </Container>
-    );
+    )
   }
 
   if (crags === undefined) {
-    return (
-      <Loader />
-    );
+    return <Loader />
   }
 
   if (crags.length === 0) {
@@ -43,7 +41,7 @@ export default function Crags() {
           <Text margin="20px">There are no crags to show.</Text>
         </Center>
       </Container>
-    );
+    )
   }
 
   return (
@@ -64,35 +62,34 @@ export default function Crags() {
         </VStack>
       </Center>
     </Container>
-  );
+  )
 }
 
-function Crag(props) {
-  const cragId = props.crag.id;
-  const { sectors, error: errorSectors } = useSectors({ crag_id: cragId });
-  const { climbs, error: errorClimbs } = useClimbs({ crag_id: cragId });
+function Crag({ crag }) {
+  const { sectors, error: errorSectors } = useSectors({ crag_id: crag.id })
+  const { climbs, error: errorClimbs } = useClimbs({ crag_id: crag.id })
 
   return (
-    <Box key={cragId}>
+    <Box key={crag.id}>
       <VStack alignItems="left">
         <Box>
-          <Link as={RouterLink} to={`/crags/${cragId}`}>
-            <Heading size="md">{props.crag.name_votes[0].value}</Heading>
+          <Link as={RouterLink} to={`/crags/${crag.id}`}>
+            <Heading size="md">{crag.name_votes[0].value}</Heading>
           </Link>
           <Skeleton isLoaded={sectors && climbs}>
             <HStack>
               <Stat size="sm">
                 <StatLabel>Sectors</StatLabel>
-                <StatNumber>{sectors ? sectors.length : "?"}</StatNumber>
+                <StatNumber>{sectors ? sectors.length : '?'}</StatNumber>
               </Stat>
               <Stat size="sm">
                 <StatLabel>Climbs</StatLabel>
-                <StatNumber>{climbs ? climbs.length : "?"}</StatNumber>
+                <StatNumber>{climbs ? climbs.length : '?'}</StatNumber>
               </Stat>
             </HStack>
           </Skeleton>
         </Box>
       </VStack>
     </Box>
-  );
+  )
 }

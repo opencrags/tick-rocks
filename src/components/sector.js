@@ -7,28 +7,27 @@ import {
   UnorderedList,
   ListItem,
   Button,
-} from "@chakra-ui/react";
-import { Link as RouterLink } from "react-router-dom";
-import Loader from "./loader.js";
-import EditButton from "./edit-button.js";
+} from '@chakra-ui/react'
+import { Link as RouterLink, useParams } from 'react-router-dom'
+import Loader from './loader.js'
+import EditButton from './edit-button.js'
 import {
   useCrag,
   useSector,
   useClimbs,
   useImages,
   useLines,
-} from "../utils/backend.js";
+} from '../utils/backend.js'
 
-export default function Sector(props) {
-  const cragId = props.match.params.cragId;
-  const sectorId = props.match.params.sectorId;
-  const { crag, error: errorCrag } = useCrag(cragId);
-  const { sector, error: errorSector } = useSector(sectorId);
-  const { climbs, error: errorClimbs } = useClimbs({ sector_id: sectorId });
+export default function Sector({ children }) {
+  const { cragId, sectorId } = useParams()
+  const { crag, error: errorCrag } = useCrag(cragId)
+  const { sector, error: errorSector } = useSector(sectorId)
+  const { climbs, error: errorClimbs } = useClimbs({ sector_id: sectorId })
   const { images, error: errorImages } = useImages({
     sector_id: sectorId,
-  });
-  const { lines, error: errorLines } = useLines({ sector_id: sectorId });
+  })
+  const { lines, error: errorLines } = useLines({ sector_id: sectorId })
 
   if (errorCrag || errorSector || errorLines) {
     return (
@@ -37,7 +36,7 @@ export default function Sector(props) {
           <Text margin="20px">Failed to load sector.</Text>
         </Center>
       </Container>
-    );
+    )
   }
 
   if (
@@ -46,7 +45,7 @@ export default function Sector(props) {
     climbs === undefined ||
     lines === undefined
   ) {
-    return <Loader />;
+    return <Loader />
   }
 
   return (
@@ -58,15 +57,15 @@ export default function Sector(props) {
         </Heading>
       </Link>
       <Heading size="lg">
-        Sector:{" "}
+        Sector:{' '}
         {sector.name_votes.length >= 1
           ? sector.name_votes[0].value
-          : "No name votes"}
+          : 'No name votes'}
         <EditButton to={`/crags/${cragId}/sectors/${sectorId}/vote-name`} />
       </Heading>
       {sector.coordinate_votes.length >= 1 && (
         <Heading size="xs">
-          Coordinates: {sector.coordinate_votes[0].value[1]},{" "}
+          Coordinates: {sector.coordinate_votes[0].value[1]},{' '}
           {sector.coordinate_votes[0].value.coordinates[0]}
         </Heading>
       )}
@@ -127,5 +126,5 @@ export default function Sector(props) {
       </UnorderedList>
       <Text>Go to an image to add a line.</Text>
     </Container>
-  );
+  )
 }

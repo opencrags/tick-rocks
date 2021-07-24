@@ -7,7 +7,7 @@ import {
   VStack,
   Box,
 } from '@chakra-ui/react'
-import { Link as RouterLink } from 'react-router-dom'
+import { Link as RouterLink, useParams } from 'react-router-dom'
 import Loader from './loader.js'
 import {
   useCrag,
@@ -18,10 +18,8 @@ import {
 } from '../utils/backend.js'
 import LineImage from './line-image.js'
 
-export default function Climb(props) {
-  const cragId = props.match.params.cragId
-  const sectorId = props.match.params.sectorId
-  const climbId = props.match.params.climbId
+export default function Climb() {
+  const { cragId, sectorId, climbId } = useParams()
   const { crag, error: errorCrag } = useCrag(cragId)
   const { sector, error: errorSector } = useSector(sectorId)
   const { climb, error: errorClimb } = useClimb(climbId)

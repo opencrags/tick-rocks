@@ -10,62 +10,62 @@ import {
   Box,
   Progress,
   Checkbox,
-} from "@chakra-ui/react";
-import { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
-import Loader from "./loader.js";
-import { useAuth0 } from "@auth0/auth0-react";
-import { useCrag, useAuthorizedFetcher, countVotes } from "../utils/backend.js";
+} from '@chakra-ui/react'
+import { useState, useEffect, useCallback } from 'react'
+import { useHistory, useParams } from 'react-router-dom'
+import Loader from './loader.js'
+import { useAuth0 } from '@auth0/auth0-react'
+import { useCrag, useAuthorizedFetcher, countVotes } from '../utils/backend.js'
 
-export default function VoteCragName(props) {
-  const cragId = props.match.params.cragId;
-  const { crag, error: errorCrag } = useCrag(cragId);
-  const { user } = useAuth0();
-  const { authorizedFetcher, isLoading, error } = useAuthorizedFetcher();
-  const history = useHistory();
-  const [cragName, setCragName] = useState("");
-  const [publicVote, setPublicVote] = useState(true);
+export default function VoteCragName() {
+  const { cragId } = useParams()
+  const { crag, error: errorCrag } = useCrag(cragId)
+  const { user } = useAuth0()
+  const { authorizedFetcher, isLoading, error } = useAuthorizedFetcher()
+  const history = useHistory()
+  const [cragName, setCragName] = useState('')
+  const [publicVote, setPublicVote] = useState(true)
 
-  const userVote = () => {
+  const userVote = useCallback(() => {
     const userVotes = crag.name_votes.filter(
       (name_vote) => name_vote.user_id === user.sub
-    );
+    )
     if (userVotes.length === 1) {
-      return userVotes[0];
+      return userVotes[0]
     } else {
-      return null;
+      return null
     }
-  };
+  }, [crag?.name_votes, user?.sub])
 
   useEffect(() => {
-    if (crag !== undefined && user && cragName === "" && userVote()) {
-      const userVote_ = userVote();
-      setCragName(userVote_.value);
-      setPublicVote(userVote_.public);
+    if (crag !== undefined && user && cragName === '' && userVote()) {
+      const userVote_ = userVote()
+      setCragName(userVote_.value)
+      setPublicVote(userVote_.public)
     }
-  }, [crag, user, cragName, userVote]);
+  }, [crag, user, cragName, userVote])
 
   const voteCragName = (cragId) =>
     userVote()
       ? authorizedFetcher(`/crags/${cragId}/name_votes/${userVote().id}`, {
-          method: "PUT",
+          method: 'PUT',
           body: JSON.stringify({
             value: cragName,
             public: publicVote,
           }),
         })
       : authorizedFetcher(`/crags/${cragId}/name_votes`, {
-          method: "POST",
+          method: 'POST',
           body: JSON.stringify({
             value: cragName,
             public: publicVote,
           }),
-        });
+        })
 
-  const navigateToCrag = (cragId) => history.replace(`/crags/${cragId}`);
+  const navigateToCrag = (cragId) => history.replace(`/crags/${cragId}`)
 
   const handleSubmit = () =>
-    voteCragName(cragId).then((_) => navigateToCrag(cragId));
+    voteCragName(cragId).then((_) => navigateToCrag(cragId))
 
   if (error) {
     return (
@@ -74,7 +74,7 @@ export default function VoteCragName(props) {
           <Text margin="20px">Failed to load auth token.</Text>
         </Center>
       </Container>
-    );
+    )
   }
 
   if (!authorizedFetcher && !isLoading) {
@@ -84,15 +84,15 @@ export default function VoteCragName(props) {
           <Text margin="20px">You need to login to vote.</Text>
         </Center>
       </Container>
-    );
+    )
   }
 
   if (!crag) {
-    return <Loader />;
+    return <Loader />
   }
 
-  const countedVotes = countVotes(crag.name_votes);
-  const maxVoteCount = Math.max(Object.values(countedVotes));
+  const countedVotes = countVotes(crag.name_votes)
+  const maxVoteCount = Math.max(Object.values(countedVotes))
 
   return (
     <Container maxWidth="container.md">
@@ -128,7 +128,7 @@ export default function VoteCragName(props) {
         <Checkbox
           isChecked={!publicVote}
           onChange={() => {
-            setPublicVote(!publicVote);
+            setPublicVote(!publicVote)
           }}
         />
         <Text fontSize="sm">
@@ -139,5 +139,5 @@ export default function VoteCragName(props) {
 
       <Button onClick={handleSubmit}>Submit</Button>
     </Container>
-  );
+  )
 }

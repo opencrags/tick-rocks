@@ -48,21 +48,4 @@ export default function TopoPlotter({
       onMouseUp={handleMouseUp}
     />
   )
-
-  // return (
-  //   <Box style={{ position: 'relative' }}>
-  //     <Image
-  //       ref={imageRef}
-  //       src={image?.base64_image}
-  //       alt="topo"
-  //       onLoad={() => setImageLoaded(true)}
-  //     />
-
-  //     <canvas
-  //       ref={canvasRef}
-  //       style={{ width: '100%', position: 'absolute', top: 0, left: 0 }}
-  //       onMouseUp={handleMouseUp}
-  //     ></canvas>
-  //   </Box>
-  // )
 }

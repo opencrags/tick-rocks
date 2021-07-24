@@ -1,45 +1,38 @@
-import {
-  Container,
-  Center,
-  Heading,
-  Box,
-  Text,
-} from "@chakra-ui/react";
-import Dropzone from "react-dropzone";
-import { useHistory } from "react-router-dom";
-import Loader from "./loader.js";
-import { useAuthorizedFetcher } from "../utils/backend.js";
+import { Container, Center, Heading, Box, Text } from '@chakra-ui/react'
+import Dropzone from 'react-dropzone'
+import { useHistory, useParams } from 'react-router-dom'
+import Loader from './loader.js'
+import { useAuthorizedFetcher } from '../utils/backend.js'
 
-export default function AddImage(props) {
-  const cragId = props.match.params.cragId;
-  const sectorId = props.match.params.sectorId;
-  const history = useHistory();
-  const { authorizedFetcher, isLoading, error } = useAuthorizedFetcher();
+export default function AddImage() {
+  const { cragId, sectorId } = useParams()
+  const history = useHistory()
+  const { authorizedFetcher, isLoading, error } = useAuthorizedFetcher()
 
   const addImage = (base64Image) =>
-    authorizedFetcher("/images", {
-      method: "POST",
+    authorizedFetcher('/images', {
+      method: 'POST',
       body: JSON.stringify({
         sector_id: sectorId,
         base64_image: base64Image,
       }),
-    });
+    })
 
   const navigateToSector = () =>
-    history.replace(`/crags/${cragId}/sectors/${sectorId}`);
+    history.replace(`/crags/${cragId}/sectors/${sectorId}`)
 
   const navigateToAddedImage = (imageId) =>
-    history.replace(`/crags/${cragId}/sectors/${sectorId}/images/${imageId}`);
+    history.replace(`/crags/${cragId}/sectors/${sectorId}/images/${imageId}`)
 
   const onDropImages = (files) => {
     Promise.all(
       files.map((file) =>
         new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onabort = () => reject("File reading was aborted");
-          reader.onerror = () => reject("File reading has failed");
-          reader.onload = () => resolve(reader.result);
-          reader.readAsDataURL(file);
+          const reader = new FileReader()
+          reader.onabort = () => reject('File reading was aborted')
+          reader.onerror = () => reject('File reading has failed')
+          reader.onload = () => resolve(reader.result)
+          reader.readAsDataURL(file)
         }).then(addImage)
       )
     )
@@ -48,8 +41,8 @@ export default function AddImage(props) {
           ? navigateToSector()
           : navigateToAddedImage(images[0].id)
       )
-      .catch(console.error);
-  };
+      .catch(console.error)
+  }
 
   if (error) {
     return (
@@ -58,7 +51,7 @@ export default function AddImage(props) {
           <Text margin="20px">Failed to load auth token.</Text>
         </Center>
       </Container>
-    );
+    )
   }
 
   if (!authorizedFetcher && !isLoading) {
@@ -68,19 +61,17 @@ export default function AddImage(props) {
           <Text margin="20px">You need to login to add stuff and vote.</Text>
         </Center>
       </Container>
-    );
+    )
   }
 
   if (!authorizedFetcher && isLoading) {
-    return (
-      <Loader />
-    );
+    return <Loader />
   }
 
   return (
     <Container maxWidth="container.md">
       <Heading>Add image</Heading>
-      <Dropzone accept={["image/jpeg"]} onDrop={onDropImages}>
+      <Dropzone accept={['image/jpeg']} onDrop={onDropImages}>
         {({ getRootProps, getInputProps }) => (
           <Box
             border="1px dashed"
@@ -98,5 +89,5 @@ export default function AddImage(props) {
         )}
       </Dropzone>
     </Container>
-  );
+  )
 }

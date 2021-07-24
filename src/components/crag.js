@@ -7,16 +7,16 @@ import {
   UnorderedList,
   ListItem,
   Button,
-} from "@chakra-ui/react";
-import { Link as RouterLink } from "react-router-dom";
-import Loader from "./loader.js";
-import EditButton from "./edit-button.js";
-import { useCrag, useSectors } from "../utils/backend.js";
+} from '@chakra-ui/react'
+import { Link as RouterLink, useParams } from 'react-router-dom'
+import Loader from './loader.js'
+import EditButton from './edit-button.js'
+import { useCrag, useSectors } from '../utils/backend.js'
 
-export default function Crag(props) {
-  const cragId = props.match.params.cragId;
-  const { crag, error: errorCrag } = useCrag(cragId);
-  const { sectors, error: errorSectors } = useSectors({ crag_id: cragId }, 100);
+export default function Crag() {
+  const { cragId } = useParams()
+  const { crag, error: errorCrag } = useCrag(cragId)
+  const { sectors, error: errorSectors } = useSectors({ crag_id: cragId }, 100)
 
   if (errorCrag || errorSectors) {
     return (
@@ -25,11 +25,11 @@ export default function Crag(props) {
           <Text margin="20px">Failed to load crag.</Text>
         </Center>
       </Container>
-    );
+    )
   }
 
   if (crag === undefined || sectors === undefined) {
-    return <Loader />;
+    return <Loader />
   }
 
   return (
@@ -57,5 +57,5 @@ export default function Crag(props) {
         <Button>Add sector</Button>
       </Link>
     </Container>
-  );
+  )
 }
