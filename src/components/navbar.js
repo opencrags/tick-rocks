@@ -1,4 +1,4 @@
-import { useAuth0 } from "@auth0/auth0-react";
+import { useAuth0 } from '@auth0/auth0-react'
 import {
   Box,
   Center,
@@ -9,12 +9,12 @@ import {
   LinkBox,
   Image,
   HStack,
-} from "@chakra-ui/react";
-import { Link as RouterLink } from "react-router-dom";
-import React from "react";
+} from '@chakra-ui/react'
+import { Link as RouterLink } from 'react-router-dom'
+import React from 'react'
 
 export function NavBar() {
-  const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
+  const { isAuthenticated, loginWithRedirect, logout } = useAuth0()
 
   return (
     <Box bg="brand.100" px={4}>
@@ -72,7 +72,7 @@ export function NavBar() {
         ) : (
           <Box>
             <Center height="80px" marginRight="20px">
-              <Heading size="sm" _hover={{ cursor: "pointer" }}>
+              <Heading size="sm" _hover={{ cursor: 'pointer' }}>
                 <Link
                   onClick={() =>
                     loginWithRedirect({
@@ -90,5 +90,5 @@ export function NavBar() {
         )}
       </Flex>
     </Box>
-  );
+  )
 }

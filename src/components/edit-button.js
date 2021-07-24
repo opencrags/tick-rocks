@@ -10,13 +10,13 @@ import {
   IconButton,
   Icon,
   LinkBox,
-} from "@chakra-ui/react";
-import { MdEdit } from 'react-icons/md';
-import { Link as RouterLink } from "react-router-dom";
+} from '@chakra-ui/react'
+import { MdEdit } from 'react-icons/md'
+import { Link as RouterLink } from 'react-router-dom'
 
-export default function EditButton(props) {
+export default function EditButton({ to }) {
   return (
-    <LinkBox as={RouterLink} to={props.to}>
+    <LinkBox as={RouterLink} to={to}>
       <IconButton
         as="sup"
         size="sm"
@@ -29,5 +29,5 @@ export default function EditButton(props) {
         icon={<Icon as={MdEdit} />}
       />
     </LinkBox>
-  );
+  )
 }

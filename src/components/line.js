@@ -1,5 +1,5 @@
 import { Container, Center, Heading, Link, Text, Image } from '@chakra-ui/react'
-import { Link as RouterLink } from 'react-router-dom'
+import { Link as RouterLink, useParams } from 'react-router-dom'
 import Loader from './loader.js'
 import {
   useCrag,
@@ -10,10 +10,8 @@ import {
 } from '../utils/backend.js'
 import LineImage from './line-image.js'
 
-export default function Line(props) {
-  const cragId = props.match.params.cragId
-  const sectorId = props.match.params.sectorId
-  const lineId = props.match.params.lineId
+export default function Line() {
+  const { cragId, sectorId, lineId } = useParams()
   const { crag, error: errorCrag } = useCrag(cragId)
   const { sector, error: errorSector } = useSector(sectorId)
   const { line, error: errorLine } = useLine(lineId)

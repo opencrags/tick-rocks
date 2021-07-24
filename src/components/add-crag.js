@@ -7,39 +7,38 @@ import {
   FormControl,
   FormLabel,
   Button,
-} from "@chakra-ui/react";
-import { useState } from "react";
-import { useHistory } from "react-router-dom";
-import Loader from "./loader.js";
-import { useAuthorizedFetcher } from "../utils/backend.js";
+} from '@chakra-ui/react'
+import { useState } from 'react'
+import { useHistory } from 'react-router-dom'
+import Loader from './loader.js'
+import { useAuthorizedFetcher } from '../utils/backend.js'
 
 export default function AddCrag() {
-  const { authorizedFetcher, isLoading, error } = useAuthorizedFetcher();
-  const history = useHistory();
-  const [cragName, setCragName] = useState("");
+  const { authorizedFetcher, isLoading, error } = useAuthorizedFetcher()
+  const history = useHistory()
+  const [cragName, setCragName] = useState('')
 
   const addCrag = () =>
-    authorizedFetcher("/crags", {
-      method: "POST",
+    authorizedFetcher('/crags', {
+      method: 'POST',
       body: JSON.stringify({}),
-    });
+    })
 
   const voteCragName = (cragId) =>
     authorizedFetcher(`/crags/${cragId}/name_votes`, {
-      method: "POST",
+      method: 'POST',
       body: JSON.stringify({
         value: cragName,
         public: true,
       }),
-    });
+    })
 
-  const navigateToAddedCrag = (cragId) =>
-    history.replace(`/crags/${cragId}`);
+  const navigateToAddedCrag = (cragId) => history.replace(`/crags/${cragId}`)
 
   const handleSubmit = () =>
     addCrag().then((crag) =>
       voteCragName(crag.id).then((_) => navigateToAddedCrag(crag.id))
-    );
+    )
 
   if (error) {
     return (
@@ -48,25 +47,21 @@ export default function AddCrag() {
           <Text margin="20px">Failed to load auth token.</Text>
         </Center>
       </Container>
-    );
+    )
   }
 
-  if(!authorizedFetcher && !isLoading){
+  if (!authorizedFetcher && !isLoading) {
     return (
       <Container maxWidth="container.md">
         <Center>
-          <Text margin="20px">
-            You need to login to add stuff and vote.
-          </Text>
+          <Text margin="20px">You need to login to add stuff and vote.</Text>
         </Center>
       </Container>
-    );
+    )
   }
 
   if (!authorizedFetcher && isLoading) {
-    return (
-      <Loader />
-    );
+    return <Loader />
   }
 
   return (
@@ -82,5 +77,5 @@ export default function AddCrag() {
       </FormControl>
       <Button onClick={handleSubmit}>Submit</Button>
     </Container>
-  );
+  )
 }

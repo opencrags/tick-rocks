@@ -22,52 +22,51 @@ function App() {
     <ChakraProvider resetCSS theme={theme}>
       <NavBar />
       <Switch>
-        <Route exact path="/crags" component={Crags} />
-        <Route exact path="/crags/:cragId?" component={Crag} />
-        <Route path="/crags/:cragId?/vote-name" component={VoteCragName} />
-        <Route path="/add-crag" component={AddCrag} />
-        <Route exact path="/crags/:cragId?/add-sector" component={AddSector} />
-        <Route
-          exact
-          path="/crags/:cragId?/sectors/:sectorId?"
-          component={Sector}
-        />
-        <Route
-          exact
-          path="/crags/:cragId?/sectors/:sectorId?/vote-name"
-          component={VoteSectorName}
-        />
-        <Route
-          exact
-          path="/crags/:cragId?/sectors/:sectorId?/add-climb"
-          component={AddClimb}
-        />
-        <Route
-          exact
-          path="/crags/:cragId?/sectors/:sectorId?/climbs/:climbId?"
-          component={Climb}
-        />
-        <Route
-          exact
-          path="/crags/:cragId?/sectors/:sectorId?/add-image"
-          component={AddImage}
-        />
-        <Route
-          exact
-          path="/crags/:cragId?/sectors/:sectorId?/images/:imageId?"
-          component={RockImage}
-        />
+        <Route exact path="/crags">
+          <Crags />
+        </Route>
+        <Route exact path="/crags/:cragId?">
+          <Crag />
+        </Route>
+        <Route path="/crags/:cragId?/vote-name">
+          <VoteCragName />
+        </Route>
+        <Route path="/add-crag">
+          <AddCrag />
+        </Route>
+        <Route exact path="/crags/:cragId?/add-sector">
+          <AddSector />
+        </Route>
+        <Route exact path="/crags/:cragId?/sectors/:sectorId?">
+          <Sector />
+        </Route>
+        <Route exact path="/crags/:cragId?/sectors/:sectorId?/vote-name">
+          <VoteSectorName />
+        </Route>
+        <Route exact path="/crags/:cragId?/sectors/:sectorId?/add-climb">
+          <AddClimb />
+        </Route>
+        <Route exact path="/crags/:cragId?/sectors/:sectorId?/climbs/:climbId?">
+          <Climb />
+        </Route>
+        <Route exact path="/crags/:cragId?/sectors/:sectorId?/add-image">
+          <AddImage />
+        </Route>
+        <Route exact path="/crags/:cragId?/sectors/:sectorId?/images/:imageId?">
+          <RockImage />
+        </Route>
         <Route
           exact
           path="/crags/:cragId?/sectors/:sectorId?/images/:imageId?/add-line"
-          component={AddLine}
-        />
-        <Route
-          exact
-          path="/crags/:cragId?/sectors/:sectorId?/lines/:lineId?"
-          component={Line}
-        />
-        <Route path="/" component={Landing} />
+        >
+          <AddLine />
+        </Route>
+        <Route exact path="/crags/:cragId?/sectors/:sectorId?/lines/:lineId?">
+          <Line />
+        </Route>
+        <Route path="/">
+          <Landing />
+        </Route>
       </Switch>
     </ChakraProvider>
   )

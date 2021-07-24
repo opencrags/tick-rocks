@@ -7,42 +7,40 @@ import {
   FormControl,
   FormLabel,
   Button,
-} from "@chakra-ui/react";
-import { useState } from "react";
-import { useHistory } from "react-router-dom";
-import Loader from "./loader.js";
-import { useAuthorizedFetcher } from "../utils/backend.js";
+} from '@chakra-ui/react'
+import { useState } from 'react'
+import { useHistory, useParams } from 'react-router-dom'
+import Loader from './loader.js'
+import { useAuthorizedFetcher } from '../utils/backend.js'
 
-export default function AddClimb(props) {
-  const cragId = props.match.params.cragId;
-  const sectorId = props.match.params.sectorId;
-  const history = useHistory();
-  const { authorizedFetcher, isLoading, error } =
-    useAuthorizedFetcher();
-  const [climbName, setClimbName] = useState("");
+export default function AddClimb() {
+  const { cragId, sectorId } = useParams()
+  const history = useHistory()
+  const { authorizedFetcher, isLoading, error } = useAuthorizedFetcher()
+  const [climbName, setClimbName] = useState('')
 
   const addClimb = () =>
-    authorizedFetcher("/climbs", {
-      method: "POST",
+    authorizedFetcher('/climbs', {
+      method: 'POST',
       body: JSON.stringify({ crag_id: cragId, sector_id: sectorId }),
-    });
+    })
 
   const voteClimbName = (climbId) =>
     authorizedFetcher(`/climbs/${climbId}/name_votes`, {
-      method: "POST",
+      method: 'POST',
       body: JSON.stringify({
         value: climbName,
         public: true,
       }),
-    });
+    })
 
   const navigateToAddedClimb = (climbId) =>
-    history.replace(`/crags/${cragId}/sectors/${sectorId}/climbs/${climbId}`);
+    history.replace(`/crags/${cragId}/sectors/${sectorId}/climbs/${climbId}`)
 
   const handleSubmit = () =>
     addClimb().then((climb) =>
       voteClimbName(climb.id).then((_) => navigateToAddedClimb(climb.id))
-    );
+    )
 
   if (error) {
     return (
@@ -51,7 +49,7 @@ export default function AddClimb(props) {
           <Text margin="20px">Failed to load auth token.</Text>
         </Center>
       </Container>
-    );
+    )
   }
 
   if (!authorizedFetcher && !isLoading) {
@@ -61,13 +59,11 @@ export default function AddClimb(props) {
           <Text margin="20px">You need to login to add stuff and vote.</Text>
         </Center>
       </Container>
-    );
+    )
   }
 
   if (!authorizedFetcher && isLoading) {
-    return (
-      <Loader />
-    );
+    return <Loader />
   }
 
   return (
@@ -82,5 +78,5 @@ export default function AddClimb(props) {
       </FormControl>
       <Button onClick={handleSubmit}>Submit</Button>
     </Container>
-  );
+  )
 }
