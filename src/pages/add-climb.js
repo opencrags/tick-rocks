@@ -7,14 +7,19 @@ import {
   FormControl,
   FormLabel,
   Button,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
 } from '@chakra-ui/react'
 import { useState } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
+import { useHistory, useParams, Link as RouterLink } from 'react-router-dom'
 import Loader from '../components/loader.js'
-import { useAuthorizedFetcher } from '../utils/backend.js'
+import { useCrag, useSector, useAuthorizedFetcher } from '../utils/backend.js'
 
 export default function AddClimb() {
   const { cragId, sectorId } = useParams()
+  const { crag, error: errorCrag } = useCrag(cragId)
+  const { sector, error: errorSector } = useSector(sectorId)
   const history = useHistory()
   const { authorizedFetcher, isLoading, error } = useAuthorizedFetcher()
   const [climbName, setClimbName] = useState('')
@@ -42,7 +47,7 @@ export default function AddClimb() {
       voteClimbName(climb.id).then((_) => navigateToAddedClimb(climb.id))
     )
 
-  if (error) {
+  if (error || errorCrag || errorSector) {
     return (
       <Container maxWidth="container.md">
         <Center>
@@ -62,12 +67,30 @@ export default function AddClimb() {
     )
   }
 
-  if (!authorizedFetcher && isLoading) {
+  if ((!authorizedFetcher && isLoading) || crag === undefined || sector === undefined) {
     return <Loader />
   }
 
   return (
     <Container maxWidth="container.md">
+      <Breadcrumb>
+        <BreadcrumbItem>
+          <BreadcrumbLink as={RouterLink} to={`/crags/${cragId}`}>
+            {crag.name_votes[0].value}
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbItem>
+          <BreadcrumbLink
+            as={RouterLink}
+            to={`/crags/${cragId}/sectors/${sectorId}`}
+          >
+            {sector.name_votes[0].value}
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbItem>
+          <Text>Add climb</Text>
+        </BreadcrumbItem>
+      </Breadcrumb>
       <Heading>Add climb</Heading>
       <FormControl isRequired>
         <FormLabel>Climb name</FormLabel>

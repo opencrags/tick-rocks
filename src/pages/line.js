@@ -1,4 +1,4 @@
-import { Container, Center, Heading, Link, Text, Image } from '@chakra-ui/react'
+import { Container, Center, Heading, Link, Text } from '@chakra-ui/react'
 import { Link as RouterLink, useParams } from 'react-router-dom'
 import Loader from '../components/loader.js'
 import {

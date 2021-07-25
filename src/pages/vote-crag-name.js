@@ -21,7 +21,7 @@ export default function VoteCragName() {
   const { cragId } = useParams()
   const { crag, error: errorCrag } = useCrag(cragId)
   const { user } = useAuth0()
-  const { authorizedFetcher, isLoading, error } = useAuthorizedFetcher()
+  const { authorizedFetcher, isLoading, error: errorAuth } = useAuthorizedFetcher()
   const history = useHistory()
   const [cragName, setCragName] = useState('')
   const [publicVote, setPublicVote] = useState(true)
@@ -67,11 +67,11 @@ export default function VoteCragName() {
   const handleSubmit = () =>
     voteCragName(cragId).then((_) => navigateToCrag(cragId))
 
-  if (error) {
+  if (errorAuth || errorCrag) {
     return (
       <Container maxWidth="container.md">
         <Center>
-          <Text margin="20px">Failed to load auth token.</Text>
+          <Text margin="20px">Failed to load page.</Text>
         </Center>
       </Container>
     )

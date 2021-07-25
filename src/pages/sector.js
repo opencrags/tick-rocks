@@ -5,10 +5,14 @@ import {
   Link,
   Text,
   UnorderedList,
+  OrderedList,
   ListItem,
   Button,
   VStack,
   Box,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
 } from '@chakra-ui/react'
 import { Link as RouterLink, useParams } from 'react-router-dom'
 import Loader from '../components/loader.js'
@@ -57,15 +61,16 @@ export default function Sector() {
 
   return (
     <Container maxWidth="container.md">
-      <Heading size="lg">
-        <Link as={RouterLink} to={`/crags/${cragId}`}>
-          Crag: {crag.name_votes[0].value}
-        </Link>
-        <EditButton to={`/crags/${cragId}/vote-name`} />
-      </Heading>
+      <Breadcrumb>
+        <BreadcrumbItem>
+          <BreadcrumbLink as={RouterLink} to={`/crags/${cragId}`}>
+            {crag.name_votes[0].value}
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbItem><Text>{sector.name_votes[0].value}</Text></BreadcrumbItem>
+      </Breadcrumb>
 
       <Heading size="lg">
-        Sector:{' '}
         {sector.name_votes.length >= 1
           ? sector.name_votes[0].value
           : 'No name votes'}
@@ -73,28 +78,35 @@ export default function Sector() {
       </Heading>
       {sector.coordinate_votes.length >= 1 && (
         <Heading size="xs">
-          Coordinates: {sector.coordinate_votes[0].value.coordinates[1]},{' '}
-          {sector.coordinate_votes[0].value.coordinates[0]}
+          Position: {JSON.stringify(sector.coordinate_votes[0].value)}
         </Heading>
       )}
-      <Heading size="sm">Undrawn climbs</Heading>
-      <UnorderedList>
-        {climbs
-          .filter(
-            (climb) =>
-              climb.name_votes.length >= 1 && !climbIdsWithLines.has(climb.id)
-          )
-          .map((climb) => (
-            <ListItem key={climb.id}>
-              <Link
-                as={RouterLink}
-                to={`/crags/${cragId}/sectors/${sectorId}/climbs/${climb.id}`}
-              >
-                <Text>{climb.name_votes[0].value}</Text>
-              </Link>
-            </ListItem>
-          ))}
-      </UnorderedList>
+      {climbs.filter(
+        (climb) =>
+          climb.name_votes.length >= 1 && !climbIdsWithLines.has(climb.id)
+      ).length >= 1 && (
+        <>
+          <Heading size="sm">Undrawn climbs</Heading>
+          <UnorderedList>
+            {climbs
+              .filter(
+                (climb) =>
+                  climb.name_votes.length >= 1 &&
+                  !climbIdsWithLines.has(climb.id)
+              )
+              .map((climb) => (
+                <ListItem key={climb.id}>
+                  <Link
+                    as={RouterLink}
+                    to={`/crags/${cragId}/sectors/${sectorId}/climbs/${climb.id}`}
+                  >
+                    <Text>{climb.name_votes[0].value}</Text>
+                  </Link>
+                </ListItem>
+              ))}
+          </UnorderedList>
+        </>
+      )}
       <Link
         as={RouterLink}
         to={`/crags/${cragId}/sectors/${sectorId}/add-climb`}
@@ -110,7 +122,12 @@ export default function Sector() {
       <VStack>
         {images &&
           images.map((image) => (
-            <ImageWithLines key={image.id} crag={crag} sector={sector} image={image} />
+            <ImageWithLines
+              key={image.id}
+              crag={crag}
+              sector={sector}
+              image={image}
+            />
           ))}
       </VStack>
     </Container>
@@ -135,19 +152,19 @@ function ImageWithLines({ crag, sector, image }) {
   return (
     <Box padding="10px" border="1px" borderColor="gray.200" borderRadius="md">
       <LineImage image={image} lines={lines} />
-      <UnorderedList>
+      <OrderedList>
         {lines.map((line) => (
           <ListItem key={line.id}>
             <Climb crag={crag} sector={sector} line={line} />
           </ListItem>
         ))}
-      </UnorderedList>
+      </OrderedList>
       <Link
         as={RouterLink}
         to={`/crags/${crag.id}/sectors/${sector.id}/images/${image.id}/add-line`}
       >
         <Button>Add line</Button>
-      </Link>      
+      </Link>
     </Box>
   )
 }

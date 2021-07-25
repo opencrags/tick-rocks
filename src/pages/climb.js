@@ -2,10 +2,12 @@ import {
   Container,
   Center,
   Heading,
-  Link,
   Text,
   VStack,
   Box,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
 } from '@chakra-ui/react'
 import { Link as RouterLink, useParams } from 'react-router-dom'
 import Loader from '../components/loader.js'
@@ -44,29 +46,21 @@ export default function Climb() {
     return <Loader />
   }
 
-  // const linesSortedByImage = lines.reduce(
-  //   (sorted, line) =>
-  //     sorted[line.image_id]
-  //       ? {
-  //           ...sorted,
-  //           [line.image_id]: [...sorted[line.image_id], line],
-  //         }
-  //       : { ...sorted, [line.image_id]: [line] },
-  //   {}
-  // )
-
-  // const imagesWithLines = Object.entries(linesSortedByImage).map(
-  //   ([id, lines]) => ({ id, lines })
-  // )
-  console.log(lines);
   return (
     <Container maxWidth="container.md">
-      <Link as={RouterLink} to={`/crags/${cragId}`}>
-        <Heading size="sm">Crag: {crag.name_votes[0].value}</Heading>
-      </Link>
-      <Link as={RouterLink} to={`/crags/${cragId}/sectors/${sectorId}`}>
-        <Heading size="sm">Sector: {sector.name_votes[0].value}</Heading>
-      </Link>
+      <Breadcrumb>
+        <BreadcrumbItem>
+          <BreadcrumbLink as={RouterLink} to={`/crags/${cragId}`}>
+            {crag.name_votes[0].value}
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbItem>
+          <BreadcrumbLink as={RouterLink} to={`/crags/${cragId}/sectors/${sectorId}`}>
+          {sector.name_votes[0].value}
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbItem><Text>{climb.name_votes[0].value}</Text></BreadcrumbItem>
+      </Breadcrumb>
       <Heading size="md">{climb.name_votes[0].value}</Heading>
       <VStack>
         {lines.map((line) => (

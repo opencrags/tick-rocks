@@ -1,10 +1,13 @@
 import {
   Container,
   Center,
-  Heading,
   Link,
   Text,
   Button,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  Code,
 } from '@chakra-ui/react'
 import Loader from '../components/loader.js'
 import { Link as RouterLink, useParams } from 'react-router-dom'
@@ -41,19 +44,27 @@ export default function RockImage() {
 
   return (
     <Container maxWidth="container.md">
-      <Link as={RouterLink} to={`/crags/${cragId}`}>
-        <Heading size="md">Crag: {crag.name_votes[0].value}</Heading>
-      </Link>
-      <Link as={RouterLink} to={`/crags/${cragId}/sectors/${sectorId}`}>
-        <Heading size="md">Sector: {sector.name_votes[0].value}</Heading>
-      </Link>
-      <LineImage image={image} lines={lines} />
+      <Breadcrumb>
+        <BreadcrumbItem>
+          <BreadcrumbLink as={RouterLink} to={`/crags/${cragId}`}>
+            {crag.name_votes[0].value}
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbItem>
+          <BreadcrumbLink as={RouterLink} to={`/crags/${cragId}/sectors/${sectorId}`}>
+          {sector.name_votes[0].value}
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbItem><Code>image-id: {image.id}</Code></BreadcrumbItem>
+        
+      </Breadcrumb>
       <Link
         as={RouterLink}
         to={`/crags/${cragId}/sectors/${sectorId}/images/${imageId}/add-line`}
       >
         <Button>Add line</Button>
       </Link>
+      <LineImage image={image} lines={lines} />
     </Container>
   )
 }
