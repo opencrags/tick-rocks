@@ -4,17 +4,22 @@ import {
   Heading,
   Select,
   Text,
-  Input,
   FormControl,
   FormLabel,
   Button,
   useDisclosure,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  Code,
 } from '@chakra-ui/react'
 import { useCallback, useState } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
+import { useHistory, useParams, Link as RouterLink } from 'react-router-dom'
 import Loader from '../components/loader.js'
 import {
   useAuthorizedFetcher,
+  useCrag,
+  useSector,
   useClimbs,
   useImage,
   useLines,
@@ -27,6 +32,8 @@ export default function AddLine() {
   const { cragId, sectorId, imageId } = useParams()
   const history = useHistory()
   const { authorizedFetcher, error } = useAuthorizedFetcher()
+  const { crag, error: errorCrag } = useCrag(cragId)
+  const { sector, error: errorSector } = useSector(sectorId)
   const { climbs, error: errorClimbs } = useClimbs({ sector_id: sectorId }, 100)
   const [climbId, setClimbId] = useState('')
   const [linePath, setLinePath] = useState(null)
@@ -54,7 +61,7 @@ export default function AddLine() {
   )
 
   const { image, error: errorImage } = useImage(imageId)
-  if (errorImage || errorLines) {
+  if (errorImage || errorClimbs || errorLines) {
     return (
       <Container maxW="container.md">
         <Center>
@@ -107,6 +114,32 @@ export default function AddLine() {
 
   return (
     <Container maxWidth="container.md">
+      <Breadcrumb>
+        <BreadcrumbItem>
+          <BreadcrumbLink as={RouterLink} to={`/crags/${cragId}`}>
+            {crag.name_votes[0].value}
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbItem>
+          <BreadcrumbLink
+            as={RouterLink}
+            to={`/crags/${cragId}/sectors/${sectorId}`}
+          >
+            {sector.name_votes[0].value}
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbItem>
+          <BreadcrumbLink
+            as={RouterLink}
+            to={`/crags/${cragId}/sectors/${sectorId}/images/${imageId}`}
+          >
+            <Code>image-id: {imageId}</Code>
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbItem>
+          <Text>Add line</Text>
+        </BreadcrumbItem>
+      </Breadcrumb>
       <Heading>Add line</Heading>
       <FormControl isRequired>
         <FormLabel>Climb</FormLabel>

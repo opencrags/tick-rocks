@@ -85,19 +85,27 @@ const useAuthorizedFetcher = () => {
 const useBackend = (key, ...args) => {
   const { token, errorToken } = useToken()
   const { config, errorConfig } = useConfig()
-  return useSwr([key, token, JSON.stringify(args)], (key) =>
+  const { data, error } = useSwr([key, token, JSON.stringify(args)], (key) =>
     token
       ? authorizedFetcher(token, config, key, ...args)
       : fetcher(config, key, ...args)
   )
+  return {
+    data,
+    error: error || errorToken || errorConfig,
+  }
 }
 
 const useAuthorizedBackend = (key, ...args) => {
   const { token, errorToken } = useToken()
   const { config, errorConfig } = useConfig()
-  return useSwr(token && config ? key : null, (key) =>
+  const { data, error } = useSwr(token && config ? key : null, (key) =>
     authorizedFetcher(token, config, key, ...args)
   )
+  return {
+    data,
+    error: error || errorToken || errorConfig,
+  }
 }
 
 const useCrag = (cragId) => {

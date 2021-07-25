@@ -13,7 +13,7 @@ import {
   Text,
   StackDivider,
 } from '@chakra-ui/react'
-import { Link as RouterLink, useParams } from 'react-router-dom'
+import { Link as RouterLink } from 'react-router-dom'
 import Loader from '../components/loader.js'
 import { useCrags, useSectors, useClimbs } from '../utils/backend.js'
 
@@ -68,6 +68,12 @@ export default function Crags() {
 function Crag({ crag }) {
   const { sectors, error: errorSectors } = useSectors({ crag_id: crag.id })
   const { climbs, error: errorClimbs } = useClimbs({ crag_id: crag.id })
+
+  if (errorSectors || errorClimbs) {
+    return (
+      <Text margin="20px">Failed to load crag.</Text>
+    )
+  }
 
   return (
     <Box key={crag.id}>

@@ -25,7 +25,7 @@ export default function VoteSectorName() {
   const { cragId, sectorId } = useParams()
   const { sector, error: errorSector } = useSector(sectorId)
   const { user } = useAuth0()
-  const { authorizedFetcher, isLoading, error } = useAuthorizedFetcher()
+  const { authorizedFetcher, isLoading, error: authError } = useAuthorizedFetcher()
   const history = useHistory()
   const [sectorName, setSectorName] = useState('')
   const [publicVote, setPublicVote] = useState(true)
@@ -72,11 +72,11 @@ export default function VoteSectorName() {
   const handleSubmit = () =>
     voteSectorName(sectorId).then((_) => navigateToSector(sectorId))
 
-  if (error) {
+  if (authError || errorSector) {
     return (
       <Container maxWidth="container.md">
         <Center>
-          <Text margin="20px">Failed to load auth token.</Text>
+          <Text margin="20px">Failed to load page.</Text>
         </Center>
       </Container>
     )
