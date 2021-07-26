@@ -10,19 +10,30 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
+  Select,
 } from '@chakra-ui/react'
 import { useState } from 'react'
 import { useHistory, useParams, Link as RouterLink } from 'react-router-dom'
 import Loader from '../components/loader.js'
-import { useCrag, useSector, useAuthorizedFetcher } from '../utils/backend.js'
+import {
+  useCrag,
+  useSector,
+  useGradeSystemGrades,
+  useAuthorizedFetcher,
+} from '../utils/backend.js'
 
 export default function AddClimb() {
   const { cragId, sectorId } = useParams()
   const { crag, error: errorCrag } = useCrag(cragId)
   const { sector, error: errorSector } = useSector(sectorId)
+  const { gradeSystemGrades, error: errorGradeSystemGrades } =
+    useGradeSystemGrades()
+
   const history = useHistory()
-  const { authorizedFetcher, isLoading, error } = useAuthorizedFetcher()
+  const { authorizedFetcher, isLoading, authError } = useAuthorizedFetcher()
   const [climbName, setClimbName] = useState('')
+  const [gradeSystem, setGradeSystem] = useState(null)
+  const [grade, setGrade] = useState(null)
 
   const addClimb = () =>
     authorizedFetcher('/climbs', {
@@ -39,19 +50,32 @@ export default function AddClimb() {
       }),
     })
 
+  const voteGrade = (climbId) =>
+    grade
+      ? authorizedFetcher(`/climbs/${climbId}/grade_votes`, {
+          method: 'POST',
+          body: JSON.stringify({
+            value: grade,
+            public: true,
+          }),
+        })
+      : Promise.resolve()
+
   const navigateToAddedClimb = (climbId) =>
     history.replace(`/crags/${cragId}/sectors/${sectorId}/climbs/${climbId}`)
 
   const handleSubmit = () =>
     addClimb().then((climb) =>
-      voteClimbName(climb.id).then((_) => navigateToAddedClimb(climb.id))
+      Promise.all([voteGrade(climb.id), voteClimbName(climb.id)]).then(() =>
+        navigateToAddedClimb(climb.id)
+      )
     )
 
-  if (error || errorCrag || errorSector) {
+  if (authError || errorCrag || errorSector || errorGradeSystemGrades) {
     return (
       <Container maxWidth="container.md">
         <Center>
-          <Text margin="20px">Failed to load auth token.</Text>
+          <Text margin="20px">Failed to load page.</Text>
         </Center>
       </Container>
     )
@@ -67,9 +91,20 @@ export default function AddClimb() {
     )
   }
 
-  if ((!authorizedFetcher && isLoading) || crag === undefined || sector === undefined) {
+  if (
+    (!authorizedFetcher && isLoading) ||
+    crag === undefined ||
+    sector === undefined ||
+    gradeSystemGrades === undefined
+  ) {
     return <Loader />
   }
+
+  const systems = [
+    ...new Set(
+      gradeSystemGrades.map((gradeSystemGrade) => gradeSystemGrade.system)
+    ),
+  ]
 
   return (
     <Container maxWidth="container.md">
@@ -98,6 +133,40 @@ export default function AddClimb() {
           placeholder="Climb name"
           onChange={(event) => setClimbName(event.target.value)}
         />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Grade system</FormLabel>
+        <Select
+          onChange={(event) => {
+            setGradeSystem(event.target.value)
+            setGrade(null)
+          }}
+        >
+          <option value={null}></option>
+          {systems.map((system) => (
+            <option key={system} value={system}>
+              {system}
+            </option>
+          ))}
+        </Select>
+      </FormControl>
+      <FormControl>
+        <FormLabel>Grade</FormLabel>
+        <Select
+          placeholder=""
+          onChange={(event) => setGrade(event.target.value)}
+        >
+          <option value={null}></option>
+          {gradeSystemGrades
+            .filter(
+              (gradeSystemGrade) => gradeSystemGrade.system === gradeSystem
+            )
+            .map((gradeSystemGrade) => (
+              <option key={gradeSystemGrade.id} value={gradeSystemGrade.id}>
+                {gradeSystemGrade.grade}
+              </option>
+            ))}
+        </Select>
       </FormControl>
       <Button onClick={handleSubmit}>Submit</Button>
     </Container>

@@ -31,7 +31,7 @@ import { drawBeizerSplines } from '../utils/splines.js'
 export default function AddLine() {
   const { cragId, sectorId, imageId } = useParams()
   const history = useHistory()
-  const { authorizedFetcher, error } = useAuthorizedFetcher()
+  const { authorizedFetcher, authError } = useAuthorizedFetcher()
   const { crag, error: errorCrag } = useCrag(cragId)
   const { sector, error: errorSector } = useSector(sectorId)
   const { climbs, error: errorClimbs } = useClimbs({ sector_id: sectorId }, 100)
@@ -61,7 +61,7 @@ export default function AddLine() {
   )
 
   const { image, error: errorImage } = useImage(imageId)
-  if (errorImage || errorClimbs || errorLines) {
+  if (errorCrag || errorSector || errorImage || errorClimbs || errorLines) {
     return (
       <Container maxW="container.md">
         <Center>
@@ -98,7 +98,7 @@ export default function AddLine() {
       voteLinePath(line.id).then(() => navigateToAddedLine(line.id))
     )
 
-  if (error) {
+  if (authError) {
     return (
       <Container maxWidth="container.md">
         <Center>

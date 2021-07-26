@@ -139,6 +139,13 @@ const useLine = (lineId) => {
   return { line, error }
 }
 
+const useGradeSystemGrade = (gradeSystemGradeId) => {
+  const { data: grade, error } = useBackend(
+    gradeSystemGradeId ? `/grade-system-grades/${gradeSystemGradeId}` : null
+  )
+  return { grade, error }
+}
+
 const useQuery = (collection, query, limit, offset) =>
   useBackend(
     collection && query
@@ -175,20 +182,29 @@ const useLines = (query, limit = 20, offset = 0) => {
   return { lines, error }
 }
 
+const useGradeSystemGrades = () => {
+  const { data: gradeSystemGrades, error } = useBackend('/grade-system-grades')
+  return { gradeSystemGrades, error }
+}
+
 const countVotes = (votes) => {
   const countedVotes = Object.entries(
     votes.reduce((count, vote) => {
-      if (vote.value in count) {
-        count[vote.value] += 1
+      const stringified = JSON.stringify(vote.value)
+      if (stringified in count) {
+        count[stringified] += 1
       } else {
-        count[vote.value] = 1
+        count[stringified] = 1
       }
       return count
     }, {})
-  ).map(([value, votes]) => ({ value: value, count: votes }))
+  ).map(([value, votes]) => ({ value: JSON.parse(value), count: votes }))
   countedVotes.sort((countA, countB) => (countA.count > countB.count ? 1 : -1))
   return countedVotes
 }
+
+const mostVoted = (votes) =>
+  votes.length === 0 ? null : countVotes(votes)[0].value
 
 export {
   useToken,
@@ -205,10 +221,13 @@ export {
   useClimb,
   useImage,
   useLine,
+  useGradeSystemGrade,
   useCrags,
   useSectors,
   useClimbs,
   useImages,
   useLines,
+  useGradeSystemGrades,
   countVotes,
+  mostVoted,
 }

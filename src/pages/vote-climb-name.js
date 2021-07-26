@@ -21,22 +21,24 @@ import { useAuth0 } from '@auth0/auth0-react'
 import {
   useCrag,
   useSector,
+  useClimb,
   useAuthorizedFetcher,
   countVotes,
 } from '../utils/backend.js'
 
-export default function VoteSectorName() {
-  const { cragId, sectorId } = useParams()
+export default function VoteClimbName() {
+  const { cragId, sectorId, climbId } = useParams()
   const { crag, error: errorCrag } = useCrag(cragId)
   const { sector, error: errorSector } = useSector(sectorId)
+  const { climb, error: errorClimb } = useClimb(climbId)
   const { user } = useAuth0()
   const { authorizedFetcher, isLoading, error: authError } = useAuthorizedFetcher()
   const history = useHistory()
-  const [sectorName, setSectorName] = useState('')
+  const [climbName, setClimbName] = useState('')
   const [publicVote, setPublicVote] = useState(true)
 
   const userVote = useCallback(() => {
-    const userVotes = sector.name_votes.filter(
+    const userVotes = climb.name_votes.filter(
       (name_vote) => name_vote.user_id === user.sub
     )
     if (userVotes.length === 1) {
@@ -44,40 +46,40 @@ export default function VoteSectorName() {
     } else {
       return null
     }
-  }, [sector?.name_votes, user?.sub])
+  }, [climb?.name_votes, user?.sub])
 
   useEffect(() => {
-    if (sector !== undefined && user && sectorName === '' && userVote()) {
+    if (climb !== undefined && user && climbName === '' && userVote()) {
       const userVote_ = userVote()
-      setSectorName(userVote_.value)
+      setClimbName(userVote_.value)
       setPublicVote(userVote_.public)
     }
-  }, [sector, user, sectorName, userVote])
+  }, [climb, user, climbName, userVote])
 
-  const voteSectorName = (sectorId) =>
+  const voteClimbName = (climbId) =>
     userVote()
-      ? authorizedFetcher(`/sectors/${sectorId}/name_votes/${userVote().id}`, {
+      ? authorizedFetcher(`/climbs/${climbId}/name_votes/${userVote().id}`, {
           method: 'PUT',
           body: JSON.stringify({
-            value: sectorName,
+            value: climbName,
             public: publicVote,
           }),
         })
-      : authorizedFetcher(`/sectors/${sectorId}/name_votes`, {
+      : authorizedFetcher(`/climbs/${climbId}/name_votes`, {
           method: 'POST',
           body: JSON.stringify({
-            value: sectorName,
+            value: climbName,
             public: publicVote,
           }),
         })
 
-  const navigateToSector = (sectorId) =>
-    history.replace(`/crags/${cragId}/sectors/${sectorId}`)
+  const navigateToClimb = (climbId) =>
+    history.replace(`/crags/${cragId}/climbs/${climbId}`)
 
   const handleSubmit = () =>
-    voteSectorName(sectorId).then((_) => navigateToSector(sectorId))
+    voteClimbName(climbId).then((_) => navigateToClimb(climbId))
 
-  if (authError || errorCrag || errorSector) {
+  if (authError || errorCrag || errorSector || errorClimb) {
     return (
       <Container maxWidth="container.md">
         <Center>
@@ -97,11 +99,11 @@ export default function VoteSectorName() {
     )
   }
 
-  if (!sector) {
+  if (!climb) {
     return <Loader />
   }
 
-  const countedVotes = countVotes(sector.name_votes)
+  const countedVotes = countVotes(climb.name_votes)
   const maxVoteCount = Math.max(Object.values(countedVotes))
 
   return (
@@ -121,10 +123,18 @@ export default function VoteSectorName() {
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem>
-          <Text>Vote for sector name</Text>
+          <BreadcrumbLink
+            as={RouterLink}
+            to={`/crags/${cragId}/sectors/${sectorId}/climbs/${climbId}`}
+          >
+            {climb.name_votes[0].value}
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbItem>
+          <Text>Vote for climb name</Text>
         </BreadcrumbItem>
       </Breadcrumb>
-      <Heading>Vote for sector name</Heading>
+      <Heading>Vote for climb name</Heading>
       <Box
         border="1px"
         borderColor="gray.300"
@@ -144,11 +154,11 @@ export default function VoteSectorName() {
       </Box>
       <Heading size="sm">Your vote</Heading>
       <FormControl isRequired>
-        <FormLabel>Sector name</FormLabel>
+        <FormLabel>Climb name</FormLabel>
         <Input
-          placeholder="Sector name"
-          value={sectorName}
-          onChange={(event) => setSectorName(event.target.value)}
+          placeholder="Climb name"
+          value={climbName}
+          onChange={(event) => setClimbName(event.target.value)}
         />
       </FormControl>
       <FormControl>

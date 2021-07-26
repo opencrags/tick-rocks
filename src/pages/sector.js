@@ -9,6 +9,7 @@ import {
   ListItem,
   Button,
   VStack,
+  HStack,
   Box,
   Breadcrumb,
   BreadcrumbItem,
@@ -17,6 +18,7 @@ import {
 import { Link as RouterLink, useParams } from 'react-router-dom'
 import Loader from '../components/loader.js'
 import EditButton from '../components/edit-button.js'
+import Grade from '../components/grade.js'
 import LineImage from '../components/line-image.js'
 import {
   useCrag,
@@ -25,6 +27,7 @@ import {
   useClimbs,
   useImages,
   useLines,
+  mostVoted,
 } from '../utils/backend.js'
 
 export default function Sector() {
@@ -64,15 +67,17 @@ export default function Sector() {
       <Breadcrumb>
         <BreadcrumbItem>
           <BreadcrumbLink as={RouterLink} to={`/crags/${cragId}`}>
-            {crag.name_votes[0].value}
+            {mostVoted(crag.name_votes)}
           </BreadcrumbLink>
         </BreadcrumbItem>
-        <BreadcrumbItem><Text>{sector.name_votes[0].value}</Text></BreadcrumbItem>
+        <BreadcrumbItem>
+          <Text>{mostVoted(sector.name_votes)}</Text>
+        </BreadcrumbItem>
       </Breadcrumb>
 
       <Heading size="lg">
         {sector.name_votes.length >= 1
-          ? sector.name_votes[0].value
+          ? mostVoted(sector.name_votes)
           : 'No name votes'}
         <EditButton to={`/crags/${cragId}/sectors/${sectorId}/vote-name`} />
       </Heading>
@@ -100,7 +105,12 @@ export default function Sector() {
                     as={RouterLink}
                     to={`/crags/${cragId}/sectors/${sectorId}/climbs/${climb.id}`}
                   >
-                    <Text>{climb.name_votes[0].value}</Text>
+                    <HStack>
+                      <Text>{mostVoted(climb.name_votes)}</Text>
+                      {climb.grade_votes.length >= 1 && (
+                        <Grade gradeId={mostVoted(climb.grade_votes)} />
+                      )}
+                    </HStack>
                   </Link>
                 </ListItem>
               ))}
@@ -185,7 +195,12 @@ function Climb({ crag, sector, line }) {
       as={RouterLink}
       to={`/crags/${crag.id}/sectors/${sector.id}/climbs/${climb.id}`}
     >
-      <Text>{climb.name_votes[0].value}</Text>
+      <HStack>
+        <Text>{climb.name_votes[0].value}</Text>
+        {climb.grade_votes.length >= 1 && (
+          <Grade gradeId={mostVoted(climb.grade_votes)} />
+        )}
+      </HStack>
     </Link>
   )
 }

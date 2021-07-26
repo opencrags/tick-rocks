@@ -4,19 +4,24 @@ import {
   Heading,
   Text,
   VStack,
+  HStack,
   Box,
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
+  Progress,
 } from '@chakra-ui/react'
 import { Link as RouterLink, useParams } from 'react-router-dom'
 import Loader from '../components/loader.js'
+import EditButton from '../components/edit-button.js'
+import Grade from '../components/grade.js'
 import {
   useCrag,
   useSector,
   useClimb,
   useLines,
   useImage,
+  countVotes,
 } from '../utils/backend.js'
 import LineImage from '../components/line-image.js'
 
@@ -46,6 +51,9 @@ export default function Climb() {
     return <Loader />
   }
 
+  const countedGradeVotes = countVotes(climb.grade_votes)
+  const maxGradeVoteCount = Math.max(Object.values(countedGradeVotes))
+
   return (
     <Container maxWidth="container.md">
       <Breadcrumb>
@@ -55,13 +63,33 @@ export default function Climb() {
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem>
-          <BreadcrumbLink as={RouterLink} to={`/crags/${cragId}/sectors/${sectorId}`}>
-          {sector.name_votes[0].value}
+          <BreadcrumbLink
+            as={RouterLink}
+            to={`/crags/${cragId}/sectors/${sectorId}`}
+          >
+            {sector.name_votes[0].value}
           </BreadcrumbLink>
         </BreadcrumbItem>
-        <BreadcrumbItem><Text>{climb.name_votes[0].value}</Text></BreadcrumbItem>
+        <BreadcrumbItem>
+          <Text>{climb.name_votes[0].value}</Text>
+        </BreadcrumbItem>
       </Breadcrumb>
-      <Heading size="md">{climb.name_votes[0].value}</Heading>
+      <Heading size="lg">
+        {climb.name_votes[0].value}
+        <EditButton
+          to={`/crags/${cragId}/sectors/${sectorId}/climbs/${climbId}/vote-name`}
+        />
+      </Heading>
+      <Heading size="sm">Grade votes</Heading>
+      {countedGradeVotes.map((vote) => (
+        <Box key={vote.value}>
+          <HStack>
+            <Grade gradeId={vote.value} />
+            <Text>({vote.count} votes)</Text>
+          </HStack>
+          <Progress value={vote.count / maxGradeVoteCount} />
+        </Box>
+      ))}
       <VStack>
         {lines.map((line) => (
           <ImageWithLines

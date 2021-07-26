@@ -10,9 +10,12 @@ import {
   Box,
   Progress,
   Checkbox,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
 } from '@chakra-ui/react'
 import { useState, useEffect, useCallback } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
+import { useHistory, useParams, Link as RouterLink } from 'react-router-dom'
 import Loader from '../components/loader.js'
 import { useAuth0 } from '@auth0/auth0-react'
 import { useCrag, useAuthorizedFetcher, countVotes } from '../utils/backend.js'
@@ -96,6 +99,16 @@ export default function VoteCragName() {
 
   return (
     <Container maxWidth="container.md">
+      <Breadcrumb>
+        <BreadcrumbItem>
+          <BreadcrumbLink as={RouterLink} to={`/crags/${cragId}`}>
+            {crag.name_votes[0].value}
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbItem>
+          <Text>Vote for crag name</Text>
+        </BreadcrumbItem>
+      </Breadcrumb>
       <Heading>Vote for crag name</Heading>
       <Box
         border="1px"
