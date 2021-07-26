@@ -11,7 +11,13 @@ import {
 } from '@chakra-ui/react'
 import Loader from '../components/loader.js'
 import { Link as RouterLink, useParams } from 'react-router-dom'
-import { useCrag, useSector, useImage, useLines } from '../utils/backend.js'
+import {
+  useCrag,
+  useSector,
+  useImage,
+  useLines,
+  mostVoted,
+} from '../utils/backend.js'
 import LineImage from '../components/line-image.js'
 
 export default function RockImage() {
@@ -47,16 +53,20 @@ export default function RockImage() {
       <Breadcrumb>
         <BreadcrumbItem>
           <BreadcrumbLink as={RouterLink} to={`/crags/${cragId}`}>
-            {crag.name_votes[0].value}
+            {mostVoted(crag.name_votes)}
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem>
-          <BreadcrumbLink as={RouterLink} to={`/crags/${cragId}/sectors/${sectorId}`}>
-          {sector.name_votes[0].value}
+          <BreadcrumbLink
+            as={RouterLink}
+            to={`/crags/${cragId}/sectors/${sectorId}`}
+          >
+            {mostVoted(sector.name_votes)}
           </BreadcrumbLink>
         </BreadcrumbItem>
-        <BreadcrumbItem><Code>image-id: {image.id}</Code></BreadcrumbItem>
-        
+        <BreadcrumbItem>
+          <Code>image-id: {image.id}</Code>
+        </BreadcrumbItem>
       </Breadcrumb>
       <Link
         as={RouterLink}

@@ -20,6 +20,7 @@ import {
   useSector,
   useGradeSystemGrades,
   useAuthorizedFetcher,
+  mostVoted,
 } from '../utils/backend.js'
 
 export default function AddClimb() {
@@ -111,7 +112,7 @@ export default function AddClimb() {
       <Breadcrumb>
         <BreadcrumbItem>
           <BreadcrumbLink as={RouterLink} to={`/crags/${cragId}`}>
-            {crag.name_votes[0].value}
+            {mostVoted(crag.name_votes)}
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem>
@@ -119,7 +120,7 @@ export default function AddClimb() {
             as={RouterLink}
             to={`/crags/${cragId}/sectors/${sectorId}`}
           >
-            {sector.name_votes[0].value}
+            {mostVoted(sector.name_votes)}
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem>

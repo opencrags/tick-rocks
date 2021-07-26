@@ -4,6 +4,8 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import useWindowSize from '../hooks/useWindowSize'
 import { drawBeizerSplines, validateLine } from '../utils/splines'
 
+import { mostVoted } from '../utils/backend'
+
 export default function LineImage({ image, lines, draw, ...props }) {
   const [imageLoaded, setImageLoaded] = useState(false)
   const canvasRef = useRef()
@@ -18,7 +20,7 @@ export default function LineImage({ image, lines, draw, ...props }) {
 
   const parsedLines = lines.flatMap((line) => {
     try {
-      const parsedLine = line.line_path_votes[0].value
+      const parsedLine = mostVoted(line.line_path_votes)
       if (validateLine(parsedLine)) {
         return [parsedLine]
       } else {

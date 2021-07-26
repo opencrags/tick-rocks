@@ -11,7 +11,7 @@ import {
 import { Link as RouterLink, useParams } from 'react-router-dom'
 import Loader from '../components/loader.js'
 import EditButton from '../components/edit-button.js'
-import { useCrag, useSectors } from '../utils/backend.js'
+import { useCrag, useSectors, mostVoted } from '../utils/backend.js'
 
 export default function Crag() {
   const { cragId } = useParams()
@@ -35,7 +35,7 @@ export default function Crag() {
   return (
     <Container maxWidth="container.md">
       <Heading size="xl" marginTop="20px">
-        {crag.name_votes[0].value}
+        {mostVoted(crag.name_votes)}
         <EditButton to={`/crags/${crag.id}/vote-name`} />
       </Heading>
       <Heading size="sm">Sectors</Heading>
@@ -48,7 +48,7 @@ export default function Crag() {
                 as={RouterLink}
                 to={`/crags/${crag.id}/sectors/${sector.id}`}
               >
-                <Text>{sector.name_votes[0].value}</Text>
+                <Text>{mostVoted(sector.name_votes)}</Text>
               </Link>
             </ListItem>
           ))}

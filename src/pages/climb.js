@@ -22,6 +22,7 @@ import {
   useLines,
   useImage,
   countVotes,
+  mostVoted,
 } from '../utils/backend.js'
 import LineImage from '../components/line-image.js'
 
@@ -59,7 +60,7 @@ export default function Climb() {
       <Breadcrumb>
         <BreadcrumbItem>
           <BreadcrumbLink as={RouterLink} to={`/crags/${cragId}`}>
-            {crag.name_votes[0].value}
+            {mostVoted(crag.name_votes)}
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem>
@@ -67,15 +68,15 @@ export default function Climb() {
             as={RouterLink}
             to={`/crags/${cragId}/sectors/${sectorId}`}
           >
-            {sector.name_votes[0].value}
+            {mostVoted(sector.name_votes)}
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem>
-          <Text>{climb.name_votes[0].value}</Text>
+          <Text>{mostVoted(climb.name_votes)}</Text>
         </BreadcrumbItem>
       </Breadcrumb>
       <Heading size="lg">
-        {climb.name_votes[0].value}
+        {mostVoted(climb.name_votes)}
         <EditButton
           to={`/crags/${cragId}/sectors/${sectorId}/climbs/${climbId}/vote-name`}
         />
@@ -122,7 +123,7 @@ function ImageWithLines({ crag, sector, climb, line }) {
   }
 
   return (
-    <Box>
+    <Box marginTop="20px">
       <LineImage image={image} lines={[line]} />
     </Box>
   )

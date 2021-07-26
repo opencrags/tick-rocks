@@ -1,4 +1,12 @@
-import { Container, Center, Heading, Link, Text } from '@chakra-ui/react'
+import {
+  Container,
+  Center,
+  Text,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  Code,
+} from '@chakra-ui/react'
 import { Link as RouterLink, useParams } from 'react-router-dom'
 import Loader from '../components/loader.js'
 import {
@@ -7,6 +15,7 @@ import {
   useLine,
   useClimb,
   useImage,
+  mostVoted,
 } from '../utils/backend.js'
 import LineImage from '../components/line-image.js'
 
@@ -40,24 +49,32 @@ export default function Line() {
 
   return (
     <Container maxWidth="container.md">
-      <Link as={RouterLink} to={`/crags/${cragId}`}>
-        <Heading size="sm">Crag: {crag.name_votes[0].value}</Heading>
-      </Link>
-      <Link as={RouterLink} to={`/crags/${cragId}/sectors/${sectorId}`}>
-        <Heading size="sm">Sector: {sector.name_votes[0].value}</Heading>
-      </Link>
-      <Link
-        as={RouterLink}
-        to={`/crags/${cragId}/sectors/${sectorId}/climbs/${climb.id}`}
-      >
-        <Heading size="sm">Climb: {climb.name_votes[0].value}</Heading>
-      </Link>
-      <Link
-        as={RouterLink}
-        to={`/crags/${cragId}/sectors/${sectorId}/images/${image.id}`}
-      >
-        <Heading size="sm">Image: {image.id}</Heading>
-      </Link>
+      <Breadcrumb>
+        <BreadcrumbItem>
+          <BreadcrumbLink as={RouterLink} to={`/crags/${cragId}`}>
+            {mostVoted(crag.name_votes)}
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbItem>
+          <BreadcrumbLink
+            as={RouterLink}
+            to={`/crags/${cragId}/sectors/${sectorId}`}
+          >
+            {mostVoted(sector.name_votes)}
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbItem>
+          <BreadcrumbLink
+            as={RouterLink}
+            to={`/crags/${cragId}/sectors/${sectorId}/images/${image.id}`}
+          >
+            <Code>image-id: {image.id}</Code>
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbItem>
+          <Code>line-id: {line.id}</Code>
+        </BreadcrumbItem>
+      </Breadcrumb>
       <LineImage image={image} lines={line} />
     </Container>
   )

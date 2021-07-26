@@ -11,7 +11,12 @@ import {
 import Dropzone from 'react-dropzone'
 import { useHistory, useParams, Link as RouterLink } from 'react-router-dom'
 import Loader from '../components/loader.js'
-import { useCrag, useSector, useAuthorizedFetcher } from '../utils/backend.js'
+import {
+  useCrag,
+  useSector,
+  useAuthorizedFetcher,
+  mostVoted,
+} from '../utils/backend.js'
 
 export default function AddImage() {
   const { cragId, sectorId } = useParams()
@@ -88,7 +93,7 @@ export default function AddImage() {
       <Breadcrumb>
         <BreadcrumbItem>
           <BreadcrumbLink as={RouterLink} to={`/crags/${cragId}`}>
-            {crag.name_votes[0].value}
+            {mostVoted(crag.name_votes)}
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem>
@@ -96,7 +101,7 @@ export default function AddImage() {
             as={RouterLink}
             to={`/crags/${cragId}/sectors/${sectorId}`}
           >
-            {sector.name_votes[0].value}
+            {mostVoted(sector.name_votes)}
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem>

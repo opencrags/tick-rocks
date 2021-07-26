@@ -18,13 +18,22 @@ import { useState, useEffect, useCallback } from 'react'
 import { useHistory, useParams, Link as RouterLink } from 'react-router-dom'
 import Loader from '../components/loader.js'
 import { useAuth0 } from '@auth0/auth0-react'
-import { useCrag, useAuthorizedFetcher, countVotes } from '../utils/backend.js'
+import {
+  useCrag,
+  useAuthorizedFetcher,
+  countVotes,
+  mostVoted,
+} from '../utils/backend.js'
 
 export default function VoteCragName() {
   const { cragId } = useParams()
   const { crag, error: errorCrag } = useCrag(cragId)
   const { user } = useAuth0()
-  const { authorizedFetcher, isLoading, error: errorAuth } = useAuthorizedFetcher()
+  const {
+    authorizedFetcher,
+    isLoading,
+    error: errorAuth,
+  } = useAuthorizedFetcher()
   const history = useHistory()
   const [cragName, setCragName] = useState('')
   const [publicVote, setPublicVote] = useState(true)
@@ -102,7 +111,7 @@ export default function VoteCragName() {
       <Breadcrumb>
         <BreadcrumbItem>
           <BreadcrumbLink as={RouterLink} to={`/crags/${cragId}`}>
-            {crag.name_votes[0].value}
+            {mostVoted(crag.name_votes)}
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem>

@@ -83,7 +83,7 @@ export default function Sector() {
       </Heading>
       {sector.coordinate_votes.length >= 1 && (
         <Heading size="xs">
-          Position: {JSON.stringify(sector.coordinate_votes[0].value)}
+          Position: {JSON.stringify(mostVoted(sector.coordinate_votes))}
         </Heading>
       )}
       {climbs.filter(
@@ -196,7 +196,7 @@ function Climb({ crag, sector, line }) {
       to={`/crags/${crag.id}/sectors/${sector.id}/climbs/${climb.id}`}
     >
       <HStack>
-        <Text>{climb.name_votes[0].value}</Text>
+        <Text>{mostVoted(climb.name_votes)}</Text>
         {climb.grade_votes.length >= 1 && (
           <Grade gradeId={mostVoted(climb.grade_votes)} />
         )}

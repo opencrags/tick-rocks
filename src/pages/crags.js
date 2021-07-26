@@ -15,7 +15,7 @@ import {
 } from '@chakra-ui/react'
 import { Link as RouterLink } from 'react-router-dom'
 import Loader from '../components/loader.js'
-import { useCrags, useSectors, useClimbs } from '../utils/backend.js'
+import { useCrags, useSectors, useClimbs, mostVoted } from '../utils/backend.js'
 
 export default function Crags() {
   const { crags, error } = useCrags({})
@@ -70,9 +70,7 @@ function Crag({ crag }) {
   const { climbs, error: errorClimbs } = useClimbs({ crag_id: crag.id })
 
   if (errorSectors || errorClimbs) {
-    return (
-      <Text margin="20px">Failed to load crag.</Text>
-    )
+    return <Text margin="20px">Failed to load crag.</Text>
   }
 
   return (
@@ -80,7 +78,7 @@ function Crag({ crag }) {
       <VStack alignItems="left">
         <Box>
           <Link as={RouterLink} to={`/crags/${crag.id}`}>
-            <Heading size="md">{crag.name_votes[0].value}</Heading>
+            <Heading size="md">{mostVoted(crag.name_votes)}</Heading>
           </Link>
           <Skeleton isLoaded={sectors && climbs}>
             <HStack>

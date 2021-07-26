@@ -23,6 +23,7 @@ import {
   useClimbs,
   useImage,
   useLines,
+  mostVoted,
 } from '../utils/backend.js'
 import LineDrawerModal from '../components/line-drawer-modal.js'
 import LineImage from '../components/line-image.js'
@@ -117,7 +118,7 @@ export default function AddLine() {
       <Breadcrumb>
         <BreadcrumbItem>
           <BreadcrumbLink as={RouterLink} to={`/crags/${cragId}`}>
-            {crag.name_votes[0].value}
+            {mostVoted(crag.name_votes)}
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem>
@@ -125,7 +126,7 @@ export default function AddLine() {
             as={RouterLink}
             to={`/crags/${cragId}/sectors/${sectorId}`}
           >
-            {sector.name_votes[0].value}
+            {mostVoted(sector.name_votes)}
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem>
@@ -149,7 +150,7 @@ export default function AddLine() {
         >
           {climbs.map((climb) => (
             <option key={climb.id} value={climb.id}>
-              {climb.name_votes[0].value}
+              {mostVoted(climb.name_votes)}
             </option>
           ))}
         </Select>

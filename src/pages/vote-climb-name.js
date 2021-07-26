@@ -24,6 +24,7 @@ import {
   useClimb,
   useAuthorizedFetcher,
   countVotes,
+  mostVoted,
 } from '../utils/backend.js'
 
 export default function VoteClimbName() {
@@ -32,7 +33,11 @@ export default function VoteClimbName() {
   const { sector, error: errorSector } = useSector(sectorId)
   const { climb, error: errorClimb } = useClimb(climbId)
   const { user } = useAuth0()
-  const { authorizedFetcher, isLoading, error: authError } = useAuthorizedFetcher()
+  const {
+    authorizedFetcher,
+    isLoading,
+    error: authError,
+  } = useAuthorizedFetcher()
   const history = useHistory()
   const [climbName, setClimbName] = useState('')
   const [publicVote, setPublicVote] = useState(true)
@@ -111,7 +116,7 @@ export default function VoteClimbName() {
       <Breadcrumb>
         <BreadcrumbItem>
           <BreadcrumbLink as={RouterLink} to={`/crags/${cragId}`}>
-            {crag.name_votes[0].value}
+            {mostVoted(crag.name_votes)}
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem>
@@ -119,7 +124,7 @@ export default function VoteClimbName() {
             as={RouterLink}
             to={`/crags/${cragId}/sectors/${sectorId}`}
           >
-            {sector.name_votes[0].value}
+            {mostVoted(sector.name_votes)}
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem>
@@ -127,7 +132,7 @@ export default function VoteClimbName() {
             as={RouterLink}
             to={`/crags/${cragId}/sectors/${sectorId}/climbs/${climbId}`}
           >
-            {climb.name_votes[0].value}
+            {mostVoted(climb.name_votes)}
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem>

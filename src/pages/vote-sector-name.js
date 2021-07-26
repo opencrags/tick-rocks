@@ -23,6 +23,7 @@ import {
   useSector,
   useAuthorizedFetcher,
   countVotes,
+  mostVoted,
 } from '../utils/backend.js'
 
 export default function VoteSectorName() {
@@ -30,7 +31,11 @@ export default function VoteSectorName() {
   const { crag, error: errorCrag } = useCrag(cragId)
   const { sector, error: errorSector } = useSector(sectorId)
   const { user } = useAuth0()
-  const { authorizedFetcher, isLoading, error: authError } = useAuthorizedFetcher()
+  const {
+    authorizedFetcher,
+    isLoading,
+    error: authError,
+  } = useAuthorizedFetcher()
   const history = useHistory()
   const [sectorName, setSectorName] = useState('')
   const [publicVote, setPublicVote] = useState(true)
@@ -109,7 +114,7 @@ export default function VoteSectorName() {
       <Breadcrumb>
         <BreadcrumbItem>
           <BreadcrumbLink as={RouterLink} to={`/crags/${cragId}`}>
-            {crag.name_votes[0].value}
+            {mostVoted(crag.name_votes)}
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem>
@@ -117,7 +122,7 @@ export default function VoteSectorName() {
             as={RouterLink}
             to={`/crags/${cragId}/sectors/${sectorId}`}
           >
-            {sector.name_votes[0].value}
+            {mostVoted(sector.name_votes)}
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem>
