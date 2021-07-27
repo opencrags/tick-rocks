@@ -79,10 +79,10 @@ export default function VoteClimbName() {
         })
 
   const navigateToClimb = (climbId) =>
-    history.replace(`/crags/${cragId}/climbs/${climbId}`)
+    history.replace(`/crags/${cragId}/sectors/${sectorId}/climbs/${climbId}`)
 
   const handleSubmit = () =>
-    voteClimbName(climbId).then((_) => navigateToClimb(climbId))
+    voteClimbName(climbId).then(() => navigateToClimb(climbId))
 
   if (authError || errorCrag || errorSector || errorClimb) {
     return (

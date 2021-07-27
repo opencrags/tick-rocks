@@ -14,9 +14,10 @@ import AddSector from './pages/add-sector.js'
 import AddClimb from './pages/add-climb.js'
 import AddImage from './pages/add-image.js'
 import AddLine from './pages/add-line.js'
-import VoteCragName from './pages/vote-crag-name'
-import VoteSectorName from './pages/vote-sector-name'
-import VoteClimbName from './pages/vote-climb-name'
+import VoteCragName from './pages/vote-crag-name.js'
+import VoteSectorName from './pages/vote-sector-name.js'
+import VoteClimbName from './pages/vote-climb-name.js'
+import VoteClimbGrade from './pages/vote-climb-grade.js'
 
 function App() {
   return (
@@ -50,8 +51,17 @@ function App() {
         <Route exact path="/crags/:cragId?/sectors/:sectorId?/climbs/:climbId?">
           <Climb />
         </Route>
-        <Route exact path="/crags/:cragId?/sectors/:sectorId?/climbs/:climbId?/vote-name">
+        <Route
+          exact
+          path="/crags/:cragId?/sectors/:sectorId?/climbs/:climbId?/vote-name"
+        >
           <VoteClimbName />
+        </Route>
+        <Route
+          exact
+          path="/crags/:cragId?/sectors/:sectorId?/climbs/:climbId?/vote-grade"
+        >
+          <VoteClimbGrade />
         </Route>
         <Route exact path="/crags/:cragId?/sectors/:sectorId?/add-image">
           <AddImage />

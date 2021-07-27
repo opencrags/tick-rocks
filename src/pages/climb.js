@@ -10,6 +10,8 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   Progress,
+  Link,
+  Button,
 } from '@chakra-ui/react'
 import { Link as RouterLink, useParams } from 'react-router-dom'
 import Loader from '../components/loader.js'
@@ -82,15 +84,25 @@ export default function Climb() {
         />
       </Heading>
       <Heading size="sm">Grade votes</Heading>
-      {countedGradeVotes.map((vote) => (
-        <Box key={vote.value}>
-          <HStack>
-            <Grade gradeId={vote.value} />
-            <Text>({vote.count} votes)</Text>
-          </HStack>
-          <Progress value={vote.count / maxGradeVoteCount} />
-        </Box>
-      ))}
+      {countedGradeVotes.length === 0 ? (
+        <Text>There are no grade votes.</Text>
+      ) : (
+        countedGradeVotes.map((vote) => (
+          <Box key={vote.value}>
+            <HStack>
+              <Grade gradeId={vote.value} />
+              <Text>({vote.count} votes)</Text>
+            </HStack>
+            <Progress value={vote.count / maxGradeVoteCount} />
+          </Box>
+        ))
+      )}
+      <Link
+        as={RouterLink}
+        to={`/crags/${cragId}/sectors/${sectorId}/climbs/${climbId}/vote-grade`}
+      >
+        <Button>Add grade vote</Button>
+      </Link>
       <VStack>
         {lines.map((line) => (
           <ImageWithLines

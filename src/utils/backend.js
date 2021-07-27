@@ -85,10 +85,12 @@ const useAuthorizedFetcher = () => {
 const useBackend = (key, ...args) => {
   const { token, errorToken } = useToken()
   const { config, errorConfig } = useConfig()
-  const { data, error } = useSwr([key, token, JSON.stringify(args)], (key) =>
-    token
-      ? authorizedFetcher(token, config, key, ...args)
-      : fetcher(config, key, ...args)
+  const { data, error } = useSwr(
+    key ? [key, token, JSON.stringify(args)] : null,
+    (key) =>
+      token
+        ? authorizedFetcher(token, config, key, ...args)
+        : fetcher(config, key, ...args)
   )
   return {
     data,
@@ -204,7 +206,7 @@ const countVotes = (votes) => {
 }
 
 const mostVoted = (votes) =>
-  votes.length === 0 ? null : countVotes(votes)[0].value
+  !votes || votes.length === 0 ? null : countVotes(votes)[0].value
 
 export {
   useToken,
