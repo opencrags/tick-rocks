@@ -1,29 +1,28 @@
 import { useCallback } from 'react'
-import { drawBeizerSplines } from '../utils/splines'
-import LineImage from './line-image'
+import { mostVoted } from '../utils/backend'
+import {
+  drawBeizerSplines,
+  drawMarkers,
+  drawPathPoints,
+  LINE_COLOR,
+  SELECTED_COLOR,
+} from '../utils/splines'
+import CanvasOverlay from './canvas-overlay'
 
-export default function TopoPlotter({
-  image,
-  currentPoints,
-  setCurrentPoints,
-  lines,
-}) {
+export default function TopoPlotter({ image, linePath, setLinePath, lines }) {
+  const parsedLines = lines.map((line) => mostVoted(line.line_path_votes))
+
   const draw = useCallback(
     (ctx) => {
-      ctx.fillStyle = '#ECC94B'
-      currentPoints.forEach((point) => {
-        const { x, y } = {
-          x: point.x * ctx.canvas.width,
-          y: point.y * ctx.canvas.height,
-        }
-        ctx.beginPath()
-        ctx.arc(x, y, 8, 0, 2 * Math.PI, false)
-        ctx.fill()
+      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+      parsedLines.forEach((line, index) => {
+        drawBeizerSplines(ctx, { color: LINE_COLOR, lineWidth: 3 }, line)
+        drawMarkers(ctx, {}, line, index)
       })
-
-      drawBeizerSplines(ctx, currentPoints, 0.5, '#ECC94B', 3)
+      drawBeizerSplines(ctx, { color: SELECTED_COLOR }, linePath)
+      drawPathPoints(ctx, { color: SELECTED_COLOR }, linePath)
     },
-    [currentPoints]
+    [linePath, parsedLines]
   )
 
   const handleMouseUp = (event) => {
@@ -31,7 +30,7 @@ export default function TopoPlotter({
     const bounds = canvas.getBoundingClientRect()
     const mouseX = event.pageX - bounds.left - window.scrollX
     const mouseY = event.pageY - bounds.top - window.scrollY
-    setCurrentPoints((previousPoints) => [
+    setLinePath((previousPoints) => [
       ...previousPoints,
       {
         x: mouseX / canvas.width,
@@ -40,12 +39,5 @@ export default function TopoPlotter({
     ])
   }
 
-  return (
-    <LineImage
-      image={image}
-      lines={lines}
-      draw={draw}
-      onMouseUp={handleMouseUp}
-    />
-  )
+  return <CanvasOverlay image={image} draw={draw} onMouseUp={handleMouseUp} />
 }

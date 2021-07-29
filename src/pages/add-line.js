@@ -7,9 +7,8 @@ import {
   FormControl,
   FormLabel,
   Button,
-  useDisclosure,
 } from '@chakra-ui/react'
-import { useCallback, useState } from 'react'
+import { useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import Loader from '../components/loader.js'
 import {
@@ -19,10 +18,9 @@ import {
   useLines,
   mostVoted,
 } from '../utils/backend.js'
-import LineDrawerModal from '../components/line-drawer-modal.js'
-import LineImage from '../components/line-image.js'
-import { drawBeizerSplines } from '../utils/splines.js'
 import { ImageBreadcrumb } from '../components/breadcrumb.js'
+
+import TopoPlotter from '../components/topo-plotter.js'
 
 export default function AddLine() {
   const { cragId, sectorId, imageId } = useParams()
@@ -31,28 +29,9 @@ export default function AddLine() {
   const { climbs, error: errorClimbs } = useClimbs({ sector_id: sectorId }, 100)
   const { authorizedFetcher, authError } = useAuthorizedFetcher()
   const [climbId, setClimbId] = useState('')
-  const [linePath, setLinePath] = useState(null)
+  const [linePath, setLinePath] = useState([])
   const { lines, error: errorLines } = useLines(
     imageId ? { image_id: imageId } : null
-  )
-  const { onClose, onOpen, isOpen } = useDisclosure()
-
-  const drawPlottedLine = useCallback(
-    (ctx) => {
-      ctx.fillStyle = '#ECC94B'
-      linePath.forEach((point) => {
-        const { x, y } = {
-          x: point.x * ctx.canvas.width,
-          y: point.y * ctx.canvas.height,
-        }
-        ctx.beginPath()
-        ctx.arc(x, y, 8, 0, 2 * Math.PI, false)
-        ctx.fill()
-      })
-
-      drawBeizerSplines(ctx, linePath, 0.5, '#ECC94B', 3)
-    },
-    [linePath]
   )
 
   if (errorImage || errorClimbs || errorLines) {
@@ -125,30 +104,27 @@ export default function AddLine() {
       </FormControl>
       <FormControl isRequired>
         <FormLabel>Line path</FormLabel>
-        {linePath ? (
-          <>
-            <LineImage image={image} lines={lines} draw={drawPlottedLine} />
-            <Button onClick={onOpen}>Modify Line</Button>
-          </>
-        ) : (
-          <>
-            <Text>No line has been plotted, </Text>
-            <Button onClick={onOpen}>Plot line</Button>
-          </>
-        )}
+        <Button
+          onClick={() => {
+            setLinePath([])
+          }}
+        >
+          Clear points
+        </Button>
+        <TopoPlotter
+          image={image}
+          lines={lines}
+          linePath={linePath}
+          setLinePath={setLinePath}
+        />
       </FormControl>
 
-      <Button onClick={handleSubmit} disabled={linePath ? false : true}>
+      <Button
+        onClick={handleSubmit}
+        disabled={linePath.length >= 2 ? false : true}
+      >
         Submit
       </Button>
-
-      <LineDrawerModal
-        onClose={onClose}
-        isOpen={isOpen}
-        image={image}
-        setLinePath={setLinePath}
-        lines={lines}
-      />
     </Container>
   )
 }

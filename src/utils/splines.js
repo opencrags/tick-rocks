@@ -1,4 +1,7 @@
-export function getControlPoints(x0, y0, x1, y1, x2, y2, t = 0.5) {
+export const LINE_COLOR = '#ED2939'
+export const SELECTED_COLOR = '#ECC94B'
+
+function calculateControlPoints(x0, y0, x1, y1, x2, y2, t = 0.5) {
   const d01 = Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2))
   const d12 = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2))
   const fa = (t * d01) / (d01 + d12) // scaling factor for triangle Ta
@@ -13,13 +16,11 @@ export function getControlPoints(x0, y0, x1, y1, x2, y2, t = 0.5) {
   ]
 }
 
-export function drawBeizerSplines(
+export const drawBeizerSplines = (
   ctx,
-  relativePoints,
-  t = 0.5,
-  color = '#ECC94B',
-  lineWidth = 6
-) {
+  { t = 0.5, color = '#ECC94B', lineWidth = 6 },
+  relativePoints
+) => {
   // For details, see http://scaledinnovation.com/analytics/splines/aboutSplines.html
   if (relativePoints.length < 2) {
     return
@@ -44,7 +45,7 @@ export function drawBeizerSplines(
   let controlPoints = []
   for (let i = 0; i < points.length - 2; i++) {
     controlPoints = controlPoints.concat(
-      getControlPoints(
+      calculateControlPoints(
         points[i].x,
         points[i].y,
         points[i + 1].x,
@@ -84,15 +85,45 @@ export function drawBeizerSplines(
   ctx.stroke()
 }
 
-export const validateLine = (line) => {
-  if (!Array.isArray(line)) return false
-  return line.every(validatePoint)
+export const drawMarkers = (
+  ctx,
+  {
+    fontColor = 'white',
+    font = '20px serif',
+    backgroundColor = '#252A32',
+    markerColor = '#ED2939',
+    markerSize = 12,
+  },
+  line,
+  index
+) => {
+  const x = line[0].x * ctx.canvas.width
+  const y = line[0].y * ctx.canvas.height
+  ctx.beginPath()
+  ctx.fillStyle = backgroundColor
+  ctx.arc(x, y, markerSize, 0, 2 * Math.PI, false)
+  ctx.fill()
+  ctx.beginPath()
+  ctx.strokeStyle = markerColor
+  ctx.lineWidth = 3
+  ctx.arc(x, y, markerSize, 0, 2 * Math.PI, false)
+  ctx.stroke()
+  ctx.fillStyle = fontColor
+  ctx.font = font
+  ctx.textAlign = 'center'
+  ctx.textBaseline = 'middle'
+  ctx.fillText(`${index + 1}`, x, y)
 }
 
-export const validatePoint = (point) => {
-  if (!typeof point === 'object') return false
-  if (Object.keys(point).length !== 2) return false
-  if (!(typeof point.x === 'number' || typeof point.y === 'number'))
-    return false
-  else return true
+export const drawPathPoints = (ctx, { color = '#ECC94B' }, path) => {
+  ctx.fillStyle = color
+  path.forEach((point) => {
+    const { x, y } = {
+      x: point.x * ctx.canvas.width,
+      y: point.y * ctx.canvas.height,
+    }
+    ctx.beginPath()
+    ctx.arc(x, y, 8, 0, 2 * Math.PI, false)
+    ctx.fill()
+  })
 }
