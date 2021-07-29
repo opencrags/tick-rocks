@@ -28,6 +28,7 @@ import {
   useLines,
   mostVoted,
 } from '../utils/backend.js'
+import { useState } from 'react'
 
 export default function Sector() {
   const { cragId, sectorId } = useParams()
@@ -151,6 +152,8 @@ export default function Sector() {
 }
 
 function ImageWithLines({ cragId, sectorId, image }) {
+  const [selectedIndex, setSelectedIndex] = useState(null)
+
   const { lines, error } = useLines({ image_id: image.id })
 
   if (error) {
@@ -165,12 +168,46 @@ function ImageWithLines({ cragId, sectorId, image }) {
     return <Loader />
   }
 
+  const parsedLines = lines.map((line) => mostVoted(line.line_path_votes))
+
+  const handleMouseMove = (event) => {
+    const canvas = event.target
+    const bounds = canvas.getBoundingClientRect()
+    const mouseX = event.pageX - bounds.left - window.scrollX
+    const mouseY = event.pageY - bounds.top - window.scrollY
+
+    let hasSelected = false
+    parsedLines.forEach((points, index) => {
+      const { x, y } = {
+        x: points[0].x * canvas.width,
+        y: points[0].y * canvas.height,
+      }
+      const distance = Math.sqrt((mouseX - x) ** 2 + (mouseY - y) ** 2)
+      if (distance < 12) {
+        setSelectedIndex(index)
+        hasSelected = true
+      }
+    })
+    if (!hasSelected && selectedIndex !== null) {
+      setSelectedIndex(null)
+    }
+  }
+
   return (
     <Box padding="10px" border="1px" borderColor="gray.200" borderRadius="md">
-      <LineImage image={image} lines={lines} />
+      <LineImage
+        image={image}
+        lines={lines}
+        selectedIndex={selectedIndex}
+        onMouseMove={handleMouseMove}
+      />
       <OrderedList>
-        {lines.map((line) => (
-          <ListItem key={line.id}>
+        {lines.map((line, index) => (
+          <ListItem
+            key={line.id}
+            bg={index === selectedIndex ? 'gray.300' : ''}
+            onMouseOver={() => setSelectedIndex(index)}
+          >
             <Climb
               cragId={cragId}
               sectorId={sectorId}
