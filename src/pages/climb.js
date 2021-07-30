@@ -8,11 +8,13 @@ import {
   Box,
   Progress,
   Link,
+  LinkBox,
   Button,
 } from '@chakra-ui/react'
 import { Link as RouterLink, useParams } from 'react-router-dom'
 import Loader from '../components/loader.js'
 import EditButton from '../components/edit-button.js'
+import VoteConflictWarning from '../components/vote-conflict-warning.js'
 import Grade from '../components/grade.js'
 import {
   useClimb,
@@ -50,10 +52,18 @@ export default function Climb() {
     <Container maxWidth="container.md">
       <ClimbBreadcrumb climbId={climbId} />
       <Heading size="lg">
-        {mostVoted(climb.name_votes)}
-        <EditButton
+        {climb.name_votes.length >= 1
+          ? mostVoted(climb.name_votes)
+          : 'No name votes'}
+        <LinkBox
+          as={RouterLink}
           to={`/crags/${cragId}/sectors/${sectorId}/climbs/${climbId}/vote-name`}
-        />
+        >
+          <Box as="sup">
+            <EditButton />
+            <VoteConflictWarning votes={climb.name_votes} />
+          </Box>
+        </LinkBox>
       </Heading>
       <Heading size="sm">Grade votes</Heading>
       {countedGradeVotes.length === 0 ? (

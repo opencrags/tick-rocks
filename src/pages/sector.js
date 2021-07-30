@@ -11,15 +11,15 @@ import {
   VStack,
   HStack,
   Box,
-  IconButton,
+  LinkBox,
 } from '@chakra-ui/react'
-import { WarningTwoIcon } from '@chakra-ui/icons'
 import { Link as RouterLink, useParams } from 'react-router-dom'
 import Loader from '../components/loader.js'
 import EditButton from '../components/edit-button.js'
 import Grade from '../components/grade.js'
 import LineImage from '../components/line-image.js'
 import { SectorBreadcrumb } from '../components/breadcrumb.js'
+import VoteConflictWarning from '../components/vote-conflict-warning.js'
 import {
   useSector,
   useClimb,
@@ -66,13 +66,15 @@ export default function Sector() {
         {sector.name_votes.length >= 1
           ? mostVoted(sector.name_votes)
           : 'No name votes'}
-        <EditButton to={`/crags/${cragId}/sectors/${sectorId}/vote-name`} />
-        <IconButton
-          variant="ghost"
-          colorScheme="yellow"
-          size="sm"
-          icon={<WarningTwoIcon />}
-        />
+        <LinkBox
+          as={RouterLink}
+          to={`/crags/${cragId}/sectors/${sectorId}/vote-name`}
+        >
+          <Box as="sup">
+            <EditButton />
+            <VoteConflictWarning votes={sector.name_votes} />
+          </Box>
+        </LinkBox>
       </Heading>
       {sector.coordinate_votes.length >= 1 && (
         <Heading size="xs">

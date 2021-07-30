@@ -3,14 +3,17 @@ import {
   Center,
   Heading,
   Link,
+  LinkBox,
   Text,
   UnorderedList,
   ListItem,
   Button,
+  Box,
 } from '@chakra-ui/react'
 import { Link as RouterLink, useParams } from 'react-router-dom'
 import Loader from '../components/loader.js'
 import EditButton from '../components/edit-button.js'
+import VoteConflictWarning from '../components/vote-conflict-warning.js'
 import { useCrag, useSectors, mostVoted } from '../utils/backend.js'
 
 export default function Crag() {
@@ -34,9 +37,16 @@ export default function Crag() {
 
   return (
     <Container maxWidth="container.md">
-      <Heading size="xl" marginTop="20px">
-        {mostVoted(crag.name_votes)}
-        <EditButton to={`/crags/${crag.id}/vote-name`} />
+      <Heading size="lg">
+        {crag.name_votes.length >= 1
+          ? mostVoted(crag.name_votes)
+          : 'No name votes'}
+        <LinkBox as={RouterLink} to={`/crags/${cragId}/vote-name`}>
+          <Box as="sup">
+            <EditButton />
+            <VoteConflictWarning votes={crag.name_votes} />
+          </Box>
+        </LinkBox>
       </Heading>
       <Heading size="sm">Sectors</Heading>
       <UnorderedList>

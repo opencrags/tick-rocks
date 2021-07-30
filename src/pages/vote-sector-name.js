@@ -7,11 +7,9 @@ import {
   FormControl,
   FormLabel,
   Button,
-  Box,
-  Progress,
   Checkbox,
 } from '@chakra-ui/react'
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { SectorBreadcrumb } from '../components/breadcrumb.js'
 import Loader from '../components/loader.js'
