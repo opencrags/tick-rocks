@@ -199,6 +199,13 @@ function Climb({ cragId, sectorId, climbId }) {
         {climb.grade_votes.length >= 1 && (
           <Grade gradeId={mostVoted(climb.grade_votes)} />
         )}
+        <VoteConflictWarning
+          anyVotes={[
+            climb.name_votes,
+            climb.grade_votes,
+            climb.line_path_votes,
+          ]}
+        />
       </HStack>
     </Link>
   )

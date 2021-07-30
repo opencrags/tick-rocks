@@ -9,6 +9,7 @@ import {
   ListItem,
   Button,
   Box,
+  HStack,
 } from '@chakra-ui/react'
 import { Link as RouterLink, useParams } from 'react-router-dom'
 import Loader from '../components/loader.js'
@@ -58,7 +59,12 @@ export default function Crag() {
                 as={RouterLink}
                 to={`/crags/${crag.id}/sectors/${sector.id}`}
               >
-                <Text>{mostVoted(sector.name_votes)}</Text>
+                <HStack>
+                  <Text>{mostVoted(sector.name_votes)}</Text>
+                  <VoteConflictWarning
+                    anyVotes={[sector.name_votes, sector.coordinate_votes]}
+                  />
+                </HStack>
               </Link>
             </ListItem>
           ))}
