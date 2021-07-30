@@ -8,18 +8,12 @@ import {
   FormLabel,
   Button,
   useDisclosure,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  Code,
 } from '@chakra-ui/react'
 import { useCallback, useState } from 'react'
-import { useHistory, useParams, Link as RouterLink } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import Loader from '../components/loader.js'
 import {
   useAuthorizedFetcher,
-  useCrag,
-  useSector,
   useClimbs,
   useImage,
   useLines,
@@ -28,14 +22,14 @@ import {
 import LineDrawerModal from '../components/line-drawer-modal.js'
 import LineImage from '../components/line-image.js'
 import { drawBeizerSplines } from '../utils/splines.js'
+import { ImageBreadcrumb } from '../components/breadcrumb.js'
 
 export default function AddLine() {
   const { cragId, sectorId, imageId } = useParams()
   const history = useHistory()
-  const { authorizedFetcher, authError } = useAuthorizedFetcher()
-  const { crag, error: errorCrag } = useCrag(cragId)
-  const { sector, error: errorSector } = useSector(sectorId)
+  const { image, error: errorImage } = useImage(imageId)
   const { climbs, error: errorClimbs } = useClimbs({ sector_id: sectorId }, 100)
+  const { authorizedFetcher, authError } = useAuthorizedFetcher()
   const [climbId, setClimbId] = useState('')
   const [linePath, setLinePath] = useState(null)
   const { lines, error: errorLines } = useLines(
@@ -61,8 +55,7 @@ export default function AddLine() {
     [linePath]
   )
 
-  const { image, error: errorImage } = useImage(imageId)
-  if (errorCrag || errorSector || errorImage || errorClimbs || errorLines) {
+  if (errorImage || errorClimbs || errorLines) {
     return (
       <Container maxW="container.md">
         <Center>
@@ -109,38 +102,13 @@ export default function AddLine() {
     )
   }
 
-  if (!authorizedFetcher || !climbs) {
+  if (!authorizedFetcher || climbs === undefined) {
     return <Loader />
   }
 
   return (
     <Container maxWidth="container.md">
-      <Breadcrumb>
-        <BreadcrumbItem>
-          <BreadcrumbLink as={RouterLink} to={`/crags/${cragId}`}>
-            {mostVoted(crag.name_votes)}
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbItem>
-          <BreadcrumbLink
-            as={RouterLink}
-            to={`/crags/${cragId}/sectors/${sectorId}`}
-          >
-            {mostVoted(sector.name_votes)}
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbItem>
-          <BreadcrumbLink
-            as={RouterLink}
-            to={`/crags/${cragId}/sectors/${sectorId}/images/${imageId}`}
-          >
-            <Code>image-id: {imageId}</Code>
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbItem>
-          <Text>Add line</Text>
-        </BreadcrumbItem>
-      </Breadcrumb>
+      <ImageBreadcrumb imageId={imageId} extra={[{ text: 'Add line' }]} />
       <Heading>Add line</Heading>
       <FormControl isRequired>
         <FormLabel>Climb</FormLabel>

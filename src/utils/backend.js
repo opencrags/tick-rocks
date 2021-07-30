@@ -208,6 +208,34 @@ const countVotes = (votes) => {
 const mostVoted = (votes) =>
   !votes || votes.length === 0 ? null : countVotes(votes)[0].value
 
+const conflicting = (votes) => {
+  if (!votes || votes.length === 0) {
+    return null
+  } else {
+    const countedVotes = countVotes(votes)
+    const totalVotes = countedVotes.reduce((sum, vote) => sum + vote.count, 0)
+    return countedVotes[0].count / totalVotes <= 0.75
+  }
+}
+
+const useUserVote = (votes) => {
+  const { user, isLoading: isLoadingUser, error } = useAuth0()
+  const isLoading = isLoadingUser || !votes
+  if (isLoading || error) {
+    return {
+      userVote: undefined,
+      error,
+    }
+  } else {
+    const userVotes = votes.filter((vote) => vote.user_id === user.sub)
+    const userVote = userVotes && userVotes.length >= 1 ? userVotes[0] : null
+    return {
+      userVote,
+      error,
+    }
+  }
+}
+
 export {
   useToken,
   config,
@@ -232,4 +260,6 @@ export {
   useGradeSystemGrades,
   countVotes,
   mostVoted,
+  conflicting,
+  useUserVote,
 }

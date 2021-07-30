@@ -6,9 +6,6 @@ import {
   VStack,
   HStack,
   Box,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
   Progress,
   Link,
   Button,
@@ -18,8 +15,6 @@ import Loader from '../components/loader.js'
 import EditButton from '../components/edit-button.js'
 import Grade from '../components/grade.js'
 import {
-  useCrag,
-  useSector,
   useClimb,
   useLines,
   useImage,
@@ -27,15 +22,14 @@ import {
   mostVoted,
 } from '../utils/backend.js'
 import LineImage from '../components/line-image.js'
+import { ClimbBreadcrumb } from '../components/breadcrumb.js'
 
 export default function Climb() {
   const { cragId, sectorId, climbId } = useParams()
-  const { crag, error: errorCrag } = useCrag(cragId)
-  const { sector, error: errorSector } = useSector(sectorId)
   const { climb, error: errorClimb } = useClimb(climbId)
   const { lines, error: errorLines } = useLines({ climb_id: climbId })
 
-  if (errorCrag || errorSector || errorClimb || errorLines) {
+  if (errorClimb || errorLines) {
     return (
       <Container maxWidth="container.md">
         <Center>
@@ -45,12 +39,7 @@ export default function Climb() {
     )
   }
 
-  if (
-    crag === undefined ||
-    sector === undefined ||
-    climb === undefined ||
-    lines === undefined
-  ) {
+  if (climb === undefined || lines === undefined) {
     return <Loader />
   }
 
@@ -59,24 +48,7 @@ export default function Climb() {
 
   return (
     <Container maxWidth="container.md">
-      <Breadcrumb>
-        <BreadcrumbItem>
-          <BreadcrumbLink as={RouterLink} to={`/crags/${cragId}`}>
-            {mostVoted(crag.name_votes)}
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbItem>
-          <BreadcrumbLink
-            as={RouterLink}
-            to={`/crags/${cragId}/sectors/${sectorId}`}
-          >
-            {mostVoted(sector.name_votes)}
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbItem>
-          <Text>{mostVoted(climb.name_votes)}</Text>
-        </BreadcrumbItem>
-      </Breadcrumb>
+      <ClimbBreadcrumb climbId={climbId} />
       <Heading size="lg">
         {mostVoted(climb.name_votes)}
         <EditButton
@@ -103,22 +75,24 @@ export default function Climb() {
       >
         <Button>Add grade vote</Button>
       </Link>
-      <VStack>
-        {lines.map((line) => (
-          <ImageWithLines
-            key={line.id}
-            crag={crag}
-            sector={sector}
-            climb={climb}
-            line={line}
-          />
-        ))}
-      </VStack>
+      {lines.length === 0 ? (
+        <Text>There are no drawn lines for this climb.</Text>
+      ) : (
+        <VStack>
+          {lines.map((line) => (
+            <ImageWithLines key={line.id} line={line} />
+          ))}
+        </VStack>
+      )}
+      <Text>
+        If you want to add a line then go to the image you want to draw the line
+        on and then select this climb.
+      </Text>
     </Container>
   )
 }
 
-function ImageWithLines({ crag, sector, climb, line }) {
+function ImageWithLines({ line }) {
   const { image, error: errorImage } = useImage(line.image_id)
   // const { lines: otherLines, error: errorOtherLines } = useLines({ image_id: line.image_id })
 

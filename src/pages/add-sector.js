@@ -14,6 +14,7 @@ import Loader from '../components/loader.js'
 import { useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { useAuthorizedFetcher } from '../utils/backend.js'
+import { CragBreadcrumb } from '../components/breadcrumb.js'
 
 export default function AddSector() {
   const { cragId } = useParams()
@@ -89,6 +90,7 @@ export default function AddSector() {
 
   return (
     <Container maxWidth="container.md">
+      <CragBreadcrumb cragId={cragId} extra={[{ text: 'Add sector' }]} />
       <Heading>Add sector</Heading>
       <FormControl id="sector-name" isRequired>
         <FormLabel>Sector name</FormLabel>

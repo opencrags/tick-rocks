@@ -7,76 +7,54 @@ import {
   FormControl,
   FormLabel,
   Button,
-  Box,
-  Progress,
   Checkbox,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
 } from '@chakra-ui/react'
-import { useState, useEffect, useCallback } from 'react'
-import { useHistory, useParams, Link as RouterLink } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useHistory, useParams } from 'react-router-dom'
 import Loader from '../components/loader.js'
-import { useAuth0 } from '@auth0/auth0-react'
 import {
-  useCrag,
-  useSector,
   useClimb,
   useAuthorizedFetcher,
-  countVotes,
-  mostVoted,
+  useUserVote,
 } from '../utils/backend.js'
+import { ClimbBreadcrumb } from '../components/breadcrumb.js'
+import Votes from '../components/votes.js'
 
 export default function VoteClimbName() {
   const { cragId, sectorId, climbId } = useParams()
-  const { crag, error: errorCrag } = useCrag(cragId)
-  const { sector, error: errorSector } = useSector(sectorId)
   const { climb, error: errorClimb } = useClimb(climbId)
-  const { user } = useAuth0()
+  const { userVote, error: errorUserVote } = useUserVote(climb?.name_votes)
   const {
     authorizedFetcher,
     isLoading,
     error: authError,
   } = useAuthorizedFetcher()
   const history = useHistory()
-  const [climbName, setClimbName] = useState('')
+  const [climbName, setClimbName] = useState(null)
   const [publicVote, setPublicVote] = useState(true)
 
-  const userVote = useCallback(() => {
-    const userVotes = climb.name_votes.filter(
-      (name_vote) => name_vote.user_id === user.sub
-    )
-    if (userVotes.length === 1) {
-      return userVotes[0]
-    } else {
-      return null
-    }
-  }, [climb?.name_votes, user?.sub])
-
   useEffect(() => {
-    if (climb !== undefined && user && climbName === '' && userVote()) {
-      const userVote_ = userVote()
-      setClimbName(userVote_.value)
-      setPublicVote(userVote_.public)
+    if (climbName === null && userVote) {
+      setClimbName(userVote.value)
+      setPublicVote(userVote.public)
     }
-  }, [climb, user, climbName, userVote])
+  }, [climbName, userVote])
 
-  const voteClimbName = (climbId) =>
-    userVote()
-      ? authorizedFetcher(`/climbs/${climbId}/name_votes/${userVote().id}`, {
+  const voteClimbName = (climbId) => {
+    const body = JSON.stringify({
+      value: climbName,
+      public: publicVote,
+    })
+    return userVote
+      ? authorizedFetcher(`/climbs/${climbId}/name_votes/${userVote.id}`, {
           method: 'PUT',
-          body: JSON.stringify({
-            value: climbName,
-            public: publicVote,
-          }),
+          body: body,
         })
       : authorizedFetcher(`/climbs/${climbId}/name_votes`, {
           method: 'POST',
-          body: JSON.stringify({
-            value: climbName,
-            public: publicVote,
-          }),
+          body: body,
         })
+  }
 
   const navigateToClimb = (climbId) =>
     history.replace(`/crags/${cragId}/sectors/${sectorId}/climbs/${climbId}`)
@@ -84,7 +62,7 @@ export default function VoteClimbName() {
   const handleSubmit = () =>
     voteClimbName(climbId).then(() => navigateToClimb(climbId))
 
-  if (authError || errorCrag || errorSector || errorClimb) {
+  if (authError || errorClimb || errorUserVote) {
     return (
       <Container maxWidth="container.md">
         <Center>
@@ -104,65 +82,39 @@ export default function VoteClimbName() {
     )
   }
 
-  if (!climb) {
+  if (!climb || userVote === undefined) {
     return <Loader />
   }
 
-  const countedVotes = countVotes(climb.name_votes)
-  const maxVoteCount = Math.max(Object.values(countedVotes))
-
   return (
     <Container maxWidth="container.md">
-      <Breadcrumb>
-        <BreadcrumbItem>
-          <BreadcrumbLink as={RouterLink} to={`/crags/${cragId}`}>
-            {mostVoted(crag.name_votes)}
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbItem>
-          <BreadcrumbLink
-            as={RouterLink}
-            to={`/crags/${cragId}/sectors/${sectorId}`}
-          >
-            {mostVoted(sector.name_votes)}
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbItem>
-          <BreadcrumbLink
-            as={RouterLink}
-            to={`/crags/${cragId}/sectors/${sectorId}/climbs/${climbId}`}
-          >
-            {mostVoted(climb.name_votes)}
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbItem>
-          <Text>Vote for climb name</Text>
-        </BreadcrumbItem>
-      </Breadcrumb>
+      <ClimbBreadcrumb
+        climbId={climbId}
+        extra={[{ text: 'Vote for climb name' }]}
+      />
       <Heading>Vote for climb name</Heading>
-      <Box
-        border="1px"
-        borderColor="gray.300"
-        borderRadius="md"
-        padding="10px"
-        margin="20px"
-      >
-        <Heading size="sm">Votes</Heading>
-        {countedVotes.map((vote) => (
-          <Box key={vote.value}>
-            <Text>
-              {vote.value} ({vote.count} votes)
-            </Text>
-            <Progress value={vote.count / maxVoteCount} />
-          </Box>
-        ))}
-      </Box>
+      <Votes
+        votes={climb.name_votes}
+        countedVoteItem={(countedVote) => (
+          <Text>
+            {countedVote.value} ({countedVote.count} votes)
+          </Text>
+        )}
+        onChange={(countedVote) => {
+          if (countedVote === null) {
+            setClimbName('')
+          } else {
+            setClimbName(countedVote.value)
+          }
+        }}
+        value={userVote?.value || null}
+      />
       <Heading size="sm">Your vote</Heading>
       <FormControl isRequired>
         <FormLabel>Climb name</FormLabel>
         <Input
           placeholder="Climb name"
-          value={climbName}
+          value={climbName === null ? '' : climbName}
           onChange={(event) => setClimbName(event.target.value)}
         />
       </FormControl>

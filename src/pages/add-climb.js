@@ -7,25 +7,20 @@ import {
   FormControl,
   FormLabel,
   Button,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
   Select,
 } from '@chakra-ui/react'
 import { useState } from 'react'
-import { useHistory, useParams, Link as RouterLink } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
+import { SectorBreadcrumb } from '../components/breadcrumb.js'
 import Loader from '../components/loader.js'
 import {
-  useCrag,
   useSector,
   useGradeSystemGrades,
   useAuthorizedFetcher,
-  mostVoted,
 } from '../utils/backend.js'
 
 export default function AddClimb() {
   const { cragId, sectorId } = useParams()
-  const { crag, error: errorCrag } = useCrag(cragId)
   const { sector, error: errorSector } = useSector(sectorId)
   const { gradeSystemGrades, error: errorGradeSystemGrades } =
     useGradeSystemGrades()
@@ -72,7 +67,7 @@ export default function AddClimb() {
       )
     )
 
-  if (authError || errorCrag || errorSector || errorGradeSystemGrades) {
+  if (authError || errorSector || errorGradeSystemGrades) {
     return (
       <Container maxWidth="container.md">
         <Center>
@@ -94,7 +89,6 @@ export default function AddClimb() {
 
   if (
     (!authorizedFetcher && isLoading) ||
-    crag === undefined ||
     sector === undefined ||
     gradeSystemGrades === undefined
   ) {
@@ -109,24 +103,7 @@ export default function AddClimb() {
 
   return (
     <Container maxWidth="container.md">
-      <Breadcrumb>
-        <BreadcrumbItem>
-          <BreadcrumbLink as={RouterLink} to={`/crags/${cragId}`}>
-            {mostVoted(crag.name_votes)}
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbItem>
-          <BreadcrumbLink
-            as={RouterLink}
-            to={`/crags/${cragId}/sectors/${sectorId}`}
-          >
-            {mostVoted(sector.name_votes)}
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbItem>
-          <Text>Add climb</Text>
-        </BreadcrumbItem>
-      </Breadcrumb>
+      <SectorBreadcrumb sectorId={sectorId} extra={[{ text: 'Add climb' }]} />
       <Heading>Add climb</Heading>
       <FormControl isRequired>
         <FormLabel>Climb name</FormLabel>

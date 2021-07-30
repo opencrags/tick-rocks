@@ -1,29 +1,19 @@
-import {
-  Container,
-  Center,
-  Heading,
-  Box,
-  Text,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-} from '@chakra-ui/react'
+import { Container, Center, Heading, Box, Text } from '@chakra-ui/react'
 import Dropzone from 'react-dropzone'
-import { useHistory, useParams, Link as RouterLink } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
+import { SectorBreadcrumb } from '../components/breadcrumb.js'
 import Loader from '../components/loader.js'
-import {
-  useCrag,
-  useSector,
-  useAuthorizedFetcher,
-  mostVoted,
-} from '../utils/backend.js'
+import { useSector, useAuthorizedFetcher } from '../utils/backend.js'
 
 export default function AddImage() {
   const { cragId, sectorId } = useParams()
-  const { crag, error: errorCrag } = useCrag(cragId)
   const { sector, error: errorSector } = useSector(sectorId)
   const history = useHistory()
-  const { authorizedFetcher, isLoading, error } = useAuthorizedFetcher()
+  const {
+    authorizedFetcher,
+    isLoading,
+    error: fetcherError,
+  } = useAuthorizedFetcher()
 
   const addImage = (base64Image) =>
     authorizedFetcher('/images', {
@@ -60,11 +50,11 @@ export default function AddImage() {
       .catch(console.error)
   }
 
-  if (error || errorCrag || errorSector) {
+  if (fetcherError || errorSector) {
     return (
       <Container maxWidth="container.md">
         <Center>
-          <Text margin="20px">Failed to load auth token.</Text>
+          <Text margin="20px">Failed to load page.</Text>
         </Center>
       </Container>
     )
@@ -80,34 +70,13 @@ export default function AddImage() {
     )
   }
 
-  if (
-    (!authorizedFetcher && isLoading) ||
-    crag === undefined ||
-    sector === undefined
-  ) {
+  if ((!authorizedFetcher && isLoading) || sector === undefined) {
     return <Loader />
   }
 
   return (
     <Container maxWidth="container.md">
-      <Breadcrumb>
-        <BreadcrumbItem>
-          <BreadcrumbLink as={RouterLink} to={`/crags/${cragId}`}>
-            {mostVoted(crag.name_votes)}
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbItem>
-          <BreadcrumbLink
-            as={RouterLink}
-            to={`/crags/${cragId}/sectors/${sectorId}`}
-          >
-            {mostVoted(sector.name_votes)}
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbItem>
-          <Text>Add image</Text>
-        </BreadcrumbItem>
-      </Breadcrumb>
+      <SectorBreadcrumb sectorId={sectorId} extra={[{ text: 'Add image' }]} />
       <Heading>Add image</Heading>
       <Dropzone accept={['image/jpeg']} onDrop={onDropImages}>
         {({ getRootProps, getInputProps }) => (

@@ -1,33 +1,16 @@
-import {
-  Container,
-  Center,
-  Text,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  Code,
-} from '@chakra-ui/react'
-import { Link as RouterLink, useParams } from 'react-router-dom'
+import { Container, Center, Text, Code } from '@chakra-ui/react'
+import { useParams } from 'react-router-dom'
 import Loader from '../components/loader.js'
-import {
-  useCrag,
-  useSector,
-  useLine,
-  useClimb,
-  useImage,
-  mostVoted,
-} from '../utils/backend.js'
+import { useLine, useImage } from '../utils/backend.js'
 import LineImage from '../components/line-image.js'
+import { ImageBreadcrumb } from '../components/breadcrumb.js'
 
 export default function Line() {
-  const { cragId, sectorId, lineId } = useParams()
-  const { crag, error: errorCrag } = useCrag(cragId)
-  const { sector, error: errorSector } = useSector(sectorId)
+  const { lineId } = useParams()
   const { line, error: errorLine } = useLine(lineId)
-  const { climb, error: errorClimb } = useClimb(line ? line.climb_id : null)
-  const { image, error: errorImage } = useImage(line ? line.image_id : null)
+  const { image, error: errorImage } = useImage(line?.image_id)
 
-  if (errorCrag || errorSector || errorClimb || errorImage || errorLine) {
+  if (errorImage || errorLine) {
     return (
       <Container maxWidth="container.md">
         <Center>
@@ -37,44 +20,16 @@ export default function Line() {
     )
   }
 
-  if (
-    crag === undefined ||
-    sector === undefined ||
-    climb === undefined ||
-    image === undefined ||
-    line === undefined
-  ) {
+  if (image === undefined || line === undefined) {
     return <Loader />
   }
 
   return (
     <Container maxWidth="container.md">
-      <Breadcrumb>
-        <BreadcrumbItem>
-          <BreadcrumbLink as={RouterLink} to={`/crags/${cragId}`}>
-            {mostVoted(crag.name_votes)}
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbItem>
-          <BreadcrumbLink
-            as={RouterLink}
-            to={`/crags/${cragId}/sectors/${sectorId}`}
-          >
-            {mostVoted(sector.name_votes)}
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbItem>
-          <BreadcrumbLink
-            as={RouterLink}
-            to={`/crags/${cragId}/sectors/${sectorId}/images/${image.id}`}
-          >
-            <Code>image-id: {image.id}</Code>
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbItem>
-          <Code>line-id: {line.id}</Code>
-        </BreadcrumbItem>
-      </Breadcrumb>
+      <ImageBreadcrumb
+        imageId={image.id}
+        extra={[{ text: <Code>line-id: {line.id}</Code> }]}
+      />
       <LineImage image={image} lines={line} />
     </Container>
   )

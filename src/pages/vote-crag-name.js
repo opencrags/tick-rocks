@@ -7,79 +7,57 @@ import {
   FormControl,
   FormLabel,
   Button,
-  Box,
-  Progress,
   Checkbox,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
 } from '@chakra-ui/react'
-import { useState, useEffect, useCallback } from 'react'
-import { useHistory, useParams, Link as RouterLink } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useHistory, useParams } from 'react-router-dom'
+import { CragBreadcrumb } from '../components/breadcrumb.js'
 import Loader from '../components/loader.js'
-import { useAuth0 } from '@auth0/auth0-react'
-import {
-  useCrag,
-  useAuthorizedFetcher,
-  countVotes,
-  mostVoted,
-} from '../utils/backend.js'
+import Votes from '../components/votes.js'
+import { useCrag, useAuthorizedFetcher, useUserVote } from '../utils/backend.js'
 
 export default function VoteCragName() {
   const { cragId } = useParams()
   const { crag, error: errorCrag } = useCrag(cragId)
-  const { user } = useAuth0()
+  const { userVote, error: errorUserVote } = useUserVote(crag?.name_votes)
   const {
     authorizedFetcher,
     isLoading,
     error: errorAuth,
   } = useAuthorizedFetcher()
   const history = useHistory()
-  const [cragName, setCragName] = useState('')
+  const [cragName, setCragName] = useState(null)
   const [publicVote, setPublicVote] = useState(true)
 
-  const userVote = useCallback(() => {
-    const userVotes = crag.name_votes.filter(
-      (name_vote) => name_vote.user_id === user.sub
-    )
-    if (userVotes.length === 1) {
-      return userVotes[0]
-    } else {
-      return null
-    }
-  }, [crag?.name_votes, user?.sub])
-
   useEffect(() => {
-    if (crag !== undefined && user && cragName === '' && userVote()) {
-      const userVote_ = userVote()
-      setCragName(userVote_.value)
-      setPublicVote(userVote_.public)
+    if (cragName === null && userVote) {
+      setCragName(userVote.value)
+      setPublicVote(userVote.public)
     }
-  }, [crag, user, cragName, userVote])
+  }, [cragName, userVote])
 
-  const voteCragName = (cragId) =>
-    userVote()
-      ? authorizedFetcher(`/crags/${cragId}/name_votes/${userVote().id}`, {
+  const voteCragName = (cragId) => {
+    const body = JSON.stringify({
+      value: cragName,
+      public: publicVote,
+    })
+    return userVote
+      ? authorizedFetcher(`/crags/${cragId}/name_votes/${userVote.id}`, {
           method: 'PUT',
-          body: JSON.stringify({
-            value: cragName,
-            public: publicVote,
-          }),
+          body: body,
         })
       : authorizedFetcher(`/crags/${cragId}/name_votes`, {
           method: 'POST',
-          body: JSON.stringify({
-            value: cragName,
-            public: publicVote,
-          }),
+          body: body,
         })
+  }
 
   const navigateToCrag = (cragId) => history.replace(`/crags/${cragId}`)
 
   const handleSubmit = () =>
-    voteCragName(cragId).then((_) => navigateToCrag(cragId))
+    voteCragName(cragId).then(() => navigateToCrag(cragId))
 
-  if (errorAuth || errorCrag) {
+  if (errorAuth || errorCrag || errorUserVote) {
     return (
       <Container maxWidth="container.md">
         <Center>
@@ -99,49 +77,39 @@ export default function VoteCragName() {
     )
   }
 
-  if (!crag) {
+  if (!crag || userVote === undefined) {
     return <Loader />
   }
 
-  const countedVotes = countVotes(crag.name_votes)
-  const maxVoteCount = Math.max(Object.values(countedVotes))
-
   return (
     <Container maxWidth="container.md">
-      <Breadcrumb>
-        <BreadcrumbItem>
-          <BreadcrumbLink as={RouterLink} to={`/crags/${cragId}`}>
-            {mostVoted(crag.name_votes)}
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbItem>
-          <Text>Vote for crag name</Text>
-        </BreadcrumbItem>
-      </Breadcrumb>
+      <CragBreadcrumb
+        cragId={cragId}
+        extra={[{ text: 'Vote for crag name' }]}
+      />
       <Heading>Vote for crag name</Heading>
-      <Box
-        border="1px"
-        borderColor="gray.300"
-        borderRadius="md"
-        padding="10px"
-        margin="20px"
-      >
-        <Heading size="sm">Votes</Heading>
-        {countedVotes.map((vote) => (
-          <Box key={vote.value}>
-            <Text>
-              {vote.value} ({vote.count} votes)
-            </Text>
-            <Progress value={vote.count / maxVoteCount} />
-          </Box>
-        ))}
-      </Box>
+      <Votes
+        votes={crag.name_votes}
+        countedVoteItem={(countedVote) => (
+          <Text>
+            {countedVote.value} ({countedVote.count} votes)
+          </Text>
+        )}
+        onChange={(countedVote) => {
+          if (countedVote === null) {
+            setCragName('')
+          } else {
+            setCragName(countedVote.value)
+          }
+        }}
+        value={userVote?.value || null}
+      />
       <Heading size="sm">Your vote</Heading>
       <FormControl isRequired>
         <FormLabel>Crag name</FormLabel>
         <Input
           placeholder="Crag name"
-          value={cragName}
+          value={cragName || ''}
           onChange={(event) => setCragName(event.target.value)}
         />
       </FormControl>
@@ -158,7 +126,6 @@ export default function VoteCragName() {
           slightly lower value than if you openly support it.
         </Text>
       </FormControl>
-
       <Button onClick={handleSubmit}>Submit</Button>
     </Container>
   )

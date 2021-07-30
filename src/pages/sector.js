@@ -11,17 +11,16 @@ import {
   VStack,
   HStack,
   Box,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
+  IconButton,
 } from '@chakra-ui/react'
+import { WarningTwoIcon } from '@chakra-ui/icons'
 import { Link as RouterLink, useParams } from 'react-router-dom'
 import Loader from '../components/loader.js'
 import EditButton from '../components/edit-button.js'
 import Grade from '../components/grade.js'
 import LineImage from '../components/line-image.js'
+import { SectorBreadcrumb } from '../components/breadcrumb.js'
 import {
-  useCrag,
   useSector,
   useClimb,
   useClimbs,
@@ -32,13 +31,12 @@ import {
 
 export default function Sector() {
   const { cragId, sectorId } = useParams()
-  const { crag, error: errorCrag } = useCrag(cragId)
   const { sector, error: errorSector } = useSector(sectorId)
   const { climbs, error: errorClimbs } = useClimbs({ sector_id: sectorId })
   const { lines, error: errorLines } = useLines({ sector_id: sectorId })
   const { images, error: errorImages } = useImages({ sector_id: sectorId })
 
-  if (errorCrag || errorSector || errorClimbs || errorLines || errorImages) {
+  if (errorSector || errorClimbs || errorLines || errorImages) {
     return (
       <Container maxWidth="container.md">
         <Center>
@@ -49,7 +47,6 @@ export default function Sector() {
   }
 
   if (
-    crag === undefined ||
     sector === undefined ||
     climbs === undefined ||
     lines === undefined ||
@@ -64,22 +61,18 @@ export default function Sector() {
 
   return (
     <Container maxWidth="container.md">
-      <Breadcrumb>
-        <BreadcrumbItem>
-          <BreadcrumbLink as={RouterLink} to={`/crags/${cragId}`}>
-            {mostVoted(crag.name_votes)}
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbItem>
-          <Text>{mostVoted(sector.name_votes)}</Text>
-        </BreadcrumbItem>
-      </Breadcrumb>
-
+      <SectorBreadcrumb sectorId={sectorId} />
       <Heading size="lg">
         {sector.name_votes.length >= 1
           ? mostVoted(sector.name_votes)
           : 'No name votes'}
         <EditButton to={`/crags/${cragId}/sectors/${sectorId}/vote-name`} />
+        <IconButton
+          variant="ghost"
+          colorScheme="yellow"
+          size="sm"
+          icon={<WarningTwoIcon />}
+        />
       </Heading>
       {sector.coordinate_votes.length >= 1 && (
         <Heading size="xs">
@@ -134,8 +127,8 @@ export default function Sector() {
           images.map((image) => (
             <ImageWithLines
               key={image.id}
-              crag={crag}
-              sector={sector}
+              cragId={cragId}
+              sectorId={sectorId}
               image={image}
             />
           ))}
@@ -144,7 +137,7 @@ export default function Sector() {
   )
 }
 
-function ImageWithLines({ crag, sector, image }) {
+function ImageWithLines({ cragId, sectorId, image }) {
   const { lines, error } = useLines({ image_id: image.id })
 
   if (error) {
@@ -165,13 +158,17 @@ function ImageWithLines({ crag, sector, image }) {
       <OrderedList>
         {lines.map((line) => (
           <ListItem key={line.id}>
-            <Climb crag={crag} sector={sector} line={line} />
+            <Climb
+              cragId={cragId}
+              sectorId={sectorId}
+              climbId={line.climb_id}
+            />
           </ListItem>
         ))}
       </OrderedList>
       <Link
         as={RouterLink}
-        to={`/crags/${crag.id}/sectors/${sector.id}/images/${image.id}/add-line`}
+        to={`/crags/${cragId}/sectors/${sectorId}/images/${image.id}/add-line`}
       >
         <Button>Add line</Button>
       </Link>
@@ -179,8 +176,8 @@ function ImageWithLines({ crag, sector, image }) {
   )
 }
 
-function Climb({ crag, sector, line }) {
-  const { climb, error } = useClimb(line.climb_id)
+function Climb({ cragId, sectorId, climbId }) {
+  const { climb, error } = useClimb(climbId)
 
   if (error) {
     return <Text margin="20px">Failed to load climb.</Text>
@@ -193,7 +190,7 @@ function Climb({ crag, sector, line }) {
   return (
     <Link
       as={RouterLink}
-      to={`/crags/${crag.id}/sectors/${sector.id}/climbs/${climb.id}`}
+      to={`/crags/${cragId}/sectors/${sectorId}/climbs/${climbId}`}
     >
       <HStack>
         <Text>{mostVoted(climb.name_votes)}</Text>

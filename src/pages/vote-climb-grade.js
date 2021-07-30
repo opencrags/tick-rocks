@@ -8,35 +8,27 @@ import {
   FormLabel,
   Button,
   HStack,
-  Box,
-  Progress,
   Checkbox,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
 } from '@chakra-ui/react'
-import { useState, useEffect, useCallback } from 'react'
-import { useHistory, useParams, Link as RouterLink } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useHistory, useParams } from 'react-router-dom'
 import Loader from '../components/loader.js'
+import Votes from '../components/votes.js'
 import Grade from '../components/grade.js'
-import { useAuth0 } from '@auth0/auth0-react'
 import {
-  useCrag,
-  useSector,
   useClimb,
   useGradeSystemGrade,
   useGradeSystemGrades,
   useAuthorizedFetcher,
-  countVotes,
   mostVoted,
+  useUserVote,
 } from '../utils/backend.js'
+import { ClimbBreadcrumb } from '../components/breadcrumb.js'
 
 export default function VoteClimbGrade() {
   const { cragId, sectorId, climbId } = useParams()
-  const { crag, error: errorCrag } = useCrag(cragId)
-  const { sector, error: errorSector } = useSector(sectorId)
   const { climb, error: errorClimb } = useClimb(climbId)
-  const { user } = useAuth0()
+  const { userVote, error: errorUserVote } = useUserVote(climb?.grade_votes)
   const {
     authorizedFetcher,
     isLoading,
@@ -45,48 +37,33 @@ export default function VoteClimbGrade() {
   const history = useHistory()
   const { gradeSystemGrades, error: errorGradeSystemGrades } =
     useGradeSystemGrades()
-  const [gradeSystem, setGradeSystem] = useState('')
-  const [gradeId, setGradeId] = useState('')
+  const [gradeSystem, setGradeSystem] = useState(null)
+  const [gradeId, setGradeId] = useState(null)
   const [publicVote, setPublicVote] = useState(true)
 
-  const userVote = useCallback(() => {
-    if (climb && user) {
-      const userVotes = climb.grade_votes.filter(
-        (name_vote) => name_vote.user_id === user.sub
-      )
-      if (userVotes.length === 1) {
-        return userVotes[0]
-      } else {
-        return null
-      }
-    } else {
-      return null
-    }
-  }, [climb?.grade_votes, user?.sub])
-
   const { grade: previouslyVotedGrade, error: errorPreviouslyVotedGrade } =
-    useGradeSystemGrade(userVote() ? userVote().value : null)
+    useGradeSystemGrade(userVote?.value)
 
   useEffect(() => {
-    if (gradeId === '' && previouslyVotedGrade) {
+    if (gradeId === null && previouslyVotedGrade) {
       setGradeId(previouslyVotedGrade.id)
       setGradeSystem(previouslyVotedGrade.system)
-      setPublicVote(userVote().public)
+      setPublicVote(userVote.public)
     }
-  }, [previouslyVotedGrade])
+  }, [gradeId, userVote, previouslyVotedGrade])
 
   const { grade: mostVotedGrade, error: errorMostVotedGrade } =
     useGradeSystemGrade(climb ? mostVoted(climb.grade_votes) : null)
 
   useEffect(() => {
-    if (mostVotedGrade && gradeId === '' && gradeSystem === '') {
+    if (mostVotedGrade && gradeId === null && gradeSystem === null) {
       setGradeSystem(mostVotedGrade.system)
     }
-  }, [mostVotedGrade])
+  }, [mostVotedGrade, gradeId, gradeSystem])
 
   const voteClimbGrade = (climbId) =>
-    userVote()
-      ? authorizedFetcher(`/climbs/${climbId}/grade_votes/${userVote().id}`, {
+    userVote
+      ? authorizedFetcher(`/climbs/${climbId}/grade_votes/${userVote.id}`, {
           method: 'PUT',
           body: JSON.stringify({
             value: gradeId,
@@ -109,12 +86,11 @@ export default function VoteClimbGrade() {
 
   if (
     authError ||
-    errorCrag ||
-    errorSector ||
     errorClimb ||
     errorPreviouslyVotedGrade ||
     errorGradeSystemGrades ||
-    errorMostVotedGrade
+    errorMostVotedGrade ||
+    errorUserVote
   ) {
     return (
       <Container maxWidth="container.md">
@@ -136,16 +112,13 @@ export default function VoteClimbGrade() {
   }
 
   if (
-    crag === undefined ||
-    sector === undefined ||
     climb === undefined ||
-    gradeSystemGrades === undefined
+    gradeSystemGrades === undefined ||
+    userVote === undefined
   ) {
     return <Loader />
   }
 
-  const countedVotes = countVotes(climb.grade_votes)
-  const maxVoteCount = Math.max(Object.values(countedVotes))
   const systems = [
     ...new Set(
       gradeSystemGrades.map((gradeSystemGrade) => gradeSystemGrade.system)
@@ -154,66 +127,36 @@ export default function VoteClimbGrade() {
 
   return (
     <Container maxWidth="container.md">
-      <Breadcrumb>
-        <BreadcrumbItem>
-          <BreadcrumbLink as={RouterLink} to={`/crags/${cragId}`}>
-            {mostVoted(crag.name_votes)}
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbItem>
-          <BreadcrumbLink
-            as={RouterLink}
-            to={`/crags/${cragId}/sectors/${sectorId}`}
-          >
-            {mostVoted(sector.name_votes)}
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbItem>
-          <BreadcrumbLink
-            as={RouterLink}
-            to={`/crags/${cragId}/sectors/${sectorId}/climbs/${climbId}`}
-          >
-            {mostVoted(climb.name_votes)}
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbItem>
-          <Text>Vote for grade</Text>
-        </BreadcrumbItem>
-      </Breadcrumb>
+      <ClimbBreadcrumb climbId={climbId} extra={[{ text: 'Vote for grade' }]} />
       <Heading>Vote for grade</Heading>
-      <Box
-        border="1px"
-        borderColor="gray.300"
-        borderRadius="md"
-        padding="10px"
-        margin="20px"
-      >
-        <Heading size="sm">Votes</Heading>
-        {countedVotes.length === 0 ? (
-          <Text>There are no votes.</Text>
-        ) : (
-          countedVotes.map((vote) => (
-            <Box key={vote.value}>
-              <HStack>
-                <Grade gradeId={vote.value} />
-                <Text>({vote.count} votes)</Text>
-              </HStack>
-              <Progress value={vote.count / maxVoteCount} />
-            </Box>
-          ))
+      <Votes
+        votes={climb.grade_votes}
+        countedVoteItem={(countedVote) => (
+          <HStack>
+            <Grade gradeId={countedVote.value} />
+            <Text>({countedVote.count} votes)</Text>
+          </HStack>
         )}
-      </Box>
+        onChange={(countedVote) => {
+          if (countedVote === null) {
+            setGradeId('')
+          } else {
+            setGradeId(countedVote.value)
+          }
+        }}
+        value={userVote?.value || null}
+      />
       <Heading size="sm">Your vote</Heading>
       <FormControl isRequired>
         <FormLabel>Grade system</FormLabel>
         <Select
-          value={gradeSystem}
+          value={gradeSystem || ''}
           onChange={(event) => {
             setGradeSystem(event.target.value)
             setGradeId(null)
           }}
         >
-          <option value={null}></option>
+          <option value={''}></option>
           {systems.map((system) => (
             <option key={system} value={system}>
               {system}
@@ -224,7 +167,7 @@ export default function VoteClimbGrade() {
       <FormControl isRequired>
         <FormLabel>Grade</FormLabel>
         <Select
-          value={gradeId}
+          value={gradeId || ''}
           placeholder=""
           onChange={(event) => setGradeId(event.target.value)}
         >
