@@ -76,11 +76,22 @@ export default function Sector() {
           </Box>
         </LinkBox>
       </Heading>
-      {sector.coordinate_votes.length >= 1 && (
-        <Heading size="xs">
-          Position: {JSON.stringify(mostVoted(sector.coordinate_votes))}
-        </Heading>
-      )}
+      <Heading size="sm">
+        {sector.coordinate_votes.length >= 1
+          ? `Coordinates: ${JSON.stringify(
+              mostVoted(sector.coordinate_votes).coordinates
+            )}`
+          : 'No coordinate votes'}
+        <LinkBox
+          as={RouterLink}
+          to={`/crags/${cragId}/sectors/${sectorId}/vote-coordinates`}
+        >
+          <Box as="sup">
+            <EditButton />
+            <VoteConflictWarning votes={sector.coordinate_votes} />
+          </Box>
+        </LinkBox>
+      </Heading>
       {climbs.filter(
         (climb) =>
           climb.name_votes.length >= 1 && !climbIdsWithLines.has(climb.id)

@@ -7,7 +7,10 @@ export default function Votes({ votes, countedVoteItem, value, onChange }) {
   const countedVotes = countVotes(votes)
   const maxVoteCount = Math.max(Object.values(countedVotes))
   const [checkboxes, setCheckboxes] = useState(
-    countedVotes.map((countedVote) => countedVote.value === value)
+    countedVotes.map(
+      (countedVote) =>
+        JSON.stringify(countedVote.value) === JSON.stringify(value)
+    )
   )
 
   return (
