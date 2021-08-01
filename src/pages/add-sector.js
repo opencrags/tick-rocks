@@ -61,7 +61,7 @@ export default function AddSector() {
       Promise.all([
         voteSectorName(sector.id),
         voteSectorCoordinates(sector.id),
-      ]).then((_) => navigateToAddedSector(sector.id))
+      ]).then(() => navigateToAddedSector(sector.id))
     )
 
   if (error) {
@@ -92,14 +92,14 @@ export default function AddSector() {
     <Container maxWidth="container.md">
       <CragBreadcrumb cragId={cragId} extra={[{ text: 'Add sector' }]} />
       <Heading>Add sector</Heading>
-      <FormControl id="sector-name" isRequired>
+      <FormControl isRequired>
         <FormLabel>Sector name</FormLabel>
         <Input
           placeholder="Sector name"
           onChange={(event) => setSectorName(event.target.value)}
         />
       </FormControl>
-      <FormControl id="longitude">
+      <FormControl>
         <FormLabel>Latitude</FormLabel>
         <NumberInput precision={7}>
           <NumberInputField
@@ -107,7 +107,7 @@ export default function AddSector() {
           />
         </NumberInput>
       </FormControl>
-      <FormControl id="longitude">
+      <FormControl>
         <FormLabel>Longitude</FormLabel>
         <NumberInput precision={7}>
           <NumberInputField

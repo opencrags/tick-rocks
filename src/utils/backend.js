@@ -189,6 +189,16 @@ const useGradeSystemGrades = () => {
   return { gradeSystemGrades, error }
 }
 
+const useUser = (userId) => {
+  const { data: user, error } = useBackend(`/users/${userId}`)
+  return { user, error }
+}
+
+const useQuickSearch = (text) => {
+  const { data: quickSearch, error } = useBackend(`/quick-search?text=${text}`)
+  return { quickSearch, error }
+}
+
 const countVotes = (votes) => {
   const countedVotes = Object.entries(
     votes.reduce((count, vote) => {
@@ -258,6 +268,8 @@ export {
   useImages,
   useLines,
   useGradeSystemGrades,
+  useUser,
+  useQuickSearch,
   countVotes,
   mostVoted,
   conflicting,
