@@ -26,6 +26,8 @@ import {
 import LineImage from '../components/line-image.js'
 import { ClimbBreadcrumb } from '../components/breadcrumb.js'
 
+import { CragBanner, CragBannerMenu, CragBannerMenuButton } from '../components/crag-banner.js'
+
 export default function Climb() {
   const { cragId, sectorId, climbId } = useParams()
   const { climb, error: errorClimb } = useClimb(climbId)
@@ -49,9 +51,13 @@ export default function Climb() {
   const maxGradeVoteCount = Math.max(Object.values(countedGradeVotes))
 
   return (
-    <Container maxWidth="container.md">
+    <Container 
+    maxWidth="100%"
+    mt={{base:"55px", md:"1px"}}
+    >
+      <CragBanner cragBannerImage="https://27crags.s3.amazonaws.com/photos/000/243/243558/size_xl-f6e1a707ffb0.jpg">
       <ClimbBreadcrumb climbId={climbId} />
-      <Heading size="lg">
+      <Heading size="xl">
         {climb.name_votes.length >= 1
           ? mostVoted(climb.name_votes)
           : 'No name votes'}
@@ -65,6 +71,8 @@ export default function Climb() {
           </Box>
         </LinkBox>
       </Heading>
+      </CragBanner>
+      <CragBannerMenu>Edit</CragBannerMenu>
       <Heading size="sm">Grade votes</Heading>
       {countedGradeVotes.length === 0 ? (
         <Text>There are no grade votes.</Text>

@@ -19,11 +19,13 @@ import VoteSectorName from './pages/vote-sector-name.js'
 import VoteSectorCoordinates from './pages/vote-sector-coordinates'
 import VoteClimbName from './pages/vote-climb-name.js'
 import VoteClimbGrade from './pages/vote-climb-grade.js'
+import { ParallaxProvider } from 'react-scroll-parallax'
 
 function App() {
   return (
     <ChakraProvider resetCSS theme={theme}>
       <NavBar />
+      <ParallaxProvider>
       <Switch>
         <Route exact path="/crags">
           <Crags />
@@ -86,6 +88,7 @@ function App() {
           <Landing />
         </Route>
       </Switch>
+      </ParallaxProvider>
     </ChakraProvider>
   )
 }

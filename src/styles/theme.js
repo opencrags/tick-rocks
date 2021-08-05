@@ -4,10 +4,14 @@ import { createBreakpoints } from '@chakra-ui/theme-tools'
 const fonts = { mono: `'Menlo', monospace` }
 
 const breakpoints = createBreakpoints({
-  sm: '40em',
-  md: '52em',
+  xxs: '21em', // Iphone SE
+  xs: '30em', // Iphone SE
+  sm: '40em', // Iphone 6 typ
+  md: '52em', 
   lg: '64em',
   xl: '80em',
+  xxl: '120em',  // 1920px
+  xxxl: '160em' // 2560px
 })
 
 const theme = extendTheme({
@@ -16,8 +20,8 @@ const theme = extendTheme({
   colors: {
     black: '#16161D',
     brand: {
-      100: '#faf6e8',
-      200: '#ed989c',
+      100: '#2d3748',
+      200: '#93D0CC',
       300: '#f7e3a1',
       400: '#fab7bf',
       500: '#f1b2a5',
