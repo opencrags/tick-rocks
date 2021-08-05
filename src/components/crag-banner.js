@@ -60,7 +60,7 @@ function CragBannerMenu({ children }) {
     >
       <Box w="100%">
         <Wrap>
-          <CragBannerMenuButton display={{ base: 'none', xs: 'block' }}>
+          <CragBannerMenuButton display={{ base: 'none', sm: 'block' }}>
             Home
           </CragBannerMenuButton>
           <CragBannerMenuButton>Topo</CragBannerMenuButton>
@@ -68,7 +68,7 @@ function CragBannerMenu({ children }) {
           <CragBannerMenuButton>Discussion</CragBannerMenuButton>
           <CragBannerMenuButton>Access</CragBannerMenuButton>
           <CragBannerMenuButton>Photos</CragBannerMenuButton>
-          <CragBannerMenuButton display={{ base: 'none', xxs: 'block' }}>
+          <CragBannerMenuButton display={{ base: 'none', sm: 'block' }}>
             Authors
           </CragBannerMenuButton>
           <Spacer display={{ base: 'none', sm: 'block' }} />
