@@ -20,74 +20,87 @@ import VoteSectorCoordinates from './pages/vote-sector-coordinates'
 import VoteClimbName from './pages/vote-climb-name.js'
 import VoteClimbGrade from './pages/vote-climb-grade.js'
 import { ParallaxProvider } from 'react-scroll-parallax'
+import FilterSearch from './pages/filter-search'
 
 function App() {
   return (
     <ChakraProvider resetCSS theme={theme}>
       <NavBar />
       <ParallaxProvider>
-      <Switch>
-        <Route exact path="/crags">
-          <Crags />
-        </Route>
-        <Route exact path="/crags/:cragId?">
-          <Crag />
-        </Route>
-        <Route path="/crags/:cragId?/vote-name">
-          <VoteCragName />
-        </Route>
-        <Route path="/add-crag">
-          <AddCrag />
-        </Route>
-        <Route exact path="/crags/:cragId?/add-sector">
-          <AddSector />
-        </Route>
-        <Route exact path="/crags/:cragId?/sectors/:sectorId?">
-          <Sector />
-        </Route>
-        <Route exact path="/crags/:cragId?/sectors/:sectorId?/vote-name">
-          <VoteSectorName />
-        </Route>
-        <Route exact path="/crags/:cragId?/sectors/:sectorId?/vote-coordinates">
-          <VoteSectorCoordinates />
-        </Route>
-        <Route exact path="/crags/:cragId?/sectors/:sectorId?/add-climb">
-          <AddClimb />
-        </Route>
-        <Route exact path="/crags/:cragId?/sectors/:sectorId?/climbs/:climbId?">
-          <Climb />
-        </Route>
-        <Route
-          exact
-          path="/crags/:cragId?/sectors/:sectorId?/climbs/:climbId?/vote-name"
-        >
-          <VoteClimbName />
-        </Route>
-        <Route
-          exact
-          path="/crags/:cragId?/sectors/:sectorId?/climbs/:climbId?/vote-grade"
-        >
-          <VoteClimbGrade />
-        </Route>
-        <Route exact path="/crags/:cragId?/sectors/:sectorId?/add-image">
-          <AddImage />
-        </Route>
-        <Route exact path="/crags/:cragId?/sectors/:sectorId?/images/:imageId?">
-          <RockImage />
-        </Route>
-        <Route
-          exact
-          path="/crags/:cragId?/sectors/:sectorId?/images/:imageId?/add-line"
-        >
-          <AddLine />
-        </Route>
-        <Route exact path="/crags/:cragId?/sectors/:sectorId?/lines/:lineId?">
-          <Line />
-        </Route>
-        <Route path="/">
-          <Landing />
-        </Route>
-      </Switch>
+        <Switch>
+          <Route exact path="/crags">
+            <Crags />
+          </Route>
+          <Route exact path="/crags/:cragId?">
+            <Crag />
+          </Route>
+          <Route path="/crags/:cragId?/vote-name">
+            <VoteCragName />
+          </Route>
+          <Route path="/add-crag">
+            <AddCrag />
+          </Route>
+          <Route exact path="/crags/:cragId?/add-sector">
+            <AddSector />
+          </Route>
+          <Route exact path="/crags/:cragId?/sectors/:sectorId?">
+            <Sector />
+          </Route>
+          <Route exact path="/crags/:cragId?/sectors/:sectorId?/vote-name">
+            <VoteSectorName />
+          </Route>
+          <Route
+            exact
+            path="/crags/:cragId?/sectors/:sectorId?/vote-coordinates"
+          >
+            <VoteSectorCoordinates />
+          </Route>
+          <Route exact path="/crags/:cragId?/sectors/:sectorId?/add-climb">
+            <AddClimb />
+          </Route>
+          <Route
+            exact
+            path="/crags/:cragId?/sectors/:sectorId?/climbs/:climbId?"
+          >
+            <Climb />
+          </Route>
+          <Route
+            exact
+            path="/crags/:cragId?/sectors/:sectorId?/climbs/:climbId?/vote-name"
+          >
+            <VoteClimbName />
+          </Route>
+          <Route
+            exact
+            path="/crags/:cragId?/sectors/:sectorId?/climbs/:climbId?/vote-grade"
+          >
+            <VoteClimbGrade />
+          </Route>
+          <Route exact path="/crags/:cragId?/sectors/:sectorId?/add-image">
+            <AddImage />
+          </Route>
+          <Route
+            exact
+            path="/crags/:cragId?/sectors/:sectorId?/images/:imageId?"
+          >
+            <RockImage />
+          </Route>
+          <Route
+            exact
+            path="/crags/:cragId?/sectors/:sectorId?/images/:imageId?/add-line"
+          >
+            <AddLine />
+          </Route>
+          <Route exact path="/crags/:cragId?/sectors/:sectorId?/lines/:lineId?">
+            <Line />
+          </Route>
+          <Route path="/search">
+            <FilterSearch />
+          </Route>
+          <Route path="/">
+            <Landing />
+          </Route>
+        </Switch>
       </ParallaxProvider>
     </ChakraProvider>
   )

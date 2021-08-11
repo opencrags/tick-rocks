@@ -236,6 +236,17 @@ const useUserVote = (votes) => {
   }
 }
 
+const useSearchClimbs = (body, params) => {
+  const paramString = Object.entries(params)
+    .map(([key, value]) => `${key}=${value}`)
+    .join('&')
+  const { data: climbs, error } = useBackend(`/search-climbs?${paramString}`, {
+    method: 'POST',
+    body: JSON.stringify(body),
+  })
+  return { climbs, error }
+}
+
 export {
   useToken,
   config,
@@ -262,4 +273,5 @@ export {
   mostVoted,
   conflicting,
   useUserVote,
+  useSearchClimbs,
 }
