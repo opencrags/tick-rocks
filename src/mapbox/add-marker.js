@@ -1,4 +1,5 @@
-import mapboxgl from 'mapbox-gl'
+// eslint-disable-next-line import/no-webpack-loader-syntax
+import mapboxgl from '!mapbox-gl'
 
 export function addLocationMarker(map, lat, lng, setLocation) {
   const marker = new mapboxgl.Marker({ draggable: true })

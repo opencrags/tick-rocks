@@ -1,5 +1,6 @@
 import { Box } from '@chakra-ui/react'
-import mapboxgl from 'mapbox-gl'
+// eslint-disable-next-line import/no-webpack-loader-syntax
+import mapboxgl from '!mapbox-gl'
 import { useEffect, useRef, useState } from 'react'
 import useCallbackRef from '../hooks/use-callback-ref'
 
