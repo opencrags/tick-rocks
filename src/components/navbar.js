@@ -149,9 +149,9 @@ export function NavBar() {
                       <path
                         d="M67 116a6 6 0 01-6 4h0-18a20 20 0 01-15-7l-10-12a21 21 0 010-26l27-35c1-2 5-6 7-6 3 0 4 5 3 7l-1 6-4 20a8 8 0 002 7l17 17a6 6 0 012 5z"
                         stroke="#3CAB70"
-                        stroke-width="4"
+                        strokeWidth="4"
                         fill="#fff"
-                        stroke-miterlimit="10"
+                        strokeMiterlimit="10"
                         data-name="Lager 3"
                       />
                       <path
@@ -255,9 +255,9 @@ export function NavBar() {
               <path
                 d="M67 116a6 6 0 01-6 4h0-18a20 20 0 01-15-7l-10-12a21 21 0 010-26l27-35c1-2 5-6 7-6 3 0 4 5 3 7l-1 6-4 20a8 8 0 002 7l17 17a6 6 0 012 5z"
                 stroke="#3CAB70"
-                stroke-width="4"
+                strokeWidth="4"
                 fill="#fff"
-                stroke-miterlimit="10"
+                strokeMiterlimit="10"
                 data-name="Lager 3"
               />
               <path

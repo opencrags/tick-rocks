@@ -4,20 +4,7 @@ import { Auth0Provider } from '@auth0/auth0-react'
 import { useConfig } from '../utils/backend'
 
 const Auth0ProviderWithHistory = ({ children }) => {
-  const { config, isLoading, error } = useConfig()
   const history = useHistory()
-
-  if (isLoading) {
-    return 'Loading config...'
-  }
-  if (error) {
-    return 'Failed to load config'
-  }
-  const domain = config.AUTH0_ISSUER_BASE_URL
-  const clientId = config.AUTH0_CLIENT_ID
-  const redirect = config.AUTH0_REDIRECT
-  const audience = config.AUTH0_AUDIENCE
-  const scope = config.AUTH0_SCOPE
 
   const onRedirectCallback = (appState) => {
     history.push(appState?.returnTo || window.location.pathname)
@@ -25,12 +12,12 @@ const Auth0ProviderWithHistory = ({ children }) => {
 
   return (
     <Auth0Provider
-      domain={domain}
-      clientId={clientId}
-      redirectUri={redirect}
+      domain={process.env.REACT_APP_AUTH0_ISSUER_BASE_URL}
+      clientId={process.env.REACT_APP_AUTH0_CLIENT_ID}
+      redirectUri={window.location.origin + '/api/auth/callback'}
       onRedirectCallback={onRedirectCallback}
-      audience={audience}
-      scope={scope}
+      audience={process.env.REACT_APP_AUTH0_AUDIENCE}
+      scope={process.env.REACT_APP_AUTH0_SCOPE}
     >
       {children}
     </Auth0Provider>

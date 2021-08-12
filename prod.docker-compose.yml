@@ -6,7 +6,8 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: always
-    volumes:
-      - ./prod.config.json:/usr/share/nginx/html/config.json
+    env_file:
+      - .env
+      - .env.development
     ports:
       - "3000:3000"

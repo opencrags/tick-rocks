@@ -6,8 +6,8 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: always
-    volumes:
-      - ./public/config.json:/usr/share/nginx/html/config.json
+    env_file:
+      - .env.development
     depends_on:
       - opencrags-rest-api-test
     ports:
@@ -21,7 +21,8 @@ services:
     environment:
       DB: "mongodb://opencrags-mongo-test:27017"
     env_file:
-      - dev.env
+      - .env
+      - .env.development
     ports:
       - "8000:8000"
 
