@@ -167,6 +167,7 @@ export function NavBar() {
                 </HStack>
 
                 <MenuItems to="/search">Search</MenuItems>
+                <MenuItems to="/map">Map</MenuItems>
                 <MenuItems to="/crags">Crags</MenuItems>
                 <MenuItems to="/add-crag">Add crag</MenuItems>
                 <MenuDivider />
@@ -288,6 +289,7 @@ export function NavBar() {
             justify={['center', 'space-between', 'flex-end', 'flex-end']}
             direction={['column', 'row', 'row', 'row']}
           >
+            <MenuItems to="/search">Search</MenuItems>
             <MenuItems to="/map">Map</MenuItems>
             <MenuItems to="/crags">Crags</MenuItems>
             <MenuItems to="/add-crag">Add crag</MenuItems>
