@@ -6,22 +6,23 @@ services:
   #     context: .
   #     dockerfile: Dockerfile
   #   restart: always
-  #   volumes:
-  #     - ./public/config.json:/usr/share/nginx/html/config.json
+  # env_file:
+  #   - .env
+  #   - .env.development
   #   depends_on:
   #     - opencrags-rest-api-dev
   #   ports:
   #     - "3000:3000"
 
   opencrags-rest-api-dev:
-    image: opencrags/opencrags-rest-api:r16
+    image: opencrags/opencrags-rest-api:r32
     restart: always
     depends_on:
       - opencrags-mongo-dev
     environment:
       DB: "mongodb://opencrags-mongo-dev:27017"
     env_file:
-      - dev.env
+      - .env.development
     ports:
       - "8000:8000"
 
