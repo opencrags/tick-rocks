@@ -5,7 +5,8 @@ import App from './app.js'
 import reportWebVitals from './reportWebVitals'
 import { BrowserRouter as Router } from 'react-router-dom'
 import Auth0ProviderWithHistory from './components/auth0-provider.js'
-import mapboxgl from 'mapbox-gl'
+// eslint-disable-next-line import/no-webpack-loader-syntax
+import mapboxgl from '!mapbox-gl'
 import './styles/mapbox.css'
 
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN

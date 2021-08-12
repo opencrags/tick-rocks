@@ -5,7 +5,8 @@ import { addSearchArea, removeSearchArea } from '../mapbox/isochrone'
 import { addRouteMarkers } from '../mapbox/route-markers'
 import { climbsToGeoJson } from '../mapbox/utils'
 import { useRef, useState } from 'react'
-import mapboxgl from 'mapbox-gl'
+// eslint-disable-next-line import/no-webpack-loader-syntax
+import mapboxgl from '!mapbox-gl'
 import MapPopupPortal from './map-popup-portal'
 import MapPopup from './map-popup'
 

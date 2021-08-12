@@ -166,7 +166,7 @@ export function NavBar() {
                   </Heading>
                 </HStack>
 
-                <MenuItems to="/map">Map</MenuItems>
+                <MenuItems to="/search">Search</MenuItems>
                 <MenuItems to="/crags">Crags</MenuItems>
                 <MenuItems to="/add-crag">Add crag</MenuItems>
                 <MenuDivider />
