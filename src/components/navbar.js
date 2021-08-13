@@ -30,9 +30,11 @@ import {
 import { Link as RouterLink } from 'react-router-dom'
 import React from 'react'
 import { SearchIcon, HamburgerIcon } from '@chakra-ui/icons'
+import { useUser } from '../utils/backend'
 
 export function NavBar() {
   const { isAuthenticated, loginWithRedirect, logout } = useAuth0()
+  const { user, error: userError } = useUser()
   const btnRef = React.useRef()
   const MenuItems = (props) => {
     const { children, isLast, to = '/', ...rest } = props
@@ -174,8 +176,8 @@ export function NavBar() {
                 {isAuthenticated ? (
                   <>
                     <MenuItems to="/user-profile">
-                      <Avatar name="Rasmus Eriksson" src="..." size="xs" />
-                      <Text marginLeft="3">Rasmus Eriksson</Text>
+                      <Avatar name={user.display_name} src="..." size="xs" />
+                      <Text marginLeft="3">{user.display_name}</Text>
                     </MenuItems>
                     <MenuItems to="/ticklist">Ticklist</MenuItems>
                     <MenuItems to="/settings">Settings</MenuItems>
@@ -299,13 +301,13 @@ export function NavBar() {
                   as={MenuButton}
                   display={{ base: 'none', md: 'block' }}
                   margin="5"
-                  name="Rasmus Eriksson"
+                  name={user.display_name}
                   src="..."
                   size="xs"
                 ></Avatar>
-                <MenuList>
+                <MenuList color="black">
                   <MenuItem as={RouterLink} to="/user-profile">
-                    Rasmus Eriksson
+                    {user.display_name || 'No display name set'}
                   </MenuItem>
                   <MenuItem as={RouterLink} to="/ticklist">
                     Ticklist{' '}

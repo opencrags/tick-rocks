@@ -69,7 +69,7 @@ const useAuthorizedFetcher = () => {
 
 const useBackend = (key, ...args) => {
   const { token, errorToken } = useToken()
-  const { data, error } = useSwr(
+  const { data, error, mutate } = useSwr(
     key ? [key, token, JSON.stringify(args)] : null,
     (key) =>
       token ? authorizedFetcher(token, key, ...args) : fetcher(key, ...args)
@@ -77,6 +77,7 @@ const useBackend = (key, ...args) => {
   return {
     data,
     error: error || errorToken,
+    mutate,
   }
 }
 
@@ -127,6 +128,12 @@ const useGradeSystemGrade = (gradeSystemGradeId) => {
     gradeSystemGradeId ? `/grade-system-grades/${gradeSystemGradeId}` : null
   )
   return { grade, error }
+}
+
+const useUser = () => {
+  const { user, error: auth0Error } = useAuth0()
+  const { data, error, mutate } = useBackend(user ? `/users/${user.sub}` : null)
+  return { user: { ...data, ...user }, error: error || auth0Error, mutate }
 }
 
 const useQuery = (collection, query, limit, offset) =>
@@ -242,6 +249,7 @@ export {
   useImage,
   useLine,
   useGradeSystemGrade,
+  useUser,
   useCrags,
   useSectors,
   useClimbs,

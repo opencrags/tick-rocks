@@ -3,6 +3,7 @@ import { Route, Switch } from 'react-router'
 import theme from './styles/theme'
 import { NavBar } from './components/navbar.js'
 import Landing from './pages/landing.js'
+import Settings from './pages/settings.js'
 import Crags from './pages/crags.js'
 import Crag from './pages/crag.js'
 import Sector from './pages/sector.js'
@@ -28,6 +29,9 @@ function App() {
       <NavBar />
       <ParallaxProvider>
         <Switch>
+          <Route exact path="/settings">
+            <Settings />
+          </Route>
           <Route exact path="/crags">
             <Crags />
           </Route>

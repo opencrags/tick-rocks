@@ -55,7 +55,7 @@ const useClimbBreadcrumbs = (climbId) => {
           link: `/crags/${crag.id}/sectors/${sector.id}`,
         },
         {
-          text: mostVoted(crag.name_votes),
+          text: mostVoted(climb.name_votes),
           link: `/crags/${crag.id}/sectors/${sector.id}/climbs/${climb.id}`,
         },
       ],
