@@ -2,7 +2,7 @@ import { HStack } from '@chakra-ui/layout'
 import { Flex } from '@chakra-ui/layout'
 import { Heading } from '@chakra-ui/layout'
 import { Select } from '@chakra-ui/select'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { climbTypes } from '../utils/constants'
 import SearchMap from '../components/search-map'
 import RangeSlider from '../components/range-slider'
@@ -20,8 +20,11 @@ export default function FilterSearch({ ...props }) {
   const [linearDistance, setLinearDistance] = useState(100)
   const [linearDistanceEnd, setLinearDistanceEnd] = useState(100)
   const [gradeRange, setGradeRange] = useState([7, 30])
+  const [gradeRangeEnd, setGradeRangeEnd] = useState([7, 30])
   const [stars, setStars] = useState(0)
+  const [starsEnd, setStarsEnd] = useState(0)
   const [ascents, setAscents] = useState(0)
+  const [ascentsEnd, setAscentsEnd] = useState(0)
   const [location, setLocation] = useState({
     longitude: 18.103421414223476,
     latitude: 59.356688222237636,
@@ -35,6 +38,23 @@ export default function FilterSearch({ ...props }) {
       { numberOfEdges: 100 }
     )
   )
+  const handleDrivingDistanceChangeEnd = useCallback(
+    (value) => setDrivingDistanceEnd(value),
+    [setDrivingDistanceEnd]
+  )
+  const handleLinearDistanceChangeEnd = useCallback(
+    (value) => setLinearDistanceEnd(value),
+    [setLinearDistanceEnd]
+  )
+  const handleStarsEnd = useCallback(
+    (value) => setStarsEnd(value),
+    [setStarsEnd]
+  )
+  const handleAscentsEnd = useCallback(
+    (value) => setAscentsEnd(value),
+    [setAscentsEnd]
+  )
+
   const { gradeSystemGrades, error: errorGradeSystemGrades } =
     useGradeSystemGrades()
 
@@ -57,7 +77,7 @@ export default function FilterSearch({ ...props }) {
   const { climbs, searchClimbError } = useSearchClimbs(
     {
       ...(fontGrades && {
-        grade_ids: getEquivalentGrades(fontGrades, gradeRange).map(
+        grade_ids: getEquivalentGrades(fontGrades, gradeRangeEnd).map(
           (grade) => grade.id
         ),
       }),
@@ -71,8 +91,8 @@ export default function FilterSearch({ ...props }) {
       latitude: location.latitude,
       // Don't filter on min rating if it is set to 0 (to
       // include problems with no avg rating).
-      ...(stars && { minimum_average_rating: stars }),
-      ...(ascents && { minimum_ascents: ascents }),
+      ...(starsEnd && { minimum_average_rating: starsEnd }),
+      ...(ascentsEnd && { minimum_ascents: ascentsEnd }),
       ...(distanceType === 'Linear' && { max_distance: linearDistanceEnd }),
     }
   )
@@ -127,7 +147,7 @@ export default function FilterSearch({ ...props }) {
         label="Linear distance"
         value={linearDistance}
         onChange={(value) => setLinearDistance(value)}
-        onChangeEnd={(value) => setLinearDistanceEnd(value)}
+        onChangeEnd={handleLinearDistanceChangeEnd}
         min={0}
         max={500}
       ></FilterSlider>
@@ -139,7 +159,7 @@ export default function FilterSearch({ ...props }) {
         label="Driving distance"
         value={drivingDistance}
         onChange={(value) => setDrivingDistance(value)}
-        onChangeEnd={(value) => setDrivingDistanceEnd(value)}
+        onChangeEnd={handleDrivingDistanceChangeEnd}
         min={10}
         step={5}
         max={60}
@@ -204,6 +224,7 @@ export default function FilterSearch({ ...props }) {
           <RangeSlider
             value={gradeRange}
             onChange={(value) => setGradeRange(value)}
+            onChangeEnd={(value) => setGradeRangeEnd(value)}
             w="80%"
             fromArray={gradeArray}
           />
@@ -216,6 +237,7 @@ export default function FilterSearch({ ...props }) {
           step={0.1}
           value={stars}
           onChange={(value) => setStars(value)}
+          onChangeEnd={handleStarsEnd}
         />
 
         <FilterSlider
@@ -224,6 +246,7 @@ export default function FilterSearch({ ...props }) {
           max={100}
           value={ascents}
           onChange={(value) => setAscents(value)}
+          onChangeEnd={handleAscentsEnd}
         />
 
         <SearchResults climbs={climbs} />

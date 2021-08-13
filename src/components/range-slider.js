@@ -4,7 +4,7 @@ import { SliderThumb } from '@chakra-ui/slider'
 import { SliderFilledTrack } from '@chakra-ui/slider'
 import { SliderTrack } from '@chakra-ui/slider'
 import { Slider } from '@chakra-ui/slider'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import useCallbackRef from '../hooks/use-callback-ref'
 
 export default function RangeSlider({
@@ -14,11 +14,27 @@ export default function RangeSlider({
   fromArray,
   value,
   onChange,
+  onChangeEnd,
   ...props
 }) {
   const [lowerValue, setLowerValue] = useState(value[0])
   const [upperValue, setUpperValue] = useState(value[1])
   const onChangeCallback = useCallbackRef(onChange)
+  const lowerChangeEnd = useCallbackRef((lowerValue) =>
+    onChangeEnd([lowerValue, upperValue])
+  )
+  const upperChangeEnd = useCallbackRef((upperValue) =>
+    onChangeEnd([lowerValue, upperValue])
+  )
+
+  const handleLowerChangeEnd = useCallback(
+    () => lowerChangeEnd(lowerValue),
+    [lowerChangeEnd, lowerValue]
+  )
+  const handleUpperChangeEnd = useCallback(
+    () => upperChangeEnd(upperValue),
+    [upperChangeEnd, upperValue]
+  )
 
   useEffect(() => {
     onChangeCallback([lowerValue, upperValue])
@@ -43,6 +59,7 @@ export default function RangeSlider({
           max={maximum}
           step={step}
           onChange={(value) => setUpperValue(Math.max(lowerValue, value))}
+          onChangeEnd={handleUpperChangeEnd}
         >
           <SliderTrack>
             <SliderFilledTrack />
@@ -66,6 +83,7 @@ export default function RangeSlider({
             }
             setLowerValue(Math.min(value, upperValue))
           }}
+          onChangeEnd={handleLowerChangeEnd}
         >
           <SliderTrack bg="transparent">
             <SliderFilledTrack bg="gray.200" zIndex={1} />
