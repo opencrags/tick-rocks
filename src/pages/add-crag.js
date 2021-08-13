@@ -65,7 +65,7 @@ export default function AddCrag() {
   }
 
   return (
-    <Container maxWidth="container.md">
+    <Container marginTop="20px" maxWidth="container.md">
       <Heading>Add crag</Heading>
       <FormControl id="crag-name" isRequired>
         <FormLabel>Crag name</FormLabel>
