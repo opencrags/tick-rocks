@@ -42,10 +42,24 @@ export default function FilterSearch({ ...props }) {
     ?.filter(({ system }) => system === 'Fontainebleau grading system')
     .sort((a, b) => a.rank - b.rank)
 
+  const getEquivalentGrades = (sliderGrades, gradeRange) => {
+    const [lowerBound, upperBound] = gradeRange
+    const lowerFuzzyGrade = sliderGrades[lowerBound].fuzzy_unified_rank
+    const upperFuzzyGrade = sliderGrades[upperBound].fuzzy_unified_rank
+
+    return gradeSystemGrades.filter(
+      (grade) =>
+        grade.fuzzy_unified_rank >= lowerFuzzyGrade &&
+        grade.fuzzy_unified_rank <= upperFuzzyGrade
+    )
+  }
+
   const { climbs, searchClimbError } = useSearchClimbs(
     {
       ...(fontGrades && {
-        grade_ids: fontGrades.slice(...gradeRange).map(({ id }) => id),
+        grade_ids: getEquivalentGrades(fontGrades, gradeRange).map(
+          (grade) => grade.id
+        ),
       }),
       ...(distanceType === 'Driving' &&
         isochrone !== null && {
