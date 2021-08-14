@@ -26,7 +26,11 @@ import {
 import LineImage from '../components/line-image.js'
 import { ClimbBreadcrumb } from '../components/breadcrumb.js'
 
-import { CragBanner, CragBannerMenu, CragBannerMenuButton } from '../components/crag-banner.js'
+import {
+  CragBanner,
+  CragBannerMenu,
+  CragBannerMenuButton,
+} from '../components/crag-banner.js'
 
 export default function Climb() {
   const { cragId, sectorId, climbId } = useParams()
@@ -51,61 +55,87 @@ export default function Climb() {
   const maxGradeVoteCount = Math.max(Object.values(countedGradeVotes))
 
   return (
-    <Container 
-    maxWidth="100%"
-    mt={{base:"55px", md:"1px"}}
-    >
+    <Container maxWidth="100%" mt={{ base: '55px', md: '0px' }} padding="0">
       <CragBanner cragBannerImage="https://27crags.s3.amazonaws.com/photos/000/243/243558/size_xl-f6e1a707ffb0.jpg">
-      <ClimbBreadcrumb climbId={climbId} />
-      <Heading size="xl">
-        {climb.name_votes.length >= 1
-          ? mostVoted(climb.name_votes)
-          : 'No name votes'}
-        <LinkBox
-          as={RouterLink}
-          to={`/crags/${cragId}/sectors/${sectorId}/climbs/${climbId}/vote-name`}
-        >
-          <Box as="sup">
-            <EditButton />
-            <VoteConflictWarning votes={climb.name_votes} />
-          </Box>
-        </LinkBox>
-      </Heading>
+        <ClimbBreadcrumb climbId={climbId} />
+        <Heading size="xl">
+          {climb.name_votes.length >= 1
+            ? mostVoted(climb.name_votes)
+            : 'No name votes'}
+          <LinkBox
+            as={RouterLink}
+            to={`/crags/${cragId}/sectors/${sectorId}/climbs/${climbId}/vote-name`}
+          >
+            <Box as="sup">
+              <EditButton />
+              <VoteConflictWarning votes={climb.name_votes} />
+            </Box>
+          </LinkBox>
+        </Heading>
+        <Heading size="lg">
+          <Grade gradeId={mostVoted(climb.grade_votes)} />
+          <LinkBox
+            as={RouterLink}
+            to={`/crags/${cragId}/sectors/${sectorId}/climbs/${climbId}/vote-grade`}
+          >
+            <Box as="sup">
+              <EditButton />
+              <VoteConflictWarning votes={climb.grade_votes} />
+            </Box>
+          </LinkBox>
+        </Heading>
+        <Heading size="sm">
+          {climb.rating_votes.length >= 1
+            ? mostVoted(climb.rating_votes) + ' / 5 stars'
+            : 'No rating votes'}
+          <LinkBox
+            as={RouterLink}
+            to={`/crags/${cragId}/sectors/${sectorId}/climbs/${climbId}/vote-rating`}
+          >
+            <Box as="sup">
+              <EditButton />
+            </Box>
+          </LinkBox>
+        </Heading>
       </CragBanner>
       <CragBannerMenu>Edit</CragBannerMenu>
-      <Heading size="sm">Grade votes</Heading>
-      {countedGradeVotes.length === 0 ? (
-        <Text>There are no grade votes.</Text>
-      ) : (
-        countedGradeVotes.map((vote) => (
-          <Box key={vote.value}>
-            <HStack>
-              <Grade gradeId={vote.value} />
-              <Text>({vote.count} votes)</Text>
-            </HStack>
-            <Progress value={vote.count / maxGradeVoteCount} />
-          </Box>
-        ))
-      )}
-      <Link
-        as={RouterLink}
-        to={`/crags/${cragId}/sectors/${sectorId}/climbs/${climbId}/vote-grade`}
-      >
-        <Button>Add grade vote</Button>
-      </Link>
-      {lines.length === 0 ? (
-        <Text>There are no drawn lines for this climb.</Text>
-      ) : (
-        <VStack>
-          {lines.map((line) => (
-            <ImageWithLines key={line.id} line={line} />
-          ))}
-        </VStack>
-      )}
-      <Text>
-        If you want to add a line then go to the image you want to draw the line
-        on and then select this climb.
-      </Text>
+      <Container maxWidth="container.md">
+        <Box margin="10px 0px">
+          <Heading size="sm">Grade votes</Heading>
+          {countedGradeVotes.length === 0 ? (
+            <Text>There are no grade votes.</Text>
+          ) : (
+            countedGradeVotes.map((vote) => (
+              <Box key={vote.value}>
+                <HStack>
+                  <Grade gradeId={vote.value} />
+                  <Text>({vote.count} votes)</Text>
+                </HStack>
+                <Progress value={vote.count / maxGradeVoteCount} />
+              </Box>
+            ))
+          )}
+        </Box>
+        <Link
+          as={RouterLink}
+          to={`/crags/${cragId}/sectors/${sectorId}/climbs/${climbId}/vote-grade`}
+        >
+          <Button>Add grade vote</Button>
+        </Link>
+        {lines.length === 0 ? (
+          <Text>There are no drawn lines for this climb.</Text>
+        ) : (
+          <VStack>
+            {lines.map((line) => (
+              <ImageWithLines key={line.id} line={line} />
+            ))}
+          </VStack>
+        )}
+        <Text>
+          If you want to add a line then go to the image you want to draw the
+          line on and then select this climb.
+        </Text>
+      </Container>
     </Container>
   )
 }
