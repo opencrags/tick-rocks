@@ -14,8 +14,8 @@ import React from 'react'
 function CragComponentBox({ children, ...props }) {
   return (
     <Box
-      pl={{ base: '0px', md: '5vw' }}
-      pr={{ base: '0px', md: '5vw' }}
+      pl={{ base: '0px', md: '10vw' }}
+      pr={{ base: '0px', md: '10vw' }}
       {...props}
     >
       {children}

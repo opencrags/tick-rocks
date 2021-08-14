@@ -32,6 +32,8 @@ import {
   UnorderedList,
   ListItem,
 } from '@chakra-ui/react'
+import StarRatings from 'react-star-ratings'
+
 import { Link as RouterLink } from 'react-router-dom'
 import React, { useEffect, useState } from 'react'
 import { SearchIcon, HamburgerIcon } from '@chakra-ui/icons'
@@ -42,8 +44,7 @@ export function NavBar() {
   const { isAuthenticated, loginWithRedirect, logout } = useAuth0()
   const { user, error: userError } = useUser()
   const btnRef = React.useRef()
-  const MenuItems = (props) => {
-    const { children, isLast, to = '/', ...rest } = props
+  const MenuItems = ({ children, isLast, to = '/', ...props }) => {
     return (
       <Box
         as={RouterLink}
@@ -59,11 +60,35 @@ export function NavBar() {
         paddingRight={{ base: 0, sm: 1 }}
         paddingLeft={{ base: 0, sm: 1 }}
         fontWeight="semibold"
+        {...props}
       >
         <Center>{children}</Center>
       </Box>
     )
   }
+  const PhoneMenuItems = ({ children, isLast, to = '/', ...props }) => {
+    return (
+      <Box
+        as={RouterLink}
+        to={to}
+        _hover={{
+          background: 'brand.300',
+        }}
+        color="white"
+        width="100%"
+        minWidth="100px"
+        pt="4"
+        pb="4"
+        paddingRight={{ base: 0, sm: 1 }}
+        paddingLeft={{ base: 0, sm: 1 }}
+        fontWeight="semibold"
+        {...props}
+      >
+        <Box pl="50px">{children} </Box>
+      </Box>
+    )
+  }
+
   const { isOpen, onOpen, onClose } = useDisclosure()
   function SearchModal() {
     const [searchText, setSearchText] = useState(null)
@@ -131,7 +156,19 @@ export function NavBar() {
                         <HStack>
                           <Box>{mostVoted(result.climb.name_votes)}</Box>
                           <Grade gradeId={result.climb.most_voted_grade} />
-                          <Box>{result.climb.average_rating} </Box>
+                          {result.climb.average_rating >= 1 ? (
+                            <StarRatings
+                              rating={result.climb.average_rating}
+                              starRatedColor="gold"
+                              numberOfStars={5}
+                              name="rating"
+                              starEmptyColor="none"
+                              starDimension="15px"
+                              starSpacing="1px"
+                            />
+                          ) : (
+                            'No rating votes'
+                          )}
                         </HStack>
                       </>
                     }
@@ -266,33 +303,38 @@ export function NavBar() {
                   </Heading>
                 </HStack>
 
-                <MenuItems to="/search">Search</MenuItems>
-                <MenuItems to="/map">Map</MenuItems>
-                <MenuItems to="/crags">Crags</MenuItems>
-                <MenuItems to="/add-crag">Add crag</MenuItems>
+                <PhoneMenuItems textAlign="left" to="/search">
+                  Search
+                </PhoneMenuItems>
+                <PhoneMenuItems to="/map">Map</PhoneMenuItems>
+                <PhoneMenuItems to="/crags">Crags</PhoneMenuItems>
+                <PhoneMenuItems to="/add-crag">Add crag</PhoneMenuItems>
                 <MenuDivider />
                 {isAuthenticated ? (
                   <>
-                    <MenuItems to="/user-profile">
-                      <Avatar name={user.display_name} src="..." size="xs" />
-                      <Text marginLeft="3">{user.display_name}</Text>
-                    </MenuItems>
-                    <MenuItems to="/ticklist">Ticklist</MenuItems>
-                    <MenuItems to="/settings">Settings</MenuItems>
+                    <PhoneMenuItems to="/user-profile">
+                      <HStack>
+                        <Avatar name={user.display_name} src="..." size="xs" />
+                        <Text>{user.display_name}</Text>
+                      </HStack>
+                    </PhoneMenuItems>
+                    <PhoneMenuItems to="/ticklist">Ticklist</PhoneMenuItems>
+                    <PhoneMenuItems to="/settings">Settings</PhoneMenuItems>
                     <Box
                       onClick={logout}
                       _hover={{
-                        background: '#3CAB70',
-                        cursor: 'pointer',
+                        background: 'brand.300',
                       }}
-                      color="White"
+                      color="white"
                       width="100%"
                       minWidth="100px"
+                      pt="4"
+                      pb="4"
+                      paddingRight={{ base: 0, sm: 1 }}
+                      paddingLeft={{ base: 0, sm: 1 }}
                       fontWeight="semibold"
-                      pt="5"
-                      pb="5"
                     >
-                      <Center>Sign Out</Center>
+                      <Box pl="50px">Sign Out </Box>
                     </Box>
                   </>
                 ) : (
@@ -333,14 +375,13 @@ export function NavBar() {
         <Flex
           width="100%"
           position={{ base: 'fixed', md: 'relative' }}
-          zIndex="docked"
-          top={{ base: '0px', md: '0px' }}
+          zIndex="overlay"
+          top="13px"
           as="nav"
           pl={{ xxl: '14vw', xl: '80px', md: '5vw', base: '0px' }}
           pr={{ xxl: '14vw', xl: '80px', md: '5vw', base: '0px' }}
           align="center"
           justify="space-between"
-          width="100%"
           height="55px"
           bg="gray.700"
           color="White"
@@ -461,6 +502,7 @@ const QuickSearchResultItem = ({
   displayName,
   resultType,
   key,
+  children,
 }) => {
   return (
     <Box onClick={onClose} as={RouterLink} to={link} key={key}>
@@ -484,7 +526,7 @@ const QuickSearchResultItem = ({
             fontWeight="bold"
             fontSize="md"
           >
-            {displayName}
+            {displayName} {children}
           </Box>
         </Flex>
       </ListItem>

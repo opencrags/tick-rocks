@@ -27,10 +27,12 @@ import VoteBanner from './pages/vote-banner'
 import { ParallaxProvider } from 'react-scroll-parallax'
 import FilterSearch from './pages/filter-search'
 import VoteCragDescription from './pages/vote-crag-description'
-
+import VoteClimbBetaVideo from './pages/vote-climb-beta-video'
+import BetaBar from './components/betabar'
 function App() {
   return (
     <ChakraProvider resetCSS theme={theme}>
+      <BetaBar />
       <NavBar />
       <ParallaxProvider>
         <Switch>
@@ -102,6 +104,12 @@ function App() {
             path="/crags/:cragId?/sectors/:sectorId?/climbs/:climbId?/vote-rating"
           >
             <VoteRating />
+          </Route>
+          <Route
+            exact
+            path="/crags/:cragId?/sectors/:sectorId?/climbs/:climbId?/vote-climb-beta-video"
+          >
+            <VoteClimbBetaVideo />
           </Route>
           <Route exact path="/crags/:cragId?/sectors/:sectorId?/add-image">
             <AddImage />

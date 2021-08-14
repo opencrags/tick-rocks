@@ -8,50 +8,71 @@ import {
   HStack,
   Spacer,
   Image,
+  Heading,
+  propNames,
 } from '@chakra-ui/react'
 import { CragComponentBox } from './crag-component-box'
 import { Link as RouterLink, useParams } from 'react-router-dom'
 import { TickRocksLogo } from './tick-rocks-logo'
 
-export function PageFooter() {
+export function PageFooter({ ...props }) {
   return (
-    <Box color="gray.200" bgColor="gray.900" marginTop="10px" minHeight="100%">
-      <CragComponentBox>
+    <Box color="gray.200" bgColor="gray.900" {...props}>
+      <Flex
+        direction={{ base: 'column', md: 'row' }}
+        align="center"
+        justify="space-evenly"
+        padding={8}
+      >
         <Flex
-          direction={{ base: 'column', md: 'row' }}
-          align="center"
-          justify="space-evenly"
-          padding={8}
+          as={RouterLink}
+          to="/"
+          direction="row"
+          flex="0 0 20%"
+          marginBottom={{ base: '20px', md: '0px' }}
         >
-          <Flex
-            as={RouterLink}
-            to="/"
-            direction="row"
-            align="center"
-            flex="0 0 10%"
-            marginBottom={{ base: '20px', md: '0px' }}
-          >
-            <TickRocksLogo /> <Text>tick.rocks</Text>
+          <Flex direction="row" align="center" justify="center">
+            <TickRocksLogo h="40px" w="55px"></TickRocksLogo>
+            <Box color="white">
+              <Heading size="lg">tick.rocks</Heading>
+              <Text fontSize="xs">open-source climbing</Text>
+            </Box>
           </Flex>
-          <Spacer />
-          <Text
-            flex="0 0 50%"
-            align="center"
-            marginBottom={{ base: '20px', md: '0px' }}
-          >
-            tick.rocks is an open-source project for creating, finding and
-            ticking off climbing problems and routes. Please help us grow by
-            adding your local crag, pre-tick a couple of projects and join our
-            community.
-          </Text>
-          <Spacer />
-          <Box align="right" flex="0 0 10%">
-            <Link href="https://github.com/opencrags/tick-rocks">
-              <Image height="40px" src="/github.png" />
-            </Link>
-          </Box>
         </Flex>
-      </CragComponentBox>
+        <Spacer />
+        <Text
+          flex="0 0 60%"
+          align={{ base: 'left', md: 'center' }}
+          marginBottom={{ base: '20px', md: '0px' }}
+        >
+          tick.rocks is an{' '}
+          <Link
+            textDecor="underline"
+            href="https://github.com/opencrags/tick-rocks"
+          >
+            open-source
+          </Link>{' '}
+          project for catalogueing, finding and ticking off climbing problems
+          and routes. Please help us grow by adding your local crag, pre-tick a
+          couple of projects and join our community. tick.rocks is built on top
+          of our open climbing database:{' '}
+          <Link textDecor="underline" href="https://opencrags.com/">
+            opencrags.com
+          </Link>
+        </Text>
+        <Text></Text>
+        <Spacer />
+        <Flex direction="row" justify="flex-end" flex="0 0 20%">
+          <Link href="https://github.com/opencrags/tick-rocks" margin={1}>
+            <Image height="40px" src="/github.png" />
+          </Link>
+
+          <Link href="https://instagram.com/tick.rocks" margin={1}>
+            {' '}
+            <Image height="40px" src="/instagram.png" />
+          </Link>
+        </Flex>
+      </Flex>
     </Box>
   )
 }

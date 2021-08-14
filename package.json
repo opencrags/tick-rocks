@@ -20,10 +20,12 @@
         "react-dom": "^17.0.2",
         "react-dropzone": "^11.3.4",
         "react-icons": "^4.2.0",
+        "react-image-gallery": "^1.2.7",
         "react-router": "^5.2.0",
         "react-router-dom": "^5.2.0",
         "react-scripts": "4.0.3",
         "react-scroll-parallax": "^2.4.0",
+        "react-star-ratings": "^2.3.0",
         "swr": "^0.5.6",
         "web-vitals": "^1.1.2"
     },

@@ -11,7 +11,8 @@ function CragSectorGrid({ children, ...props }) {
         columns={[2, 3, 3, 4, 5]}
         gridAutoFlow="row dense"
         spacing="5px"
-        margin="0px"
+        marginLeft="10px"
+        marginRight="10px"
         position="relative"
       >
         {children}
