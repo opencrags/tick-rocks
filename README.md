@@ -1,10 +1,12 @@
 # Tick Rocks
+Open source bouldering and sport climbing website built on top of the open
+climbing database [opencrags](https://github.com/opencrags/opencrags-rest-api).
 
 ## Development
 
 ```bash
 nvm use
-npm install
+npm ci
 ```
 
 Run backend separately using `docker-compose`:

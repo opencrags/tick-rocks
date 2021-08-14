@@ -1,21 +1,8 @@
 version: "3"
 
 services:
-  # tick-rocks-frontend-dev:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #   restart: always
-  # env_file:
-  #   - .env
-  #   - .env.development
-  #   depends_on:
-  #     - opencrags-rest-api-dev
-  #   ports:
-  #     - "3000:3000"
-
   opencrags-rest-api-dev:
-    image: opencrags/opencrags-rest-api:r35
+    image: opencrags/opencrags-rest-api:r36
     restart: always
     depends_on:
       - opencrags-mongo-dev
