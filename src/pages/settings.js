@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import {
   Container,
   Center,
@@ -6,6 +7,7 @@ import {
   Input,
   FormControl,
   FormLabel,
+  Button,
 } from '@chakra-ui/react'
 import Loader from '../components/loader.js'
 import { useUser, useAuthorizedFetcher } from '../utils/backend.js'
@@ -13,15 +15,31 @@ import { useUser, useAuthorizedFetcher } from '../utils/backend.js'
 export default function Settings() {
   const { user, userError, mutate } = useUser()
   const { authorizedFetcher, isLoading, authError } = useAuthorizedFetcher()
+  const [displayName, setDisplayName] = useState(null)
 
-  const updateDisplayName = (displayName) => {
+  useEffect(() => {
+    if (displayName === null && user) {
+      setDisplayName(user.display_name)
+    }
+  }, [displayName, user])
+
+  const updateDisplayName = () => {
+    console.log(user)
+    console.log(displayName)
+    user.id === undefined
+      ? authorizedFetcher('/users', {
+          method: 'POST',
+          body: JSON.stringify({
+            display_name: displayName,
+          }),
+        })
+      : authorizedFetcher(`/users/${user.sub}`, {
+          method: 'PUT',
+          body: JSON.stringify({
+            display_name: displayName,
+          }),
+        })
     mutate({ ...user, display_name: displayName })
-    authorizedFetcher(`/users/${user.sub}`, {
-      method: 'PUT',
-      body: JSON.stringify({
-        display_name: displayName,
-      }),
-    })
   }
 
   if (userError || authError) {
@@ -57,10 +75,13 @@ export default function Settings() {
         <FormLabel>Display name</FormLabel>
         <Input
           placeholder="Display name"
-          value={user.display_name}
-          onChange={(event) => updateDisplayName(event.target.value)}
+          value={displayName || ''}
+          onChange={(event) => setDisplayName(event.target.value)}
         />
       </FormControl>
+      <Button marginTop="8px" onClick={updateDisplayName}>
+        Save
+      </Button>
     </Container>
   )
 }

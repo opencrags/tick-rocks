@@ -6,16 +6,16 @@ export default function Grade({ gradeId }) {
   const { grade, error } = useGradeSystemGrade(gradeId)
 
   if (error) {
-    return <Text>Failed to load grade.</Text>
+    return <span>Failed to load grade.</span>
   }
 
   if (grade === undefined) {
     return (
-      <Skeleton>
-        <Text>?</Text>
+      <Skeleton as="span">
+        <span>?</span>
       </Skeleton>
     )
   }
 
-  return <Text>{grade.grade}</Text>
+  return <span>{grade.grade}</span>
 }

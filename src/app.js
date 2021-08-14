@@ -21,6 +21,7 @@ import VoteSectorName from './pages/vote-sector-name.js'
 import VoteSectorCoordinates from './pages/vote-sector-coordinates'
 import VoteClimbName from './pages/vote-climb-name.js'
 import VoteClimbGrade from './pages/vote-climb-grade.js'
+import VoteRating from './pages/vote-rating'
 import { ParallaxProvider } from 'react-scroll-parallax'
 import FilterSearch from './pages/filter-search'
 
@@ -83,6 +84,12 @@ function App() {
             path="/crags/:cragId?/sectors/:sectorId?/climbs/:climbId?/vote-grade"
           >
             <VoteClimbGrade />
+          </Route>
+          <Route
+            exact
+            path="/crags/:cragId?/sectors/:sectorId?/climbs/:climbId?/vote-rating"
+          >
+            <VoteRating />
           </Route>
           <Route exact path="/crags/:cragId?/sectors/:sectorId?/add-image">
             <AddImage />
