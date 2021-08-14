@@ -11,10 +11,6 @@ import {
 } from '@chakra-ui/react'
 import React from 'react'
 
-function CragComponentBoxHeader({ children, ...props }) {
-  return <Heading {...props}>{children}</Heading>
-}
-
 function CragComponentBox({ children, ...props }) {
   return (
     <Box

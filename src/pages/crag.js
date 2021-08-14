@@ -15,6 +15,7 @@ import {
   MenuItem,
   Stack,
   Spacer,
+  IconButton,
 } from '@chakra-ui/react'
 import { Link as RouterLink, useParams } from 'react-router-dom'
 import Loader from '../components/loader.js'
@@ -36,6 +37,8 @@ import { CragSectorGrid, CragSector } from '../components/crag-sectors.js'
 import { CragGrades } from '../components/crag-grades.js'
 import { CragLatestDiscussions } from '../components/crag-latestdiscussions'
 import { ChevronDownIcon, EditIcon, AddIcon } from '@chakra-ui/icons'
+import { isEmpty } from 'lodash'
+import { PageFooter } from '../components/page-footer.js'
 
 export default function Crag() {
   const { cragId } = useParams()
@@ -123,8 +126,8 @@ export default function Crag() {
                 _hover={{ color: 'brand.200' }}
               >
                 Edit <ChevronDownIcon />
-              </Text>{' '}
-              <EditIcon display={{ base: 'block', sm: 'none' }} />{' '}
+              </Text>
+              <EditIcon display={{ base: 'block', sm: 'none' }} />
             </Center>
           </MenuButton>
           <MenuList zIndex="popover">
@@ -139,16 +142,42 @@ export default function Crag() {
       </CragFrontPageBannerMenu>
 
       <CragComponentBox>
-        <CragGrades />
-      </CragComponentBox>
-
-      <CragComponentBox>
         <Flex
-          justify="flex-start"
+          justify="space-between"
           direction={{ base: 'column', md: 'row' }}
           margin="0px"
         >
-          <Box id="cragAccess" mt="5px" mb="5px" mr="5px">
+          <Box id="cragAccess" mt="5px" mb="5px" mr="5px" flex="0 0 30%">
+            <Heading
+              textShadow="2px 2px 2px rgba(0, 0, 0, 0.2)"
+              padding="10px"
+              color="white"
+              size="2xl"
+              fontFamily="sans-serif"
+              fontWeight="bold"
+              letterSpacing="tighter"
+            >
+              Description
+              <LinkBox
+                as={RouterLink}
+                to={`/crags/${cragId}/vote-crag-description`}
+              >
+                <Box as="sup">
+                  <EditButton />
+                  <VoteConflictWarning votes={crag.description_votes} />
+                </Box>
+              </LinkBox>
+            </Heading>
+            <Box pl="10px" pr="10px" pb="10px" w="100%">
+              <Text overflowWrap="break-word" color="white">
+                {crag.description_votes.length === 0
+                  ? 'No description has been added.'
+                  : mostVoted(crag.description_votes)}
+              </Text>
+            </Box>
+          </Box>
+          <Spacer />
+          <Box id="cragAccess" mt="5px" mb="5px" mr="5px" flex="0 0 30%">
             <Heading
               textShadow="2px 2px 2px rgba(0, 0, 0, 0.2)"
               padding="10px"
@@ -178,7 +207,7 @@ export default function Crag() {
             </Box>
           </Box>
           <Spacer />
-          <Box as={RouterLink} to="authors" margin="5px">
+          <Box as={RouterLink} to="/authors" margin="5px" flex="0 0 10%">
             <Heading
               textShadow="2px 2px 2px rgba(0, 0, 0, 0.2)"
               padding="10px"
@@ -188,9 +217,9 @@ export default function Crag() {
               fontWeight="bold"
               letterSpacing="tighter"
             >
-              Authors{' '}
+              Authors
             </Heading>
-            <Box pl="10px" pb="10px" w="30vw">
+            <Box pl="10px" pb="10px">
               <AvatarGroup overflow="auto" size="md" max={2}>
                 <Avatar
                   name="Åke R"
@@ -209,10 +238,18 @@ export default function Crag() {
           </Box>
         </Flex>
       </CragComponentBox>
-
+      <CragComponentBox>
+        <CragGrades />
+      </CragComponentBox>
       <CragComponentBox bg="gray.600">
-        <Box id="cragSectors" mt="5px" mb="5px" padding="10px">
-          <Box zIndex="2" position="sticky" top="60px" bottom="0px" pb="10px">
+        <Box id="cragSectors" mt="5px" mb="5px">
+          <Box
+            zIndex="2"
+            position="sticky"
+            top="60px"
+            bottom="0px"
+            padding="10px"
+          >
             <Flex flexWrap="wrap">
               <Heading
                 color="white"
@@ -225,19 +262,15 @@ export default function Crag() {
                 Sectors
               </Heading>
               <Spacer />
-              <Stack spacing={2} direction="row" align="center">
+
+              <Stack direction="row" align="center">
                 <Box as={RouterLink} to={`/crags/${crag.id}/add-sector`}>
-                  <Button
+                  <IconButton
+                    icon={<AddIcon />}
                     display={{ base: 'block', md: 'none' }}
                     boxShadow="xl"
-                    pr={2}
-                    pl={2}
                     colorScheme="green"
-                  >
-                    <AddIcon />
-                  </Button>
-                </Box>
-                <Box as={RouterLink} to={`/crags/${crag.id}/add-sector`}>
+                  ></IconButton>
                   <Button
                     display={{ base: 'none', md: 'block' }}
                     boxShadow="xl"
@@ -249,17 +282,23 @@ export default function Crag() {
                     New sector
                   </Button>
                 </Box>
-                <Button boxShadow="xl" pr={4} pl={4} colorScheme="gray">
+                <Button
+                  boxShadow="xl"
+                  pr={4}
+                  pl={4}
+                  margin={0}
+                  colorScheme="gray"
+                >
                   View all
                 </Button>
               </Stack>
             </Flex>
           </Box>
 
-          <Box>
+          <Box pb="10px">
             <CragSectorGrid>
               {sectors
-                .filter((sector) => sector.name_votes.length >= 1)
+                .filter((sector) => sector.name_votes.length >= 1 && sector)
                 .map((sector) => (
                   <Box key={sector.id}>
                     <CragSector
@@ -281,7 +320,7 @@ export default function Crag() {
         <CragLatestDiscussions />
       </CragComponentBox>
       <CragComponentBox>
-        <Box id="cragPhotos" mt="5px" mb="5px">
+        <Box id="cragPhotos">
           <Box position="sticky" top="55px" mt="10px" mb="5px" zIndex="2">
             <Box mt="10px" mb="5px">
               <Flex>
@@ -329,12 +368,7 @@ export default function Crag() {
           <CragPhotoGrid cragId={cragId} />
         </Box>
       </CragComponentBox>
-      <CragComponentBox>
-        <Center as={RouterLink} to="/" color="white">
-          {' '}
-          tick.rocks
-        </Center>
-      </CragComponentBox>
+      <PageFooter></PageFooter>
     </Container>
   )
 }

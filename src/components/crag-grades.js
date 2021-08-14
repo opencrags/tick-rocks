@@ -15,6 +15,7 @@ function CragGrades({ children, ...props }) {
     <Box id="cragGrades" mt="5px" mb="5px">
       <Flex position="sticky" top="65px" mt="10px" mb="5px" zIndex="2">
         <Heading
+          display="none "
           color="white"
           size="2xl"
           fontFamily="sans-serif"

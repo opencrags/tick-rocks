@@ -1,4 +1,4 @@
-import { Box, SimpleGrid, Center } from '@chakra-ui/react'
+import { Box, SimpleGrid, Center, Flex } from '@chakra-ui/react'
 import React from 'react'
 import { Link as RouterLink } from 'react-router-dom'
 
@@ -25,14 +25,14 @@ function CragSector({ img, to, children, ...props }) {
     <Box
       as={RouterLink}
       to={to}
-      FlexGrow="1"
+      flexGrow="1"
       height="100%"
       width="100%"
       position="relative"
     >
       <Box
-        FlexGrow="1"
-        w={{ base: '24.25vw', md: 'unset' }}
+        flexGrow="1"
+        w={{ base: '22.25vw', md: 'unset' }}
         h={{ base: '20vh', lg: '30vh' }}
         objectFit="cover"
         verticalAlign="bottom"
@@ -45,6 +45,7 @@ function CragSector({ img, to, children, ...props }) {
         position="relative"
         _hover={{ transform: 'scale(0.98)' }}
         transition="all .2s"
+        mb="10px"
       >
         <Box
           bg="blackAlpha.500"
