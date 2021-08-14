@@ -16,6 +16,7 @@ import AddClimb from './pages/add-climb.js'
 import AddImage from './pages/add-image.js'
 import AddLine from './pages/add-line.js'
 import VoteCragName from './pages/vote-crag-name.js'
+import VoteAccessInformation from './pages/vote-access-information'
 import VoteSectorName from './pages/vote-sector-name.js'
 import VoteSectorCoordinates from './pages/vote-sector-coordinates'
 import VoteClimbName from './pages/vote-climb-name.js'
@@ -40,6 +41,9 @@ function App() {
           </Route>
           <Route path="/crags/:cragId?/vote-name">
             <VoteCragName />
+          </Route>
+          <Route path="/crags/:cragId?/vote-access-information">
+            <VoteAccessInformation />
           </Route>
           <Route path="/add-crag">
             <AddCrag />
