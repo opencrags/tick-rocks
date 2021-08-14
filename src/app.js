@@ -11,6 +11,7 @@ import Climb from './pages/climb.js'
 import RockImage from './pages/image.js'
 import Line from './pages/line.js'
 import AddCrag from './pages/add-crag.js'
+import AddCragPhoto from './pages/add-crag-photo'
 import AddSector from './pages/add-sector.js'
 import AddClimb from './pages/add-climb.js'
 import AddImage from './pages/add-image.js'
@@ -22,6 +23,7 @@ import VoteSectorCoordinates from './pages/vote-sector-coordinates'
 import VoteClimbName from './pages/vote-climb-name.js'
 import VoteClimbGrade from './pages/vote-climb-grade.js'
 import VoteRating from './pages/vote-rating'
+import VoteBanner from './pages/vote-banner'
 import { ParallaxProvider } from 'react-scroll-parallax'
 import FilterSearch from './pages/filter-search'
 
@@ -45,6 +47,12 @@ function App() {
           </Route>
           <Route path="/crags/:cragId?/vote-access-information">
             <VoteAccessInformation />
+          </Route>
+          <Route path="/crags/:cragId?/vote-banner">
+            <VoteBanner />
+          </Route>
+          <Route path="/crags/:cragId?/add-crag-photo">
+            <AddCragPhoto />
           </Route>
           <Route path="/add-crag">
             <AddCrag />

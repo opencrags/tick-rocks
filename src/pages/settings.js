@@ -24,9 +24,7 @@ export default function Settings() {
   }, [displayName, user])
 
   const updateDisplayName = () => {
-    console.log(user)
-    console.log(displayName)
-    user.id === undefined
+    user.display_name === null
       ? authorizedFetcher('/users', {
           method: 'POST',
           body: JSON.stringify({
