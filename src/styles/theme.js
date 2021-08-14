@@ -7,11 +7,11 @@ const breakpoints = createBreakpoints({
   xxs: '21em', // Iphone SE
   xs: '30em', // Iphone SE
   sm: '40em', // Iphone 6 typ
-  md: '52em', 
+  md: '52em',
   lg: '64em',
   xl: '80em',
-  xxl: '120em',  // 1920px
-  xxxl: '160em' // 2560px
+  xxl: '120em', // 1920px
+  xxxl: '160em', // 2560px
 })
 
 const theme = extendTheme({
@@ -22,7 +22,7 @@ const theme = extendTheme({
     brand: {
       100: '#2d3748',
       200: '#93D0CC',
-      300: '#f7e3a1',
+      300: '#3CAB70',
       400: '#fab7bf',
       500: '#f1b2a5',
       600: '#e8ae8b',

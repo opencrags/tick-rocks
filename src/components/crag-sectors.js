@@ -1,23 +1,13 @@
-import {
-  Box,
-  Image,
-  SimpleGrid,
-  Flex,
-  Center,
-  Heading,
-  Spacer,
-  Button,
-  Stack,
-  Text,
-} from '@chakra-ui/react'
+import { Box, SimpleGrid, Center } from '@chakra-ui/react'
 import React from 'react'
 import { Link as RouterLink } from 'react-router-dom'
-import { AddIcon } from '@chakra-ui/icons'
 
 function CragSectorGrid({ children, ...props }) {
   return (
     <Box>
       <SimpleGrid
+        display={{ base: 'flex', md: 'grid' }}
+        overflowX="auto"
         columns={[2, 3, 3, 4, 5]}
         gridAutoFlow="row dense"
         spacing="5px"
@@ -42,6 +32,7 @@ function CragSector({ img, to, children, ...props }) {
     >
       <Box
         FlexGrow="1"
+        w={{ base: '24.25vw', md: 'unset' }}
         h={{ base: '20vh', lg: '30vh' }}
         objectFit="cover"
         verticalAlign="bottom"
@@ -61,7 +52,7 @@ function CragSector({ img, to, children, ...props }) {
           w="100%"
           color="white"
           fontWeight="normal"
-          fontSize="lg"
+          fontSize="md"
           letterSpacing="1.5pt"
         >
           <Center>{children}</Center>

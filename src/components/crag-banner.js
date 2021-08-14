@@ -12,13 +12,71 @@ import {
   SimpleGrid,
   Text,
   Button,
-  MenuButton,
-  MenuItem,
-  Stack,
+  Drawer,
+  DrawerBody,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
+  Heading,
 } from '@chakra-ui/react'
 import React from 'react'
 import { Link as RouterLink } from 'react-router-dom'
 import { Parallax, ParallaxBanner } from 'react-scroll-parallax'
+import { useDisclosure } from '@chakra-ui/react'
+import { CloseIcon } from '@chakra-ui/react'
+function SectorDrawer({ children }) {
+  const btnRef = React.useRef()
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const PhoneButton = (props) => {
+    const { children } = props
+    return (
+      <Box>
+        <Button
+          ref={btnRef}
+          onClick={onOpen}
+          display={{ base: 'block', xl: 'none' }}
+          zIndex="banner"
+          position="fixed"
+          borderRadius="40px"
+          bottom="10px"
+          right="15px"
+          shadow="dark-lg"
+          colorScheme="green"
+        >
+          {children}
+        </Button>
+      </Box>
+    )
+  }
+
+  return (
+    <Box>
+      <CragBannerMenuButton ref={btnRef} onClick={onOpen}>
+        Sectors
+      </CragBannerMenuButton>
+      <PhoneButton>Nearby</PhoneButton>
+      <Drawer placement="right" onClose={onClose} isOpen={isOpen}>
+        <DrawerOverlay />
+        <DrawerContent background="brand.100" color="white">
+          <DrawerHeader>
+            <Flex padding="10px" direction="row" justify="space-between">
+              <CloseIcon w="20px" h="15px" color="white" onClick={onClose} />
+              <Heading color="white">Sectors</Heading>
+            </Flex>
+          </DrawerHeader>
+          <DrawerBody padding="0px">
+            <Flex direction="column">
+              <Flex direction="row" justify="space-evenly"></Flex>
+              <Box onClick={onClose}>{children}</Box>
+            </Flex>
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
+    </Box>
+  )
+}
 
 function CragBannerMenuButton({ children, to, buttonicon, ...props }) {
   return (
@@ -38,43 +96,52 @@ function CragBannerMenuButton({ children, to, buttonicon, ...props }) {
           pt="20px"
           pr={{ base: '4px', sm: '8px', md: '10px' }}
           pl={{ base: '4px', sm: '8px', md: '10px' }}
-          height="40px"
+          height="55px"
         >
           <Text>{children}</Text>
-          <Box ml="5px" display={{ base: 'block', sm: 'none' }}>
-            {buttonicon}
-          </Box>
         </Center>
       </Box>
     </Box>
   )
 }
 
+function CragBannerMenuDivider(...props) {
+  return (
+    <Box pt="13px" {...props}>
+      <Box h="30px" bg="gray.300" w="1px" />
+    </Box>
+  )
+}
+
 function CragBannerMenu({ children }) {
   return (
-    <Box
-      bg="gray.200"
-      mb="4px"
-      pl={{ xxl: '700px', xl: '350px', lg: '100px', md: '50px', base: '20px' }}
-      pr={{ xxl: '700px', xl: '350px', lg: '100px', md: '50px', base: '20px' }}
-    >
-      <Box w="100%">
-        <Wrap>
-          <CragBannerMenuButton display={{ base: 'none', sm: 'block' }}>
-            Home
-          </CragBannerMenuButton>
-          <CragBannerMenuButton>Topo</CragBannerMenuButton>
+    <Box zIndex="1" position="sticky" top={{ base: '54px', md: '-1px' }}>
+      <Box>
+        <Flex bg="gray.200" mb="4px" mt="0px" justify="center">
+          <CragBannerMenuButton>Home</CragBannerMenuButton>
+          <CragBannerMenuDivider />
+          <CragBannerMenuButton>Sectors</CragBannerMenuButton>
+
+          <CragBannerMenuDivider />
           <CragBannerMenuButton>Map</CragBannerMenuButton>
-          <CragBannerMenuButton>Discussion</CragBannerMenuButton>
+          <CragBannerMenuDivider />
+          <CragBannerMenuButton display={{ base: 'none', md: 'block' }}>
+            Discussion
+          </CragBannerMenuButton>
+          <CragBannerMenuDivider display={{ base: 'none', md: 'block' }} />
           <CragBannerMenuButton>Access</CragBannerMenuButton>
-          <CragBannerMenuButton>Photos</CragBannerMenuButton>
-          <CragBannerMenuButton display={{ base: 'none', sm: 'block' }}>
+          <CragBannerMenuDivider />
+          <CragBannerMenuButton display={{ base: 'none', xs: 'block' }}>
+            Photos
+          </CragBannerMenuButton>
+          <CragBannerMenuDivider display={{ base: 'none', xs: 'block' }} />
+          <CragBannerMenuButton display={{ base: 'none', xxl: 'block' }}>
             Authors
           </CragBannerMenuButton>
-          <Spacer display={{ base: 'none', sm: 'block' }} />
+          <CragBannerMenuDivider display={{ base: 'none', xxl: 'block' }} />
 
           {children}
-        </Wrap>
+        </Flex>
       </Box>
     </Box>
   )
@@ -106,17 +173,11 @@ function CragBanner({ children, cragBannerImage, ...props }) {
         >
           <Flex
             pl={{
-              xxl: '700px',
-              xl: '350px',
-              lg: '100px',
-              md: '50px',
+              md: '15vw',
               base: '20px',
             }}
             pr={{
-              xxl: '700px',
-              xl: '350px',
-              lg: '100px',
-              md: '50px',
+              md: '15vw',
               base: '20px',
             }}
             position="relative"
@@ -125,11 +186,7 @@ function CragBanner({ children, cragBannerImage, ...props }) {
           >
             <Box>{children}</Box>
             <Box></Box>
-            <VStack>
-              <Link>Länkar</Link>
-              <Link>....</Link>
-              <Link>....</Link>
-            </VStack>
+            <VStack></VStack>
           </Flex>
         </Box>
       </Box>
@@ -155,7 +212,7 @@ function CragFrontPageBannerMenuButton({ children, to, buttonicon, ...props }) {
           pt="20px"
           pr={{ base: '4px', sm: '8px', md: '10px' }}
           pl={{ base: '4px', sm: '8px', md: '10px' }}
-          height="40px"
+          height="55px"
         >
           <Text>{children}</Text>
           <Box ml="5px" display={{ base: 'block', sm: 'none' }}>
@@ -191,23 +248,28 @@ function CragFrontPageBannerMenu({ children, ...props }) {
           >
             Home
           </CragFrontPageBannerMenuButton>
-          <CragFrontPageBannerMenuButton>Topo</CragFrontPageBannerMenuButton>
+          <CragBannerMenuDivider />
+          <CragFrontPageBannerMenuButton>Sectors</CragFrontPageBannerMenuButton>
+          <CragBannerMenuDivider />
           <CragFrontPageBannerMenuButton>Map</CragFrontPageBannerMenuButton>
+          <CragBannerMenuDivider />
           <CragFrontPageBannerMenuButton>
             Discussion
           </CragFrontPageBannerMenuButton>
+          <CragBannerMenuDivider />
           <CragFrontPageBannerMenuButton to="#cragPhotos">
             Photos
           </CragFrontPageBannerMenuButton>
+          <CragBannerMenuDivider />
           <CragFrontPageBannerMenuButton>Access</CragFrontPageBannerMenuButton>
+          <CragBannerMenuDivider />
           <CragFrontPageBannerMenuButton
             display={{ base: 'none', sm: 'block' }}
           >
             Authors
           </CragFrontPageBannerMenuButton>
-
+          <CragBannerMenuDivider />
           {children}
-
           <Spacer display={{ base: 'none', sm: 'block' }} />
         </Flex>
       </Center>
@@ -227,6 +289,7 @@ function CragFrontPageBanner({
       <Box
         minHeight={{ base: '40vh', md: '70vh', lg: '95vh' }}
         maxHeight={{ base: '200px', md: '70vh', lg: '95vh' }}
+        {...props}
       >
         <ParallaxBanner
           layers={[
