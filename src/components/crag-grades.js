@@ -9,12 +9,11 @@ import {
 } from '@chakra-ui/react'
 import React from 'react'
 import { Link as RouterLink } from 'react-router-dom'
-import { Parallax, ParallaxBanner } from 'react-scroll-parallax'
 
 function CragGrades({ children, ...props }) {
   return (
-    <Box id="cragForum" mt="10px" mb="5px">
-      <Flex zIndex="2" position="sticky" top="55px" bottom="0px">
+    <Box id="cragGrades" mt="5px" mb="5px">
+      <Flex position="sticky" top="65px" mt="10px" mb="5px" zIndex="2">
         <Heading
           color="white"
           size="2xl"
@@ -28,17 +27,16 @@ function CragGrades({ children, ...props }) {
         </Heading>
         <Spacer />
         <Button boxShadow="xl" pr={8} pl={8} m={2} colorScheme="gray">
-          List all
+          View list
         </Button>
       </Flex>
 
       <Box
-        ml={{ base: '1vW', md: '15vw' }}
-        mr={{ base: '1vW', md: '15vw' }}
+        ml={{ base: '3vW', md: '15vw' }}
+        mr={{ base: '3vW', md: '15vw' }}
         pb="10px"
       >
         <Grid
-          zIndex="1"
           alignItems="end"
           templateColumns="repeat(14, 1fr)"
           gap="0"

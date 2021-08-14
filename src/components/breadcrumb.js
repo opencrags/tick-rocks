@@ -87,7 +87,12 @@ const useImageBreadcrumbs = (imageId) => {
 
 function RockBreadcrumb({ breadcrumbs }) {
   return (
-    <Breadcrumb>
+    <Breadcrumb
+      fontWeight="normal"
+      fontSize={{ base: 'sm', sm: 'sm', md: 'md' }}
+      letterSpacing="1.2pt"
+      fontFamily="sans-serif"
+    >
       {breadcrumbs.map((breadcrumb, index) => (
         <BreadcrumbItem key={`${breadcrumb.text}&${breadcrumb.link}`}>
           {breadcrumb.link && index !== breadcrumbs.length - 1 ? (

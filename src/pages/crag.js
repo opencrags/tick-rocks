@@ -31,6 +31,7 @@ import { CragSectorGrid, CragSector } from '../components/crag-sectors.js'
 import { CragGrades } from '../components/crag-grades.js'
 import { CragLatestDiscussions } from '../components/crag-latestdiscussions'
 import { ChevronDownIcon, EditIcon, AddIcon } from '@chakra-ui/icons'
+import { isEmpty } from 'lodash'
 
 export default function Crag() {
   const { cragId } = useParams()
@@ -62,9 +63,9 @@ export default function Crag() {
         left="15px"
         shadow="dark-lg"
         w="75px"
-        colorScheme="telegram"
+        colorScheme="green"
       >
-        Topo
+        Sector
       </Button>
 
       <CragFrontPageBanner cragBannerImage="https://27crags.s3.amazonaws.com/photos/000/213/213830/size_xl-9d8dc766475a.jpg">
@@ -119,7 +120,7 @@ export default function Crag() {
               <EditIcon display={{ base: 'block', sm: 'none' }} />{' '}
             </Center>
           </MenuButton>
-          <MenuList>
+          <MenuList zIndex="popover">
             <MenuItem as={RouterLink} to={`/crags/${crag.id}/add-sector`}>
               Add Sector
             </MenuItem>
@@ -204,7 +205,7 @@ export default function Crag() {
 
       <CragComponentBox bg="gray.600">
         <Box id="cragSectors" mt="5px" mb="5px" padding="10px">
-          <Box zIndex="2" position="sticky" top="55px" bottom="0px" pb="10px">
+          <Box zIndex="2" position="sticky" top="60px" bottom="0px" pb="10px">
             <Flex flexWrap="wrap">
               <Heading
                 color="white"
@@ -212,21 +213,23 @@ export default function Crag() {
                 fontFamily="sans-serif"
                 fontWeight="bold"
                 letterSpacing="tighter"
-                textShadow="3px 3px 3px rgba(0, 0, 0, 0.2)"
+                textShadow="3px 3px 3px rgba(0, 0, 0, 0.1)"
               >
                 Sectors
               </Heading>
               <Spacer />
-              <Stack spacing={2} direction="row" align="center" flexWrap="wrap">
-                <Button
-                  display={{ base: 'block', md: 'none' }}
-                  boxShadow="xl"
-                  pr={2}
-                  pl={2}
-                  colorScheme="green"
-                >
-                  <AddIcon />
-                </Button>
+              <Stack spacing={2} direction="row" align="center">
+                <Box as={RouterLink} to={`/crags/${crag.id}/add-sector`}>
+                  <Button
+                    display={{ base: 'block', md: 'none' }}
+                    boxShadow="xl"
+                    pr={2}
+                    pl={2}
+                    colorScheme="green"
+                  >
+                    <AddIcon />
+                  </Button>
+                </Box>
                 <Box as={RouterLink} to={`/crags/${crag.id}/add-sector`}>
                   <Button
                     display={{ base: 'none', md: 'block' }}

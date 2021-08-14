@@ -26,11 +26,17 @@ import {
   DrawerBody,
   DrawerOverlay,
   DrawerContent,
+  ModalHeader,
+  Tag,
+  Button,
+  UnorderedList,
+  ListItem,
 } from '@chakra-ui/react'
 import { Link as RouterLink } from 'react-router-dom'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { SearchIcon, HamburgerIcon } from '@chakra-ui/icons'
-import { useUser } from '../utils/backend'
+import { useUser, useQuickSearch, mostVoted } from '../utils/backend'
+import Grade from '../components/grade'
 
 export function NavBar() {
   const { isAuthenticated, loginWithRedirect, logout } = useAuth0()
@@ -43,7 +49,7 @@ export function NavBar() {
         as={RouterLink}
         to={to}
         _hover={{
-          background: '#3CAB70',
+          background: 'brand.300',
         }}
         color="white"
         width="100%"
@@ -60,6 +66,87 @@ export function NavBar() {
   }
   const { isOpen, onOpen, onClose } = useDisclosure()
   function SearchModal() {
+    const [searchText, setSearchText] = useState(null)
+    const { quickSearch, error: errorQuickSearch } = useQuickSearch(searchText)
+    const [oldQuickSearch, setOldQuickSearch, link, displayName] =
+      useState(undefined)
+    useEffect(() => {
+      if (quickSearch !== undefined && quickSearch.length >= 1) {
+        setOldQuickSearch(quickSearch)
+      }
+    }, [quickSearch])
+    const QuickSearchResults = ({ quickSearch }) => {
+      if (quickSearch === undefined && oldQuickSearch === undefined) {
+        return ''
+      } else if (errorQuickSearch) {
+        return <Box>No results</Box>
+      } else {
+        return (
+          <UnorderedList
+            listStyleType="none"
+            width="100%"
+            margin="0px"
+            maxH={{ base: '72vh', md: '100%' }}
+            overflowY="scroll"
+            sx={{
+              '&::-webkit-scrollbar': {
+                width: '10px',
+                borderRadius: '8px',
+              },
+              '&::-webkit-scrollbar-thumb': {
+                backgroundColor: `gray.300`,
+                borderRadius: '8px',
+              },
+            }}
+          >
+            {(quickSearch || oldQuickSearch).map((result) => {
+              if (result.type === 'crag') {
+                return (
+                  <QuickSearchResultItem
+                    link={`/crags/${result.crag.id}`}
+                    displayName={mostVoted(result.crag.name_votes)}
+                    resultId={result.id}
+                    resultType={result.type}
+                    onClose={onClose}
+                  />
+                )
+              }
+              if (result.type === 'sector') {
+                return (
+                  <QuickSearchResultItem
+                    link={`/crags/${result.sector.crag_id}/sectors/${result.sector.id}`}
+                    displayName={mostVoted(result.sector.name_votes)}
+                    resultId={result.id}
+                    resultType={result.type}
+                    onClose={onClose}
+                  />
+                )
+              }
+              if (result.type === 'climb') {
+                return (
+                  <QuickSearchResultItem
+                    link={`/crags/${result.climb.crag_id}/sectors/${result.climb.sector_id}/climbs/${result.climb.id}`}
+                    displayName={
+                      <>
+                        <HStack>
+                          <Box>{mostVoted(result.climb.name_votes)}</Box>
+                          <Grade gradeId={result.climb.most_voted_grade} />
+                          <Box>{result.climb.average_rating} </Box>
+                        </HStack>
+                      </>
+                    }
+                    resultId={result.id}
+                    resultType={result.type}
+                    onClose={onClose}
+                  />
+                )
+              }
+            })}
+          </UnorderedList>
+        )
+      }
+    }
+
     return (
       <>
         <Box height={{ base: '100%', md: '10' }}>
@@ -89,19 +176,24 @@ export function NavBar() {
               backgroundColor="brand.100"
               marginTop={{ base: '0px', sm: '10vh' }}
             >
-              <ModalBody>
-                <Flex>
-                  <SearchIcon color="gray.300" w={5} h={5} margin="15px" />
+              <ModalHeader>
+                <Flex ml={5} mr={5} mt={5}>
+                  <SearchIcon color="gray.300" w={5} h={5} mr={5} />
                   <Input
-                    color="gray.300"
+                    color="white"
                     variant="unstyled"
                     placeholder="Search crags, routes, climbers, etc."
+                    onChange={(event) => setSearchText(event.target.value)}
+                    value={searchText || ''}
                   />
                 </Flex>
                 <ModalCloseButton
                   display={{ base: 'block', sm: 'none' }}
                   color="white"
                 />
+              </ModalHeader>
+              <ModalBody>
+                <QuickSearchResults quickSearch={quickSearch} />
               </ModalBody>
             </ModalContent>
           </Modal>
@@ -163,7 +255,13 @@ export function NavBar() {
                       />
                     </svg>
                   </Box>
-                  <Heading width="150px" size="sm" color="white">
+                  <Heading
+                    width="150px"
+                    size="sm"
+                    color="white"
+                    fontFamily="sans-serif"
+                    letterSpacing="1.5"
+                  >
                     tick.rocks
                   </Heading>
                 </HStack>
@@ -185,6 +283,7 @@ export function NavBar() {
                       onClick={logout}
                       _hover={{
                         background: '#3CAB70',
+                        cursor: 'pointer',
                       }}
                       color="White"
                       width="100%"
@@ -204,10 +303,12 @@ export function NavBar() {
                       })
                     }
                     _hover={{
-                      background: '3CAB70',
-                      color: 'White',
+                      background: '#3CAB70',
+                      cursor: 'pointer',
                     }}
+                    color="White"
                     width="100%"
+                    height="100%"
                     minWidth="100px"
                     fontWeight="semibold"
                     pt="5"
@@ -226,7 +327,7 @@ export function NavBar() {
 
   return (
     <Box>
-      <Box h="57px" display={{ base: 'block', md: 'none' }} />
+      <Box h="55px" display={{ base: 'block', md: 'none' }} />
       <Flex
         as="nav"
         pl={{ xxl: '14vw', xl: '80px', md: '5vw', base: '0px' }}
@@ -234,7 +335,7 @@ export function NavBar() {
         align="center"
         justify="space-between"
         width="100%"
-        height="57px"
+        height="55px"
         bg="gray.700"
         color="White"
         position={{ base: 'fixed', md: 'relative' }}
@@ -244,7 +345,7 @@ export function NavBar() {
       >
         <MenuDrawer />
         <Flex as={RouterLink} to="/" align="center">
-          <Box h="35px" w="50px" mr="10px">
+          <Box h="30px" w="43px" mr="10px">
             <svg
               data-name="Lager 1"
               xmlns="http://www.w3.org/2000/svg"
@@ -276,6 +377,7 @@ export function NavBar() {
             size="sm"
             color="white"
             display={{ base: 'none', md: 'flex' }}
+            letterSpacing="1.5"
           >
             tick.rocks
           </Heading>
@@ -320,21 +422,69 @@ export function NavBar() {
                 </MenuList>
               </Menu>
             ) : (
-              <MenuItems to="/">
-                <Text
-                  onClick={() =>
-                    loginWithRedirect({
-                      appState: { returnTo: window.location.pathname },
-                    })
-                  }
-                >
-                  Sign in
-                </Text>
-              </MenuItems>
+              <Box
+                variant="unstyled"
+                onClick={() =>
+                  loginWithRedirect({
+                    appState: { returnTo: window.location.pathname },
+                  })
+                }
+                _hover={{
+                  background: 'brand.300',
+                  cursor: 'pointer',
+                }}
+                color="white"
+                width="100%"
+                minWidth="100px"
+                pt="4"
+                pb="4"
+                paddingRight={{ base: 0, sm: 1 }}
+                paddingLeft={{ base: 0, sm: 1 }}
+                fontWeight="semibold"
+              >
+                <Center>Sign in</Center>
+              </Box>
             )}
           </Flex>
         </Box>
       </Flex>
+    </Box>
+  )
+}
+
+const QuickSearchResultItem = ({
+  onClose,
+  link,
+  displayName,
+  resultType,
+  key,
+}) => {
+  return (
+    <Box onClick={onClose} as={RouterLink} to={link} key={key}>
+      <ListItem
+        padding={4}
+        mb={1}
+        borderRadius="5px"
+        background="gray.600"
+        _hover={{
+          background: 'brand.300',
+          cursor: 'pointer',
+        }}
+      >
+        <Flex>
+          <Flex direction="row" w="70px">
+            <Tag>{resultType}</Tag>
+          </Flex>
+          <Box
+            color="white"
+            fontFamily="sans-serif"
+            fontWeight="bold"
+            fontSize="md"
+          >
+            {displayName}
+          </Box>
+        </Flex>
+      </ListItem>
     </Box>
   )
 }

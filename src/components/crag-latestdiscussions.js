@@ -66,7 +66,7 @@ function CragLatestDiscussions({ children, ...props }) {
         justifyContent="space-between"
         padding="5px"
       >
-        <Box bg="gray.600" padding="10px" margin="5px">
+        <Box bg="gray.600" padding="10px" margin="5px" flex="0 0 33%">
           <Flex m="1">
             <Tooltip label="Rasmus E" aria-label="A tooltip">
               <Avatar
@@ -98,7 +98,7 @@ function CragLatestDiscussions({ children, ...props }) {
           </Flex>
         </Box>
 
-        <Box bg="gray.600" padding="10px" margin="5px">
+        <Box bg="gray.600" padding="10px" margin="5px" flex="0 0 33%">
           <Flex m="1">
             <Tooltip label="Åke R" aria-label="A tooltip">
               <Avatar
@@ -130,7 +130,7 @@ function CragLatestDiscussions({ children, ...props }) {
           </Flex>
         </Box>
 
-        <Box bg="gray.600" padding="10px" margin="5px">
+        <Box bg="gray.600" padding="10px" margin="5px" flex="0 0 33%">
           <Flex m="1">
             <Tooltip label="Richard L" aria-label="A tooltip">
               <Avatar

@@ -41,7 +41,7 @@ export default function CanvasOverlay({ image, draw, ...props }) {
   }, [renderCanvas, imageLoaded])
 
   return (
-    <Box position="relative">
+    <Box position="relative" maxWidth="800px">
       <Image
         ref={imageRef}
         src={image?.base64_image}
