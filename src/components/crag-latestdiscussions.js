@@ -49,11 +49,18 @@ function CragLatestDiscussions({ children, ...props }) {
               pr={4}
               pl={4}
               colorScheme="green"
-              leftIcon={<AddIcon />}
             >
-              New post
+              <Flex align="center" direction="row">
+                <AddIcon /> <Text ml="5px">New post </Text>
+              </Flex>
             </Button>
-            <Button boxShadow="xl" pr={4} pl={4} colorScheme="gray">
+            <Button
+              boxShadow="xl"
+              pr={4}
+              pl={4}
+              colorScheme="gray"
+              color="black"
+            >
               View all
             </Button>
           </Stack>
@@ -65,6 +72,7 @@ function CragLatestDiscussions({ children, ...props }) {
         direction={{ base: 'column', md: 'row' }}
         justifyContent="space-between"
         padding="5px"
+        {...props}
       >
         <Box bg="gray.600" padding="10px" margin="5px" flex="0 0 33%">
           <Flex m="1">

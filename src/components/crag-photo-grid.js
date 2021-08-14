@@ -6,7 +6,7 @@ import {
   SlideFade,
 } from '@chakra-ui/react'
 import React from 'react'
-import { useCragPhotos } from '../utils/backend'
+import { useCragPhotos, useUser } from '../utils/backend'
 
 function CragPhotoGrid({ cragId, children, ...props }) {
   const { cragPhotos, error } = useCragPhotos({ crag_id: cragId })
@@ -28,16 +28,23 @@ function CragPhotoGrid({ cragId, children, ...props }) {
         spacing="5px"
         margin="5px"
       >
-        {cragPhotos.map((cragPhoto) => (
-          <CragPhotos key={cragPhoto.id} img={cragPhoto.base64_image} />
-        ))}
+        {cragPhotos.map((cragPhoto) => {
+          return (
+            <CragPhotos
+              key={cragPhoto.id}
+              img={cragPhoto.base64_image}
+              user={cragPhoto.user_id}
+            />
+          )
+        })}
       </SimpleGrid>
     </Box>
   )
 }
 
-function CragPhotos({ img, ...props }) {
+function CragPhotos({ img, user, ...props }) {
   const { isOpen, onToggle } = useDisclosure()
+
   return (
     <Box onPointerEnter={onToggle} onPointerLeave={onToggle}>
       <Box
@@ -52,18 +59,19 @@ function CragPhotos({ img, ...props }) {
         bgSize="cover"
         position="relative"
       >
-        <SlideFade in={isOpen} offsetY="-20px">
+        <SlideFade in={isOpen}>
           <Box
-            p="40px"
+            p="20px"
             color="white"
             mt="4"
             bg="gray.500"
+            maxW="95%"
             roundedRight="md"
             shadow="md"
             position="absolute"
             left="0px"
           >
-            Uploaded by Rasmus Eriksson
+            Uploaded by {user}
           </Box>
         </SlideFade>
       </Box>

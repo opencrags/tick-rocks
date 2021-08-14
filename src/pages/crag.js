@@ -14,6 +14,7 @@ import {
   MenuList,
   MenuItem,
   Stack,
+  Link,
   Spacer,
   IconButton,
 } from '@chakra-ui/react'
@@ -104,13 +105,18 @@ export default function Crag() {
             </LinkBox>
           </Heading>
           <Text
+            ml="20px"
             textShadow="2px 2px 2px rgba(0, 0, 0, 0.2)"
             fontSize={{ base: '8pt', sm: '12pt', md: '14pt', lg: '18pt' }}
             fontWeight="hairline"
             fontFamily="sans-serif"
             letterSpacing="tight"
+            color="gray.300"
           >
-            in the area of Fontainebleau, France
+            in the area of{' '}
+            <Link color="gray.100" as={RouterLink} to="/">
+              Fontaniebleau, France
+            </Link>
           </Text>
         </Box>
       </CragFrontPageBanner>
@@ -152,7 +158,7 @@ export default function Crag() {
               textShadow="2px 2px 2px rgba(0, 0, 0, 0.2)"
               padding="10px"
               color="white"
-              size="2xl"
+              size="xl"
               fontFamily="sans-serif"
               fontWeight="bold"
               letterSpacing="tighter"
@@ -182,7 +188,7 @@ export default function Crag() {
               textShadow="2px 2px 2px rgba(0, 0, 0, 0.2)"
               padding="10px"
               color="white"
-              size="2xl"
+              size="xl"
               fontFamily="sans-serif"
               fontWeight="bold"
               letterSpacing="tighter"
@@ -212,7 +218,7 @@ export default function Crag() {
               textShadow="2px 2px 2px rgba(0, 0, 0, 0.2)"
               padding="10px"
               color="white"
-              size="2xl"
+              size="xl"
               fontFamily="sans-serif"
               fontWeight="bold"
               letterSpacing="tighter"
@@ -240,6 +246,21 @@ export default function Crag() {
       </CragComponentBox>
       <CragComponentBox>
         <CragGrades />
+        <Flex
+          justify="center"
+          display={{ base: 'wrap', md: 'flex' }}
+          padding="20px"
+        >
+          <Button boxShadow="xl" pr={8} pl={8} m={2} colorScheme="green">
+            List all problems
+          </Button>
+          <Button boxShadow="xl" pr={8} pl={8} m={2} colorScheme="gray">
+            View topo
+          </Button>
+          <Button boxShadow="xl" pr={8} pl={8} m={2} colorScheme="gray">
+            View map
+          </Button>
+        </Flex>
       </CragComponentBox>
       <CragComponentBox bg="gray.600">
         <Box id="cragSectors" mt="5px" mb="5px">
@@ -277,9 +298,10 @@ export default function Crag() {
                     pr={4}
                     pl={4}
                     colorScheme="green"
-                    leftIcon={<AddIcon />}
                   >
-                    New sector
+                    <Flex align="center" direction="row">
+                      <AddIcon /> <Text ml="5px">New sector </Text>
+                    </Flex>
                   </Button>
                 </Box>
                 <Button
@@ -357,9 +379,10 @@ export default function Crag() {
                     pl={5}
                     m={3}
                     colorScheme="green"
-                    leftIcon={<AddIcon />}
                   >
-                    Upload
+                    <Flex align="center" direction="row">
+                      <AddIcon /> <Text ml="5px">Upload </Text>
+                    </Flex>
                   </Button>
                 </Box>
               </Flex>

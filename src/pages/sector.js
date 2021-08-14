@@ -38,8 +38,9 @@ import {
   CragBannerMenuButton,
 } from '../components/crag-banner.js'
 import { CalcDistance } from '../components/cordinate-distance-calc.js'
-
+import StarRatings from 'react-star-ratings'
 import { ChevronDownIcon, EditIcon } from '@chakra-ui/icons'
+import ModalLink from '../components/modal-link.js'
 
 import {
   useCrag,
@@ -53,6 +54,7 @@ import {
 } from '../utils/backend.js'
 import { useState } from 'react'
 import { PageFooter } from '../components/page-footer.js'
+import { isEmpty } from 'lodash'
 
 export default function Sector() {
   const { cragId, sectorId } = useParams()
@@ -95,226 +97,221 @@ export default function Sector() {
   )
 
   return (
-    <Container bg="brand.100" maxWidth="100%" minHeight="95vh" padding="0px">
-      <CragBanner cragId={cragId}>
-        <SectorBreadcrumb sectorId={sectorId} />
-        <Heading
-          size="lg"
-          fontFamily="sans-serif"
-          fontWeight="bold"
-          letterSpacing="tight"
-          textShadow="2px 2px 2px rgba(0, 0, 0, 0.1)"
-        >
-          {sector.name_votes.length >= 1
-            ? mostVoted(sector.name_votes)
-            : 'No name votes'}
-          <LinkBox
-            as={RouterLink}
-            to={`/crags/${cragId}/sectors/${sector.id}/vote-name`}
+    <Flex direction="column" height="95vh">
+      <Container bg="brand.100" maxWidth="100%" flexGrow="1" padding="0px">
+        <CragBanner cragId={cragId}>
+          <SectorBreadcrumb sectorId={sectorId} />
+          <Heading
+            size="lg"
+            fontFamily="sans-serif"
+            fontWeight="bold"
+            letterSpacing="tight"
+            textShadow="2px 2px 2px rgba(0, 0, 0, 0.1)"
           >
-            <Box as="sup">
-              <EditButton />
-              <VoteConflictWarning votes={sector.name_votes} />
-            </Box>
-          </LinkBox>
-        </Heading>
-        <Text size="sm">
-          {sector.coordinate_votes.length >= 1
-            ? `Coordinates: ${JSON.stringify(
-                mostVoted(sector.coordinate_votes).coordinates
-              )}`
-            : 'No coordinate votes'}
-          <LinkBox
-            as={RouterLink}
-            to={`/crags/${cragId}/sectors/${sector.id}/vote-coordinates`}
-          >
-            <Box as="sup">
-              <EditButton />
-              <VoteConflictWarning votes={sector.coordinate_votes} />
-            </Box>
-          </LinkBox>
-        </Text>
-      </CragBanner>
-      <CragBannerMenu>
-        <Menu>
-          <MenuButton
-            padding="8px"
-            variant="unstyled"
-            fontWeight="normal"
-            fontSize={{ base: 'sm', sm: 'sm', md: 'md' }}
-            letterSpacing="1.5pt"
-            _hover={{ color: 'brand.200' }}
-            transition="all .1s"
-          >
-            <Center>
-              <Text display={{ base: 'none', sm: 'block' }}>
-                Edit <ChevronDownIcon />
-              </Text>
-              <EditIcon display={{ base: 'block', sm: 'none' }} />{' '}
-            </Center>
-          </MenuButton>
-          <MenuList>
-            <MenuItem
+            {sector.name_votes.length >= 1
+              ? mostVoted(sector.name_votes)
+              : 'No name votes'}
+            <LinkBox
               as={RouterLink}
-              to={`/crags/${cragId}/sectors/${sector.id}/add-climb`}
+              to={`/crags/${cragId}/sectors/${sector.id}/vote-name`}
             >
-              Add Climb
-            </MenuItem>
-            <MenuItem
-              as={RouterLink}
-              to={`/crags/${cragId}/sectors/${sector.id}/add-image`}
-            >
-              Add image
-            </MenuItem>
-          </MenuList>
-        </Menu>
-      </CragBannerMenu>
-
-      <Flex display={{ base: 'wrap', md: 'flex' }} justify="space-between">
-        <Box flex="0 0 10%" flexGrow="0">
-          {sector.coordinate_votes.length >= 1 && nearbySectors.length >= 2 && (
-            <Box
-              display={{ base: 'none', xl: 'block' }}
-              position="sticky"
-              top="40px"
-              maxWidth="10vw"
-            >
-              <Box color="black" padding="10px" w="300px">
-                <Heading
-                  mb="10px"
-                  size="md"
-                  color="white"
-                  fontFamily="sans-serif"
-                  fontWeight="bold"
-                  letterSpacing="tighter"
-                  textShadow="2px 2px 2px rgba(0, 0, 0, 0.1)"
-                >
-                  Close by:
-                </Heading>
-                <Box fontSize="sm" bgColor="gray.500">
-                  {nearbySectors.map((nearbySector) => (
-                    <Box
-                      key={sector.id}
-                      as={RouterLink}
-                      to={`/crags/${cragId}/sectors/${nearbySector.id}`}
-                    >
-                      <Box padding="10px">
-                        <CalcDistance
-                          lat1={
-                            mostVoted(sector.coordinate_votes).coordinates[1]
-                          }
-                          lon1={
-                            mostVoted(sector.coordinate_votes).coordinates[0]
-                          }
-                          lat2={
-                            mostVoted(nearbySector.coordinate_votes)
-                              .coordinates[1]
-                          }
-                          lon2={
-                            mostVoted(nearbySector.coordinate_votes)
-                              .coordinates[0]
-                          }
-                        />
-                        <Text>{mostVoted(nearbySector.name_votes)}</Text>
-                        <VoteConflictWarning
-                          anyVotes={[
-                            nearbySector.name_votes,
-                            nearbySector.coordinate_votes,
-                          ]}
-                        />
-                      </Box>
-                    </Box>
-                  ))}
-                </Box>
+              <Box as="sup">
+                <EditButton />
+                <VoteConflictWarning votes={sector.name_votes} />
               </Box>
-            </Box>
-          )}
-        </Box>
+            </LinkBox>
+          </Heading>
+          <Text size="sm">
+            {sector.coordinate_votes.length >= 1
+              ? `Coordinates: ${JSON.stringify(
+                  mostVoted(sector.coordinate_votes).coordinates
+                )}`
+              : 'No coordinate votes'}
+            <LinkBox
+              as={RouterLink}
+              to={`/crags/${cragId}/sectors/${sector.id}/vote-coordinates`}
+            >
+              <Box as="sup">
+                <EditButton />
+                <VoteConflictWarning votes={sector.coordinate_votes} />
+              </Box>
+            </LinkBox>
+          </Text>
+        </CragBanner>
+        <CragBannerMenu>
+          <Menu>
+            <MenuButton
+              padding="8px"
+              variant="unstyled"
+              fontWeight="normal"
+              fontSize={{ base: 'sm', sm: 'sm', md: 'md' }}
+              letterSpacing="1.5pt"
+              _hover={{ color: 'brand.200' }}
+              transition="all .1s"
+            >
+              <Center>
+                <Text display={{ base: 'none', sm: 'block' }}>
+                  Edit <ChevronDownIcon />
+                </Text>
+                <EditIcon display={{ base: 'block', sm: 'none' }} />{' '}
+              </Center>
+            </MenuButton>
+            <MenuList>
+              <MenuItem
+                as={RouterLink}
+                to={`/crags/${cragId}/sectors/${sector.id}/add-climb`}
+              >
+                Add climb
+              </MenuItem>
+              <MenuItem
+                as={RouterLink}
+                to={`/crags/${cragId}/sectors/${sector.id}/add-image`}
+              >
+                Add topo
+              </MenuItem>
+            </MenuList>
+          </Menu>
+        </CragBannerMenu>
 
-        <Flex direction="column">
-          <Box mt={1}>
-            {climbs.filter(
-              (climb) =>
-                climb.name_votes.length >= 1 && !climbIdsWithLines.has(climb.id)
-            ).length >= 1 && (
-              <>
-                <Alert status="warning">
-                  <Flex direction="column">
-                    <Flex direction="row">
-                      <AlertIcon />
-                      <AlertTitle mr={2}>
-                        There are undrawn lines on this sector.
-                      </AlertTitle>
-                      <AlertDescription>
-                        Please edit and add topo to contribute.
+        <Flex display={{ base: 'wrap', md: 'flex' }} justify="Center">
+          <Flex direction="column" mb="10px">
+            <Box mt={1}>
+              {climbs.filter(
+                (climb) =>
+                  climb.name_votes.length >= 1 &&
+                  !climbIdsWithLines.has(climb.id)
+              ).length >= 1 && (
+                <>
+                  <Alert status="warning">
+                    <Flex direction="column">
+                      <Flex direction="row">
+                        <AlertIcon />
+                        <AlertTitle mr={2}>
+                          There are undrawn lines on this sector.
+                          <Text fontWeight="normal">
+                            Please edit and add topo to contribute.
+                          </Text>
+                        </AlertTitle>
+                      </Flex>
+                      <AlertDescription ml={{ base: 0, lg: 10 }}>
+                        <UnorderedList>
+                          {climbs
+                            .filter(
+                              (climb) =>
+                                climb.name_votes.length >= 1 &&
+                                !climbIdsWithLines.has(climb.id)
+                            )
+                            .map((climb) => (
+                              <ListItem key={climb.id}>
+                                <Link
+                                  as={RouterLink}
+                                  to={`/crags/${cragId}/sectors/${sector.id}/climbs/${climb.id}`}
+                                >
+                                  <Flex>
+                                    <Text overflowWrap="anywhere">
+                                      {mostVoted(climb.name_votes)}
+                                    </Text>
+                                    {climb.grade_votes.length >= 1 && (
+                                      <Grade
+                                        gradeId={mostVoted(climb.grade_votes)}
+                                      />
+                                    )}
+                                  </Flex>
+                                </Link>
+                              </ListItem>
+                            ))}
+                        </UnorderedList>
                       </AlertDescription>
                     </Flex>
-                    <AlertDescription ml={{ base: 0, lg: 10 }}>
-                      <UnorderedList>
-                        {climbs
-                          .filter(
-                            (climb) =>
-                              climb.name_votes.length >= 1 &&
-                              !climbIdsWithLines.has(climb.id)
-                          )
-                          .map((climb) => (
-                            <ListItem key={climb.id}>
-                              <Link
-                                as={RouterLink}
-                                to={`/crags/${cragId}/sectors/${sector.id}/climbs/${climb.id}`}
-                              >
-                                <Flex>
-                                  <Text overflowWrap="anywhere">
-                                    {mostVoted(climb.name_votes)}
-                                  </Text>
-                                  {climb.grade_votes.length >= 1 && (
-                                    <Grade
-                                      gradeId={mostVoted(climb.grade_votes)}
-                                    />
-                                  )}
-                                </Flex>
-                              </Link>
-                            </ListItem>
-                          ))}
-                      </UnorderedList>
-                    </AlertDescription>
-                  </Flex>
-                </Alert>
-              </>
+                  </Alert>
+                </>
+              )}
+            </Box>
+
+            <Box>
+              {images &&
+                images.map((image) => (
+                  <ImageWithLines
+                    key={image.id}
+                    cragId={cragId}
+                    sectorId={sectorId}
+                    sectorName={mostVoted(sector.name_votes)}
+                    image={image}
+                  />
+                ))}
+            </Box>
+          </Flex>
+          <Box>
+            {sector.coordinate_votes.length >= 1 && nearbySectors.length >= 2 && (
+              <Box
+                padding="10px"
+                display={{ base: 'none', xl: 'block' }}
+                position="sticky"
+                top="65px"
+                bgColor="gray.800"
+                margin="10px"
+                maxW="300px"
+                minW="200px"
+              >
+                <Box color="white">
+                  <Heading
+                    mb="10px"
+                    size="md"
+                    color="white"
+                    fontFamily="sans-serif"
+                    fontWeight="bold"
+                    letterSpacing="tighter"
+                    textShadow="2px 2px 2px rgba(0, 0, 0, 0.1)"
+                  >
+                    Close by:
+                  </Heading>
+                  <Box fontSize="sm">
+                    {nearbySectors.map((nearbySector) => (
+                      <Box
+                        key={sector.id}
+                        as={RouterLink}
+                        to={`/crags/${cragId}/sectors/${nearbySector.id}`}
+                      >
+                        <HStack padding="10px">
+                          <Text>{mostVoted(nearbySector.name_votes)}</Text>
+                          <VoteConflictWarning
+                            anyVotes={[
+                              nearbySector.name_votes,
+                              nearbySector.coordinate_votes,
+                            ]}
+                          />
+                          <CalcDistance
+                            lat1={
+                              mostVoted(sector.coordinate_votes).coordinates[1]
+                            }
+                            lon1={
+                              mostVoted(sector.coordinate_votes).coordinates[0]
+                            }
+                            lat2={
+                              mostVoted(nearbySector.coordinate_votes)
+                                .coordinates[1]
+                            }
+                            lon2={
+                              mostVoted(nearbySector.coordinate_votes)
+                                .coordinates[0]
+                            }
+                          />
+                        </HStack>
+                      </Box>
+                    ))}
+                  </Box>
+                </Box>
+              </Box>
             )}
           </Box>
-          <Box margin="0px" flex="0 0 80%" flexGrow="5">
-            {images &&
-              images.map((image) => (
-                <ImageWithLines
-                  pictureNumber={'1'}
-                  pictureTotalNumber={'2'}
-                  key={image.id}
-                  cragId={cragId}
-                  sectorId={sectorId}
-                  sectorName={mostVoted(sector.name_votes)}
-                  image={image}
-                />
-              ))}
-          </Box>
         </Flex>
-        <Box flex="0 0 10%" flexGrow="0">
-          <Box maxWidth="20vw"></Box>
-        </Box>
-      </Flex>
+      </Container>
       <PageFooter></PageFooter>
-    </Container>
+    </Flex>
   )
 }
 
-function ImageWithLines({
-  cragId,
-  sectorId,
-  image,
-  sectorName,
-  pictureNumber,
-  pictureTotalNumber,
-}) {
+function ImageWithLines({ cragId, sectorId, image, sectorName }) {
   const [selectedIndex, setSelectedIndex] = useState(null)
 
   const { lines, error } = useLines({ image_id: image.id })
@@ -329,6 +326,10 @@ function ImageWithLines({
 
   if (lines === undefined) {
     return <Loader />
+  }
+
+  if (lines === isEmpty()) {
+    return <Box>Emptiiii</Box>
   }
   const parsedLines = lines.map((line) => mostVoted(line.line_path_votes))
 
@@ -357,84 +358,80 @@ function ImageWithLines({
 
   return (
     <Box pt={{ base: '0px', md: '2' }}>
-      <Flex
-        direction={{ base: 'column', md: 'row' }}
-        bg="gray.300"
-        boxShadow="xl"
-      >
-        <Box alignSelf="baseline">
-          <LineImage
-            as={LineImage}
-            image={image}
-            lines={lines}
-            selectedIndex={selectedIndex}
-            onMouseMove={handleMouseMove}
-          />
-        </Box>
-        <Box>
-          <Flex
-            direction="column"
-            pl={{ base: '10px', md: '0px' }}
-            pr={{ base: '10px', md: '0px' }}
-          >
-            <Flex justify="space-between" alignItems="center">
+      <Flex direction="column">
+        <Flex
+          direction={{ base: 'column', md: 'row' }}
+          bg="gray.300"
+          boxShadow="xl"
+        >
+          <Box alignSelf="baseline">
+            <LineImage
+              as={LineImage}
+              image={image}
+              lines={lines}
+              selectedIndex={selectedIndex}
+              onMouseMove={handleMouseMove}
+            />
+          </Box>
+          <Box>
+            <Flex direction="column">
+              <Flex padding="10px" justify="space-between" alignItems="center">
+                <Box>
+                  <Text size="sm">{sectorName}</Text>
+                </Box>
+                <Spacer />
+                <Box>
+                  <IconButton
+                    colorScheme="green"
+                    as={RouterLink}
+                    to={`/crags/${cragId}/sectors/${sectorId}/images/${image.id}/add-line`}
+                    size="sm"
+                    icon={<EditIcon />}
+                  />
+                </Box>
+              </Flex>
               <Box>
-                <Text size="sm">
-                  {sectorName} ({pictureNumber}/{pictureTotalNumber})
-                </Text>
-              </Box>
-              <Spacer />
-              <Box>
-                <IconButton
-                  colorScheme="green"
-                  as={RouterLink}
-                  to={`/crags/${cragId}/sectors/${sectorId}/images/${image.id}/add-line`}
-                  size="sm"
-                  icon={<EditIcon />}
-                />
+                <Box
+                  overflow="auto"
+                  minHeight="100px"
+                  sx={{
+                    '&::-webkit-scrollbar': {
+                      width: '10px',
+                      borderRadius: '8px',
+                      backgroundColor: `white`,
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                      backgroundColor: `gray.300`,
+                      borderRadius: '8px',
+                    },
+                  }}
+                >
+                  <OrderedList
+                    pr="10px"
+                    pl="10px"
+                    pt="2px"
+                    wordBreak="noraml"
+                    whitespace="normal"
+                  >
+                    {lines.map((line, index) => (
+                      <ListItem
+                        key={line.id}
+                        bg={index === selectedIndex ? 'whiteAlpha.600' : ''}
+                        onMouseOver={() => setSelectedIndex(index)}
+                      >
+                        <Climb
+                          cragId={cragId}
+                          sectorId={sectorId}
+                          climbId={line.climb_id}
+                        />
+                      </ListItem>
+                    ))}
+                  </OrderedList>
+                </Box>
               </Box>
             </Flex>
-            <Box>
-              <Box
-                overflow="auto"
-                minHeight="100px"
-                sx={{
-                  '&::-webkit-scrollbar': {
-                    width: '10px',
-                    borderRadius: '8px',
-                    backgroundColor: `white`,
-                  },
-                  '&::-webkit-scrollbar-thumb': {
-                    backgroundColor: `gray.300`,
-                    borderRadius: '8px',
-                  },
-                }}
-              >
-                <OrderedList
-                  pr="10px"
-                  pl="10px"
-                  pt="2px"
-                  wordBreak="noraml"
-                  whitespace="normal"
-                >
-                  {lines.map((line, index) => (
-                    <ListItem
-                      key={line.id}
-                      bg={index === selectedIndex ? 'whiteAlpha.600' : ''}
-                      onMouseOver={() => setSelectedIndex(index)}
-                    >
-                      <Climb
-                        cragId={cragId}
-                        sectorId={sectorId}
-                        climbId={line.climb_id}
-                      />
-                    </ListItem>
-                  ))}
-                </OrderedList>
-              </Box>
-            </Box>
-          </Flex>
-        </Box>
+          </Box>
+        </Flex>
       </Flex>
     </Box>
   )
@@ -456,19 +453,32 @@ function Climb({ cragId, sectorId, climbId }) {
       as={RouterLink}
       to={`/crags/${cragId}/sectors/${sectorId}/climbs/${climbId}`}
     >
-      <HStack>
-        <Text>{mostVoted(climb.name_votes)}</Text>
-        {climb.grade_votes.length >= 1 && (
-          <Grade gradeId={mostVoted(climb.grade_votes)} />
+      <Flex direction="column">
+        <HStack>
+          <Text>{mostVoted(climb.name_votes)}</Text>
+          {climb.grade_votes.length >= 1 && (
+            <Grade gradeId={mostVoted(climb.grade_votes)} />
+          )}
+          <VoteConflictWarning
+            anyVotes={[
+              climb.name_votes,
+              climb.grade_votes,
+              climb.line_path_votes,
+            ]}
+          />
+        </HStack>
+        {climb.rating_votes.length >= 1 && (
+          <StarRatings
+            rating={mostVoted(climb.rating_votes)}
+            starRatedColor="gold"
+            numberOfStars={5}
+            name="rating"
+            starEmptyColor="none"
+            starDimension="20px"
+            starSpacing="1px"
+          />
         )}
-        <VoteConflictWarning
-          anyVotes={[
-            climb.name_votes,
-            climb.grade_votes,
-            climb.line_path_votes,
-          ]}
-        />
-      </HStack>
+      </Flex>
     </Link>
   )
 }

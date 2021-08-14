@@ -12,6 +12,7 @@ import React from 'react'
 import { Link as RouterLink } from 'react-router-dom'
 import { ParallaxBanner } from 'react-scroll-parallax'
 import { useCrag, useCragPhoto, mostVoted } from '../utils/backend'
+import { CragComponentBox } from './crag-component-box'
 import EditButton from './edit-button'
 import VoteConflictWarning from './vote-conflict-warning'
 
@@ -42,7 +43,7 @@ function CragBannerMenuButton({ children, to, buttonicon, ...props }) {
   )
 }
 
-function CragBannerMenuDivider(...props) {
+function CragBannerMenuDivider({ ...props }) {
   return (
     <Box pt="13px" {...props}>
       <Box h="30px" bg="gray.300" w="1px" />
@@ -50,35 +51,66 @@ function CragBannerMenuDivider(...props) {
   )
 }
 
-function CragBannerMenu({ children }) {
+function CragBannerMenu({ children, cragId }) {
+  const { crag, error: cragError } = useCrag(cragId)
   return (
-    <Box zIndex="1" position="sticky" top={{ base: '54px', md: '-1px' }}>
+    <Box
+      zIndex="1"
+      position={{ base: 'relative', md: 'sticky' }}
+      top={{ base: '0px', md: '-1px' }}
+      bg="gray.200"
+    >
       <Box>
-        <Flex bg="gray.200" mb="4px" mt="0px" justify="center">
-          <CragBannerMenuButton to="/">Home</CragBannerMenuButton>
-          <CragBannerMenuDivider />
-          <CragBannerMenuButton to="/">Sectors</CragBannerMenuButton>
+        <Box
+          pl={{
+            md: '15vw',
+            base: '20px',
+          }}
+          pr={{
+            md: '15vw',
+            base: '20px',
+          }}
+        >
+          <Flex
+            mb="4px"
+            mt="0px"
+            justify={{ base: 'space-around', md: 'flex-start' }}
+            position="relative"
+            w="100%"
+          >
+            <CragBannerMenuDivider />
+            <CragBannerMenuButton to="/">Sectors</CragBannerMenuButton>
 
-          <CragBannerMenuDivider />
-          <CragBannerMenuButton to="/">Map</CragBannerMenuButton>
-          <CragBannerMenuDivider />
-          <CragBannerMenuButton to="/" display={{ base: 'none', md: 'block' }}>
-            Discussion
-          </CragBannerMenuButton>
-          <CragBannerMenuDivider display={{ base: 'none', md: 'block' }} />
-          <CragBannerMenuButton to="/">Access</CragBannerMenuButton>
-          <CragBannerMenuDivider />
-          <CragBannerMenuButton to="/" display={{ base: 'none', xs: 'block' }}>
-            Photos
-          </CragBannerMenuButton>
-          <CragBannerMenuDivider display={{ base: 'none', xs: 'block' }} />
-          <CragBannerMenuButton to="/" display={{ base: 'none', xxl: 'block' }}>
-            Authors
-          </CragBannerMenuButton>
-          <CragBannerMenuDivider display={{ base: 'none', xxl: 'block' }} />
-
-          {children}
-        </Flex>
+            <CragBannerMenuDivider />
+            <CragBannerMenuButton to="/">Map</CragBannerMenuButton>
+            <CragBannerMenuDivider display={{ base: 'none', md: 'block' }} />
+            <CragBannerMenuButton
+              to="/"
+              display={{ base: 'none', md: 'block' }}
+            >
+              Discussion
+            </CragBannerMenuButton>
+            <CragBannerMenuDivider />
+            <CragBannerMenuButton to="/">Access</CragBannerMenuButton>
+            <CragBannerMenuDivider />
+            <CragBannerMenuButton
+              to="/"
+              display={{ base: 'none', xs: 'block' }}
+            >
+              Photos
+            </CragBannerMenuButton>
+            <CragBannerMenuDivider display={{ base: 'none', xs: 'block' }} />
+            <CragBannerMenuButton
+              to="/"
+              display={{ base: 'none', xxl: 'block' }}
+            >
+              Authors
+            </CragBannerMenuButton>
+            <CragBannerMenuDivider display={{ base: 'none', xxl: 'block' }} />
+            <Spacer />
+            {children}
+          </Flex>
+        </Box>
       </Box>
     </Box>
   )
@@ -181,58 +213,56 @@ function CragFrontPageBannerMenu({ children }) {
   return (
     <Flex
       position={{ base: 'relative', md: 'sticky' }}
-      zIndex={{ base: 'initial', md: 'sticky' }}
+      zIndex={{ base: 'sticky', md: 'sticky' }}
       top="0px"
       bottom="0px"
       w="100%"
-      justify-content="center"
       textColor="white"
       bg="gray.200"
       textColor="black"
       minHeight={{ base: '40px', sm: '50px' }}
       boxShadow="0px 12px 18px -20px rgba(0, 0, 0, 0.5)"
     >
-      <Center w="inherit">
-        <Flex ml={2} wrap="wrap" w="inherit">
-          <Spacer display={{ base: 'none', sm: 'block' }} />
-          <CragFrontPageBannerMenuButton
-            to="/"
-            display={{ base: 'none', xs: 'block' }}
+      <CragComponentBox w="100%">
+        <Center w="inherit">
+          <Flex
+            ml={2}
+            wrap="wrap"
+            w="inherit"
+            justify={{ base: 'space-between', md: 'space-around' }}
           >
-            Home
-          </CragFrontPageBannerMenuButton>
-          <CragBannerMenuDivider />
-          <CragFrontPageBannerMenuButton to="/">
-            Sectors
-          </CragFrontPageBannerMenuButton>
-          <CragBannerMenuDivider />
-          <CragFrontPageBannerMenuButton to="/">
-            Map
-          </CragFrontPageBannerMenuButton>
-          <CragBannerMenuDivider />
-          <CragFrontPageBannerMenuButton to="/">
-            Discussion
-          </CragFrontPageBannerMenuButton>
-          <CragBannerMenuDivider />
-          <CragFrontPageBannerMenuButton to="/">
-            Photos
-          </CragFrontPageBannerMenuButton>
-          <CragBannerMenuDivider />
-          <CragFrontPageBannerMenuButton to="/">
-            Access
-          </CragFrontPageBannerMenuButton>
-          <CragBannerMenuDivider />
-          <CragFrontPageBannerMenuButton
-            to="/"
-            display={{ base: 'none', sm: 'block' }}
-          >
-            Authors
-          </CragFrontPageBannerMenuButton>
-          <CragBannerMenuDivider />
-          {children}
-          <Spacer display={{ base: 'none', sm: 'block' }} />
-        </Flex>
-      </Center>
+            <CragFrontPageBannerMenuButton to="/">
+              Sectors
+            </CragFrontPageBannerMenuButton>
+            <CragBannerMenuDivider />
+            <CragFrontPageBannerMenuButton to="/">
+              Map
+            </CragFrontPageBannerMenuButton>
+            <CragBannerMenuDivider />
+            <CragFrontPageBannerMenuButton to="/">
+              Discussion
+            </CragFrontPageBannerMenuButton>
+            <CragBannerMenuDivider />
+            <CragFrontPageBannerMenuButton to="/">
+              Photos
+            </CragFrontPageBannerMenuButton>
+            <CragBannerMenuDivider />
+            <CragFrontPageBannerMenuButton to="/">
+              Access
+            </CragFrontPageBannerMenuButton>
+            <CragBannerMenuDivider />
+            <CragFrontPageBannerMenuButton
+              to="/"
+              display={{ base: 'none', sm: 'block' }}
+            >
+              Authors
+            </CragFrontPageBannerMenuButton>
+            <CragBannerMenuDivider display={{ md: 'none', sm: 'block' }} />
+            <Spacer />
+            {children}
+          </Flex>
+        </Center>
+      </CragComponentBox>
     </Flex>
   )
 }
@@ -266,7 +296,6 @@ function CragFrontPageBanner({
         position="relative"
         minHeight={{ base: '40vh', md: '70vh', lg: '95vh' }}
         maxHeight={{ base: '200px', md: '70vh', lg: '95vh' }}
-        {...props}
       >
         <Box
           color="white"
@@ -286,7 +315,7 @@ function CragFrontPageBanner({
           layers={[
             {
               image: cragPhoto?.base64_image,
-              amount: 0.5,
+              amount: 0.4,
             },
 
             {
