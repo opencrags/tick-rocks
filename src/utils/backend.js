@@ -125,6 +125,13 @@ const useLine = (lineId) => {
   return { line, error }
 }
 
+const useCragPhoto = (cragPhotoId) => {
+  const { data: cragPhoto, error } = useBackend(
+    cragPhotoId ? `/crag_photos/${cragPhotoId}` : null
+  )
+  return { cragPhoto, error }
+}
+
 const useGradeSystemGrade = (gradeSystemGradeId) => {
   const { data: grade, error } = useBackend(
     gradeSystemGradeId ? `/grade-system-grades/${gradeSystemGradeId}` : null
@@ -174,6 +181,16 @@ const useLines = (query, limit = 20, offset = 0) => {
   return { lines, error }
 }
 
+const useCragPhotos = (query, limit = 20, offset = 0) => {
+  const { data: cragPhotos, error } = useQuery(
+    'crag_photos',
+    query,
+    limit,
+    offset
+  )
+  return { cragPhotos, error }
+}
+
 const useGradeSystemGrades = () => {
   const { data: gradeSystemGrades, error } = useBackend('/grade-system-grades')
   return { gradeSystemGrades, error }
@@ -183,6 +200,7 @@ const useQuickSearch = (text) => {
   const { data: quickSearch, error } = useBackend(`/quick-search?text=${text}`)
   return { quickSearch, error }
 }
+
 const countVotes = (votes) => {
   const countedVotes = Object.entries(
     votes.reduce((count, vote) => {
@@ -254,12 +272,14 @@ export {
   useClimb,
   useImage,
   useLine,
+  useCragPhoto,
   useGradeSystemGrade,
   useCrags,
   useSectors,
   useClimbs,
   useImages,
   useLines,
+  useCragPhotos,
   useGradeSystemGrades,
   useUser,
   useQuickSearch,

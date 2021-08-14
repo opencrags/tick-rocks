@@ -56,7 +56,7 @@ export default function Climb() {
 
   return (
     <Container maxWidth="100%" mt={{ base: '55px', md: '0px' }} padding="0">
-      <CragBanner cragBannerImage="https://27crags.s3.amazonaws.com/photos/000/243/243558/size_xl-f6e1a707ffb0.jpg">
+      <CragBanner cragId={cragId}>
         <ClimbBreadcrumb climbId={climbId} />
         <Heading size="xl">
           {climb.name_votes.length >= 1

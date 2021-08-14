@@ -95,7 +95,7 @@ export default function Sector() {
 
   return (
     <Container bg="brand.100" maxWidth="100%" padding="0px">
-      <CragBanner cragBannerImage="https://27crags.s3.amazonaws.com/photos/000/213/213830/size_xl-9d8dc766475a.jpg">
+      <CragBanner cragId={cragId}>
         <SectorBreadcrumb sectorId={sectorId} />
         <Heading
           size="lg"

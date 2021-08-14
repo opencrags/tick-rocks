@@ -20,22 +20,29 @@ import { Link as RouterLink, useParams } from 'react-router-dom'
 import Loader from '../components/loader.js'
 import EditButton from '../components/edit-button.js'
 import VoteConflictWarning from '../components/vote-conflict-warning.js'
-import { useCrag, useSectors, mostVoted } from '../utils/backend.js'
+import {
+  useCrag,
+  useSectors,
+  mostVoted,
+  useCragPhotos,
+} from '../utils/backend.js'
 import {
   CragFrontPageBannerMenu,
   CragFrontPageBanner,
 } from '../components/crag-banner.js'
-import { CragPhotoGrid } from '../components/crag-photos.js'
+import { CragPhotoGrid } from '../components/crag-photo-grid.js'
 import { CragComponentBox } from '../components/crag-component-box'
 import { CragSectorGrid, CragSector } from '../components/crag-sectors.js'
 import { CragGrades } from '../components/crag-grades.js'
 import { CragLatestDiscussions } from '../components/crag-latestdiscussions'
 import { ChevronDownIcon, EditIcon, AddIcon } from '@chakra-ui/icons'
-import { isEmpty } from 'lodash'
 
 export default function Crag() {
   const { cragId } = useParams()
   const { crag, error: errorCrag } = useCrag(cragId)
+  const { cragPhotos, error: errorCragPhotos } = useCragPhotos({
+    crag_id: cragId,
+  })
   const { sectors, error: errorSectors } = useSectors({ crag_id: cragId }, 100)
 
   if (errorCrag || errorSectors) {
@@ -68,7 +75,7 @@ export default function Crag() {
         Sector
       </Button>
 
-      <CragFrontPageBanner cragBannerImage="https://27crags.s3.amazonaws.com/photos/000/213/213830/size_xl-9d8dc766475a.jpg">
+      <CragFrontPageBanner cragId={cragId}>
         <Box position="absolute">
           <Heading
             textShadow="2px 2px 2px rgba(0, 0, 0, 0.2)"
@@ -293,31 +300,33 @@ export default function Crag() {
                     ? mostVoted(crag.name_votes)
                     : 'No name votes'}
                 </Heading>
-                <Button
-                  display={{ base: 'block', md: 'none' }}
-                  boxShadow="xl"
-                  pr={5}
-                  pl={5}
-                  m={3}
-                  colorScheme="green"
-                >
-                  <AddIcon />
-                </Button>
-                <Button
-                  display={{ base: 'none', md: 'Block' }}
-                  boxShadow="xl"
-                  pr={5}
-                  pl={5}
-                  m={3}
-                  colorScheme="green"
-                  leftIcon={<AddIcon />}
-                >
-                  Upload
-                </Button>
+                <Box as={RouterLink} to={`/crags/${crag.id}/add-crag-photo`}>
+                  <Button
+                    display={{ base: 'block', md: 'none' }}
+                    boxShadow="xl"
+                    pr={5}
+                    pl={5}
+                    m={3}
+                    colorScheme="green"
+                  >
+                    <AddIcon />
+                  </Button>
+                  <Button
+                    display={{ base: 'none', md: 'Block' }}
+                    boxShadow="xl"
+                    pr={5}
+                    pl={5}
+                    m={3}
+                    colorScheme="green"
+                    leftIcon={<AddIcon />}
+                  >
+                    Upload
+                  </Button>
+                </Box>
               </Flex>
             </Box>
           </Box>
-          <CragPhotoGrid />
+          <CragPhotoGrid cragId={cragId} />
         </Box>
       </CragComponentBox>
       <CragComponentBox>

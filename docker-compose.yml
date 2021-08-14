@@ -2,7 +2,7 @@ version: "3"
 
 services:
   opencrags-rest-api-dev:
-    image: opencrags/opencrags-rest-api:r37
+    image: opencrags/opencrags-rest-api:r41
     restart: always
     depends_on:
       - opencrags-mongo-dev

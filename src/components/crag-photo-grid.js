@@ -1,15 +1,24 @@
 import {
   Box,
-  Image,
+  Text,
   SimpleGrid,
   useDisclosure,
   SlideFade,
 } from '@chakra-ui/react'
 import React from 'react'
-import { Link as RouterLink } from 'react-router-dom'
-import { Parallax, ParallaxBanner } from 'react-scroll-parallax'
+import { useCragPhotos } from '../utils/backend'
 
-function CragPhotoGrid({ children, ...props }) {
+function CragPhotoGrid({ cragId, children, ...props }) {
+  const { cragPhotos, error } = useCragPhotos({ crag_id: cragId })
+
+  if (cragPhotos === undefined) {
+    return ''
+  }
+
+  if (error) {
+    return <Text>Error fetching photos</Text>
+  }
+
   return (
     <Box>
       {children}
@@ -19,15 +28,9 @@ function CragPhotoGrid({ children, ...props }) {
         spacing="5px"
         margin="5px"
       >
-        <CragPhotos img="https://27crags.s3.amazonaws.com/photos/000/075/75038/size_xl-51f3b20cc4af.png" />
-        <CragPhotos img="https://27crags.s3.amazonaws.com/photos/000/086/86608/size_xl-b84cf248cff7.jpg" />
-        <CragPhotos img="https://27crags.s3.amazonaws.com/photos/000/064/64474/size_xl-c06bad023ce7.jpg" />
-        <CragPhotos img="https://27crags.s3.amazonaws.com/photos/000/081/81392/size_xl-003920a9beef.jpg" />
-        <CragPhotos img="https://27crags.s3.amazonaws.com/photos/000/056/56906/size_xl-64df3ee6b279.jpg" />
-        <CragPhotos img="https://27crags.s3.amazonaws.com/photos/000/062/62491/size_xl-8e3054119a11.jpg" />
-        <CragPhotos img="https://27crags.s3.amazonaws.com/photos/000/213/213913/size_xl-d16b8a6b9f2b.jpg" />
-        <CragPhotos img="https://27crags.s3.amazonaws.com/photos/000/056/56873/size_xl-c67d6243d0c8.jpg" />
-        <CragPhotos img="https://27crags.s3.amazonaws.com/photos/000/052/52533/size_xl-109573834ada.jpg" />
+        {cragPhotos.map((cragPhoto) => (
+          <CragPhotos key={cragPhoto.id} img={cragPhoto.base64_image} />
+        ))}
       </SimpleGrid>
     </Box>
   )

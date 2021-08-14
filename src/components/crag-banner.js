@@ -2,81 +2,18 @@ import {
   Box,
   Image,
   Flex,
-  Menu,
-  MenuList,
   VStack,
   Spacer,
   Center,
-  Link,
-  Wrap,
-  SimpleGrid,
   Text,
-  Button,
-  Drawer,
-  DrawerBody,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerOverlay,
-  DrawerContent,
-  DrawerCloseButton,
-  Heading,
+  LinkBox,
 } from '@chakra-ui/react'
 import React from 'react'
 import { Link as RouterLink } from 'react-router-dom'
-import { Parallax, ParallaxBanner } from 'react-scroll-parallax'
-import { useDisclosure } from '@chakra-ui/react'
-import { CloseIcon } from '@chakra-ui/react'
-function SectorDrawer({ children }) {
-  const btnRef = React.useRef()
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const PhoneButton = (props) => {
-    const { children } = props
-    return (
-      <Box>
-        <Button
-          ref={btnRef}
-          onClick={onOpen}
-          display={{ base: 'block', xl: 'none' }}
-          zIndex="banner"
-          position="fixed"
-          borderRadius="40px"
-          bottom="10px"
-          right="15px"
-          shadow="dark-lg"
-          colorScheme="green"
-        >
-          {children}
-        </Button>
-      </Box>
-    )
-  }
-
-  return (
-    <Box>
-      <CragBannerMenuButton ref={btnRef} onClick={onOpen}>
-        Sectors
-      </CragBannerMenuButton>
-      <PhoneButton>Nearby</PhoneButton>
-      <Drawer placement="right" onClose={onClose} isOpen={isOpen}>
-        <DrawerOverlay />
-        <DrawerContent background="brand.100" color="white">
-          <DrawerHeader>
-            <Flex padding="10px" direction="row" justify="space-between">
-              <CloseIcon w="20px" h="15px" color="white" onClick={onClose} />
-              <Heading color="white">Sectors</Heading>
-            </Flex>
-          </DrawerHeader>
-          <DrawerBody padding="0px">
-            <Flex direction="column">
-              <Flex direction="row" justify="space-evenly"></Flex>
-              <Box onClick={onClose}>{children}</Box>
-            </Flex>
-          </DrawerBody>
-        </DrawerContent>
-      </Drawer>
-    </Box>
-  )
-}
+import { ParallaxBanner } from 'react-scroll-parallax'
+import { useCrag, useCragPhoto, mostVoted } from '../utils/backend'
+import EditButton from './edit-button'
+import VoteConflictWarning from './vote-conflict-warning'
 
 function CragBannerMenuButton({ children, to, buttonicon, ...props }) {
   return (
@@ -147,12 +84,28 @@ function CragBannerMenu({ children }) {
   )
 }
 
-function CragBanner({ children, cragBannerImage, ...props }) {
+function CragBanner({ children, cragId, ...props }) {
+  const { crag, error: cragError } = useCrag(cragId)
+  const { cragPhoto, error: cragPhotoError } = useCragPhoto(
+    crag && crag.banner_votes.length >= 1 ? mostVoted(crag.banner_votes) : null
+  )
+
+  if (
+    crag === undefined ||
+    (cragPhoto === undefined && crag.banner_votes.length >= 1)
+  ) {
+    return 'Loading...'
+  }
+
+  if (cragError || cragPhotoError) {
+    return 'Error loading crag photo'
+  }
+
   return (
     <Box>
       <Box h={{ base: '150px', xs: '200px' }} w="100%" position="relative">
         <Image
-          src={cragBannerImage}
+          src={cragPhoto?.base64_image}
           position="absolute"
           filter="grayscale(0.10)"
           height="100%"
@@ -281,9 +234,25 @@ function CragFrontPageBanner({
   bgParallaxAmount,
   cragParallaxAmount,
   children,
-  cragBannerImage,
+  cragId,
   ...props
 }) {
+  const { crag, error: cragError } = useCrag(cragId)
+  const { cragPhoto, error: cragPhotoError } = useCragPhoto(
+    crag && crag.banner_votes.length >= 1 ? mostVoted(crag.banner_votes) : null
+  )
+
+  if (
+    crag === undefined ||
+    (cragPhoto === undefined && crag.banner_votes.length >= 1)
+  ) {
+    return 'Loading...'
+  }
+
+  if (cragError || cragPhotoError) {
+    return 'Error loading crag photo'
+  }
+
   return (
     <Box>
       <Box
@@ -291,28 +260,27 @@ function CragFrontPageBanner({
         maxHeight={{ base: '200px', md: '70vh', lg: '95vh' }}
         {...props}
       >
+        <Box
+          color="white"
+          height="0px"
+          position="sticky"
+          zIndex="1"
+          top="60px"
+          width="100%"
+          textAlign="right"
+        >
+          <LinkBox as={RouterLink} to={`/crags/${cragId}/vote-banner`}>
+            <EditButton size="lg" />
+            <VoteConflictWarning votes={crag.banner_votes} />
+          </LinkBox>
+        </Box>
         <ParallaxBanner
           layers={[
             {
-              image:
-                'https://27crags.s3.amazonaws.com/photos/000/213/213830/size_xl-9d8dc766475a.jpg',
+              image: cragPhoto?.base64_image,
               amount: 0.5,
             },
 
-            {
-              amount: 0,
-              children: (
-                <Box
-                  position="absolute"
-                  height="100%"
-                  width="100%"
-                  bg="blackAlpha.300"
-                  display="flex"
-                  justifyContent="center"
-                  alignItems="center"
-                ></Box>
-              ),
-            },
             {
               amount: 0.6,
               children: (

@@ -5,7 +5,7 @@ import { countVotes } from '../utils/backend.js'
 
 export default function Votes({ votes, countedVoteItem, value, onChange }) {
   const countedVotes = countVotes(votes)
-  const maxVoteCount = Math.max(Object.values(countedVotes))
+  const maxVoteCount = Math.max(countedVotes.map(({ count }) => count))
   const [checkboxes, setCheckboxes] = useState(
     countedVotes.map(
       (countedVote) =>
@@ -36,7 +36,7 @@ export default function Votes({ votes, countedVoteItem, value, onChange }) {
             >
               {countedVoteItem(countedVote, maxVoteCount)}
             </Checkbox>
-            <Progress value={countedVote.count / maxVoteCount} />
+            <Progress value={(countedVote.count / maxVoteCount) * 100} />
           </Box>
         ))
       )}
