@@ -90,7 +90,6 @@ function RockBreadcrumb({ breadcrumbs }) {
     <Breadcrumb
       fontWeight="normal"
       fontSize={{ base: 'sm', sm: 'sm', md: 'md' }}
-      letterSpacing="1.2pt"
       fontFamily="sans-serif"
     >
       {breadcrumbs.map((breadcrumb, index) => (

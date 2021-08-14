@@ -31,6 +31,7 @@ import {
   CragBannerMenu,
   CragBannerMenuButton,
 } from '../components/crag-banner.js'
+import { PageFooter } from '../components/page-footer.js'
 
 export default function Climb() {
   const { cragId, sectorId, climbId } = useParams()
@@ -136,6 +137,7 @@ export default function Climb() {
           line on and then select this climb.
         </Text>
       </Container>
+      <PageFooter></PageFooter>
     </Container>
   )
 }

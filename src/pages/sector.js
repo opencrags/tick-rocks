@@ -52,6 +52,7 @@ import {
   mostVoted,
 } from '../utils/backend.js'
 import { useState } from 'react'
+import { PageFooter } from '../components/page-footer.js'
 
 export default function Sector() {
   const { cragId, sectorId } = useParams()
@@ -94,7 +95,7 @@ export default function Sector() {
   )
 
   return (
-    <Container bg="brand.100" maxWidth="100%" padding="0px">
+    <Container bg="brand.100" maxWidth="100%" minHeight="95vh" padding="0px">
       <CragBanner cragId={cragId}>
         <SectorBreadcrumb sectorId={sectorId} />
         <Heading
@@ -170,8 +171,8 @@ export default function Sector() {
       </CragBannerMenu>
 
       <Flex display={{ base: 'wrap', md: 'flex' }} justify="space-between">
-        {sector.coordinate_votes.length >= 1 && nearbySectors.length >= 2 && (
-          <Box flex="0 0 10%" flexGrow="0">
+        <Box flex="0 0 10%" flexGrow="0">
+          {sector.coordinate_votes.length >= 1 && nearbySectors.length >= 2 && (
             <Box
               display={{ base: 'none', xl: 'block' }}
               position="sticky"
@@ -227,8 +228,9 @@ export default function Sector() {
                 </Box>
               </Box>
             </Box>
-          </Box>
-        )}
+          )}
+        </Box>
+
         <Flex direction="column">
           <Box mt={1}>
             {climbs.filter(
@@ -300,6 +302,7 @@ export default function Sector() {
           <Box maxWidth="20vw"></Box>
         </Box>
       </Flex>
+      <PageFooter></PageFooter>
     </Container>
   )
 }

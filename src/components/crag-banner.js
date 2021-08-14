@@ -55,24 +55,24 @@ function CragBannerMenu({ children }) {
     <Box zIndex="1" position="sticky" top={{ base: '54px', md: '-1px' }}>
       <Box>
         <Flex bg="gray.200" mb="4px" mt="0px" justify="center">
-          <CragBannerMenuButton>Home</CragBannerMenuButton>
+          <CragBannerMenuButton to="/">Home</CragBannerMenuButton>
           <CragBannerMenuDivider />
-          <CragBannerMenuButton>Sectors</CragBannerMenuButton>
+          <CragBannerMenuButton to="/">Sectors</CragBannerMenuButton>
 
           <CragBannerMenuDivider />
-          <CragBannerMenuButton>Map</CragBannerMenuButton>
+          <CragBannerMenuButton to="/">Map</CragBannerMenuButton>
           <CragBannerMenuDivider />
-          <CragBannerMenuButton display={{ base: 'none', md: 'block' }}>
+          <CragBannerMenuButton to="/" display={{ base: 'none', md: 'block' }}>
             Discussion
           </CragBannerMenuButton>
           <CragBannerMenuDivider display={{ base: 'none', md: 'block' }} />
-          <CragBannerMenuButton>Access</CragBannerMenuButton>
+          <CragBannerMenuButton to="/">Access</CragBannerMenuButton>
           <CragBannerMenuDivider />
-          <CragBannerMenuButton display={{ base: 'none', xs: 'block' }}>
+          <CragBannerMenuButton to="/" display={{ base: 'none', xs: 'block' }}>
             Photos
           </CragBannerMenuButton>
           <CragBannerMenuDivider display={{ base: 'none', xs: 'block' }} />
-          <CragBannerMenuButton display={{ base: 'none', xxl: 'block' }}>
+          <CragBannerMenuButton to="/" display={{ base: 'none', xxl: 'block' }}>
             Authors
           </CragBannerMenuButton>
           <CragBannerMenuDivider display={{ base: 'none', xxl: 'block' }} />
@@ -177,7 +177,7 @@ function CragFrontPageBannerMenuButton({ children, to, buttonicon, ...props }) {
   )
 }
 
-function CragFrontPageBannerMenu({ children, ...props }) {
+function CragFrontPageBannerMenu({ children }) {
   return (
     <Flex
       position={{ base: 'relative', md: 'sticky' }}
@@ -191,32 +191,39 @@ function CragFrontPageBannerMenu({ children, ...props }) {
       textColor="black"
       minHeight={{ base: '40px', sm: '50px' }}
       boxShadow="0px 12px 18px -20px rgba(0, 0, 0, 0.5)"
-      {...props}
     >
       <Center w="inherit">
         <Flex ml={2} wrap="wrap" w="inherit">
           <Spacer display={{ base: 'none', sm: 'block' }} />
           <CragFrontPageBannerMenuButton
+            to="/"
             display={{ base: 'none', xs: 'block' }}
           >
             Home
           </CragFrontPageBannerMenuButton>
           <CragBannerMenuDivider />
-          <CragFrontPageBannerMenuButton>Sectors</CragFrontPageBannerMenuButton>
+          <CragFrontPageBannerMenuButton to="/">
+            Sectors
+          </CragFrontPageBannerMenuButton>
           <CragBannerMenuDivider />
-          <CragFrontPageBannerMenuButton>Map</CragFrontPageBannerMenuButton>
+          <CragFrontPageBannerMenuButton to="/">
+            Map
+          </CragFrontPageBannerMenuButton>
           <CragBannerMenuDivider />
-          <CragFrontPageBannerMenuButton>
+          <CragFrontPageBannerMenuButton to="/">
             Discussion
           </CragFrontPageBannerMenuButton>
           <CragBannerMenuDivider />
-          <CragFrontPageBannerMenuButton to="#cragPhotos">
+          <CragFrontPageBannerMenuButton to="/">
             Photos
           </CragFrontPageBannerMenuButton>
           <CragBannerMenuDivider />
-          <CragFrontPageBannerMenuButton>Access</CragFrontPageBannerMenuButton>
+          <CragFrontPageBannerMenuButton to="/">
+            Access
+          </CragFrontPageBannerMenuButton>
           <CragBannerMenuDivider />
           <CragFrontPageBannerMenuButton
+            to="/"
             display={{ base: 'none', sm: 'block' }}
           >
             Authors
@@ -256,6 +263,7 @@ function CragFrontPageBanner({
   return (
     <Box>
       <Box
+        position="relative"
         minHeight={{ base: '40vh', md: '70vh', lg: '95vh' }}
         maxHeight={{ base: '200px', md: '70vh', lg: '95vh' }}
         {...props}

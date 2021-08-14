@@ -26,6 +26,7 @@ import VoteRating from './pages/vote-rating'
 import VoteBanner from './pages/vote-banner'
 import { ParallaxProvider } from 'react-scroll-parallax'
 import FilterSearch from './pages/filter-search'
+import VoteCragDescription from './pages/vote-crag-description'
 
 function App() {
   return (
@@ -53,6 +54,9 @@ function App() {
           </Route>
           <Route path="/crags/:cragId?/add-crag-photo">
             <AddCragPhoto />
+          </Route>
+          <Route path="/crags/:cragId?/vote-crag-description">
+            <VoteCragDescription />
           </Route>
           <Route path="/add-crag">
             <AddCrag />
