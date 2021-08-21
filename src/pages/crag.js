@@ -40,8 +40,13 @@ import { CragLatestDiscussions } from '../components/crag-latestdiscussions'
 import { ChevronDownIcon, EditIcon, AddIcon } from '@chakra-ui/icons'
 import { isEmpty } from 'lodash'
 import { PageFooter } from '../components/page-footer.js'
-
+import { useColorMode, useColorModeValue } from '@chakra-ui/color-mode'
 export default function Crag() {
+  const bg = useColorModeValue('offwhite', 'gray.700')
+  const boxBg = useColorModeValue('gray.300', 'gray.600')
+  const buttonBg = useColorModeValue('gray.200', 'gray.600')
+  const headingShadow = ('3px 3px 3px rgba(0, 0, 0, 0.2)', 'none')
+
   const { cragId } = useParams()
   const { crag, error: errorCrag } = useCrag(cragId)
   const { cragPhotos, error: errorCragPhotos } = useCragPhotos({
@@ -64,7 +69,7 @@ export default function Crag() {
   }
 
   return (
-    <Container bg="gray.700" padding="0px" maxWidth="100%">
+    <Container bg={bg} padding="0px" maxWidth="100%">
       <Button
         display={{ base: 'block', sm: 'none' }}
         zIndex="banner"
@@ -114,7 +119,7 @@ export default function Crag() {
             color="gray.300"
           >
             in the area of{' '}
-            <Link color="gray.100" as={RouterLink} to="/">
+            <Link color="white" as={RouterLink} to="/">
               Fontaniebleau, France
             </Link>
           </Text>
@@ -155,9 +160,8 @@ export default function Crag() {
         >
           <Box id="cragAccess" mt="5px" mb="5px" mr="5px" flex="0 0 30%">
             <Heading
-              textShadow="2px 2px 2px rgba(0, 0, 0, 0.2)"
+              textShadow={headingShadow}
               padding="10px"
-              color="white"
               size="xl"
               fontFamily="sans-serif"
               fontWeight="bold"
@@ -175,7 +179,7 @@ export default function Crag() {
               </LinkBox>
             </Heading>
             <Box pl="10px" pr="10px" pb="10px" w="100%">
-              <Text overflowWrap="break-word" color="white">
+              <Text overflowWrap="break-word">
                 {crag.description_votes.length === 0
                   ? 'No description has been added.'
                   : mostVoted(crag.description_votes)}
@@ -185,9 +189,8 @@ export default function Crag() {
           <Spacer />
           <Box id="cragAccess" mt="5px" mb="5px" mr="5px" flex="0 0 30%">
             <Heading
-              textShadow="2px 2px 2px rgba(0, 0, 0, 0.2)"
+              textShadow={headingShadow}
               padding="10px"
-              color="white"
               size="xl"
               fontFamily="sans-serif"
               fontWeight="bold"
@@ -205,7 +208,7 @@ export default function Crag() {
               </LinkBox>
             </Heading>
             <Box pl="10px" pr="10px" pb="10px" w="100%">
-              <Text overflowWrap="break-word" color="white">
+              <Text overflowWrap="break-word">
                 {crag.access_information_votes.length === 0
                   ? 'No access information has been added.'
                   : mostVoted(crag.access_information_votes)}
@@ -215,9 +218,8 @@ export default function Crag() {
           <Spacer />
           <Box as={RouterLink} to="/authors" margin="5px" flex="0 0 10%">
             <Heading
-              textShadow="2px 2px 2px rgba(0, 0, 0, 0.2)"
+              textShadow={headingShadow}
               padding="10px"
-              color="white"
               size="xl"
               fontFamily="sans-serif"
               fontWeight="bold"
@@ -262,7 +264,7 @@ export default function Crag() {
           </Button>
         </Flex>
       </CragComponentBox>
-      <CragComponentBox bg="gray.600">
+      <CragComponentBox bg={boxBg}>
         <Box id="cragSectors" mt="5px" mb="5px">
           <Box
             zIndex="2"
@@ -273,12 +275,11 @@ export default function Crag() {
           >
             <Flex flexWrap="wrap">
               <Heading
-                color="white"
                 size="2xl"
                 fontFamily="sans-serif"
                 fontWeight="bold"
                 letterSpacing="tighter"
-                textShadow="3px 3px 3px rgba(0, 0, 0, 0.1)"
+                textShadow={headingShadow}
               >
                 Sectors
               </Heading>
@@ -348,7 +349,6 @@ export default function Crag() {
               <Flex>
                 <Heading
                   flex="1"
-                  color="white"
                   size="2xl"
                   fontFamily="sans-serif"
                   fontWeight="bold"

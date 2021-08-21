@@ -16,9 +16,10 @@ const breakpoints = createBreakpoints({
 
 const theme = extendTheme({
   useSystemColorMode: false,
-  initialColorMode: 'light',
+  initialColorMode: 'dark',
   colors: {
     black: '#16161D',
+    offwhite: '#f8f8ff',
     brand: {
       100: '#2d3748',
       200: '#93D0CC',

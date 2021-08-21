@@ -8,12 +8,15 @@ import Auth0ProviderWithHistory from './components/auth0-provider.js'
 // eslint-disable-next-line import/no-webpack-loader-syntax
 import mapboxgl from '!mapbox-gl'
 import './styles/mapbox.css'
+import theme from './styles/theme.js'
 
+import { ColorModeScript } from '@chakra-ui/react'
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN
 
 ReactDOM.render(
   <Router>
     <Auth0ProviderWithHistory>
+      <ColorModeScript initialColorMode={theme.config.initialColorMode} />
       <App />
     </Auth0ProviderWithHistory>
   </Router>,

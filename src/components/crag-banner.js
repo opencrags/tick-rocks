@@ -16,6 +16,7 @@ import { CragComponentBox } from './crag-component-box'
 import EditButton from './edit-button'
 import VoteConflictWarning from './vote-conflict-warning'
 
+import { useColorMode, useColorModeValue } from '@chakra-ui/color-mode'
 function CragBannerMenuButton({ children, to, buttonicon, ...props }) {
   return (
     <Box {...props}>
@@ -44,21 +45,23 @@ function CragBannerMenuButton({ children, to, buttonicon, ...props }) {
 }
 
 function CragBannerMenuDivider({ ...props }) {
+  const bg = useColorModeValue('gray.500', 'white')
   return (
     <Box pt="13px" {...props}>
-      <Box h="30px" bg="gray.300" w="1px" />
+      <Box h="30px" bg={bg} w="1px" />
     </Box>
   )
 }
 
 function CragBannerMenu({ children, cragId }) {
+  const bannerColor = useColorModeValue('gray.300', 'gray.800')
   const { crag, error: cragError } = useCrag(cragId)
   return (
     <Box
       zIndex="1"
       position={{ base: 'relative', md: 'sticky' }}
       top={{ base: '0px', md: '-1px' }}
-      bg="gray.200"
+      bg={bannerColor}
     >
       <Box>
         <Box
@@ -78,7 +81,6 @@ function CragBannerMenu({ children, cragId }) {
             position="relative"
             w="100%"
           >
-            <CragBannerMenuDivider />
             <CragBannerMenuButton to="/">Sectors</CragBannerMenuButton>
 
             <CragBannerMenuDivider />
@@ -99,14 +101,13 @@ function CragBannerMenu({ children, cragId }) {
             >
               Photos
             </CragBannerMenuButton>
-            <CragBannerMenuDivider display={{ base: 'none', xs: 'block' }} />
+            <CragBannerMenuDivider display={{ base: 'none', xl: 'block' }} />
             <CragBannerMenuButton
               to="/"
-              display={{ base: 'none', xxl: 'block' }}
+              display={{ base: 'none', xl: 'block' }}
             >
               Authors
             </CragBannerMenuButton>
-            <CragBannerMenuDivider display={{ base: 'none', xxl: 'block' }} />
             <Spacer />
             {children}
           </Flex>
@@ -117,6 +118,7 @@ function CragBannerMenu({ children, cragId }) {
 }
 
 function CragBanner({ children, cragId, ...props }) {
+  const bannerColor = useColorModeValue('offwhite', 'gray.700')
   const { crag, error: cragError } = useCrag(cragId)
   const { cragPhoto, error: cragPhotoError } = useCragPhoto(
     crag && crag.banner_votes.length >= 1 ? mostVoted(crag.banner_votes) : null
@@ -210,6 +212,7 @@ function CragFrontPageBannerMenuButton({ children, to, buttonicon, ...props }) {
 }
 
 function CragFrontPageBannerMenu({ children }) {
+  const bannerColor = useColorModeValue('gray.300', 'gray.800')
   return (
     <Flex
       position={{ base: 'relative', md: 'sticky' }}
@@ -217,9 +220,7 @@ function CragFrontPageBannerMenu({ children }) {
       top="0px"
       bottom="0px"
       w="100%"
-      textColor="white"
-      bg="gray.200"
-      textColor="black"
+      bg={bannerColor}
       minHeight={{ base: '40px', sm: '50px' }}
       boxShadow="0px 12px 18px -20px rgba(0, 0, 0, 0.5)"
     >
@@ -298,7 +299,6 @@ function CragFrontPageBanner({
         maxHeight={{ base: '200px', md: '70vh', lg: '95vh' }}
       >
         <Box
-          color="white"
           height="0px"
           position="sticky"
           zIndex="1"

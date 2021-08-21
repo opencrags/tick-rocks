@@ -11,7 +11,12 @@ import {
 } from '@chakra-ui/react'
 import React from 'react'
 import { AddIcon } from '@chakra-ui/icons'
+import { useColorMode, useColorModeValue } from '@chakra-ui/color-mode'
 function CragLatestDiscussions({ children, ...props }) {
+  const bg = useColorModeValue('offwhite', 'gray.700')
+  const boxBg = useColorModeValue('gray.300', 'gray.800')
+  const buttonBg = useColorModeValue('gray.200', 'gray.600')
+  const headingShadow = ('3px 3px 3px rgba(0, 0, 0, 0.2)', 'none')
   return (
     <Box id="cragForum" mt="10px" mb="5px">
       <Box id="cragForum" mt="10px" mb="5px">
@@ -23,12 +28,11 @@ function CragLatestDiscussions({ children, ...props }) {
           padding="10px"
         >
           <Heading
-            color="white"
             size="2xl"
             fontFamily="sans-serif"
             fontWeight="bold"
             letterSpacing="tighter"
-            textShadow="3px 3px 3px rgba(0, 0, 0, 0.2)"
+            textShadow={headingShadow}
           >
             Discussion
           </Heading>
@@ -54,13 +58,7 @@ function CragLatestDiscussions({ children, ...props }) {
                 <AddIcon /> <Text ml="5px">New post </Text>
               </Flex>
             </Button>
-            <Button
-              boxShadow="xl"
-              pr={4}
-              pl={4}
-              colorScheme="gray"
-              color="black"
-            >
+            <Button boxShadow="xl" pr={4} pl={4} colorScheme="gray">
               View all
             </Button>
           </Stack>
@@ -68,13 +66,12 @@ function CragLatestDiscussions({ children, ...props }) {
       </Box>
 
       <Flex
-        color="white"
         direction={{ base: 'column', md: 'row' }}
         justifyContent="space-between"
         padding="5px"
         {...props}
       >
-        <Box bg="gray.600" padding="10px" margin="5px" flex="0 0 33%">
+        <Box bg={boxBg} padding="10px" margin="5px" flex="0 0 33%">
           <Flex m="1">
             <Tooltip label="Rasmus E" aria-label="A tooltip">
               <Avatar
@@ -106,7 +103,7 @@ function CragLatestDiscussions({ children, ...props }) {
           </Flex>
         </Box>
 
-        <Box bg="gray.600" padding="10px" margin="5px" flex="0 0 33%">
+        <Box bg={boxBg} padding="10px" margin="5px" flex="0 0 33%">
           <Flex m="1">
             <Tooltip label="Åke R" aria-label="A tooltip">
               <Avatar
@@ -138,7 +135,7 @@ function CragLatestDiscussions({ children, ...props }) {
           </Flex>
         </Box>
 
-        <Box bg="gray.600" padding="10px" margin="5px" flex="0 0 33%">
+        <Box bg={boxBg} padding="10px" margin="5px" flex="0 0 33%">
           <Flex m="1">
             <Tooltip label="Richard L" aria-label="A tooltip">
               <Avatar
