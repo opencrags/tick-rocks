@@ -22,6 +22,7 @@ import { SearchIcon } from '@chakra-ui/icons'
 
 import { useUser, useQuickSearch, mostVoted } from '../utils/backend'
 import { Link as RouterLink } from 'react-router-dom'
+
 export default function Landing() {
   return (
     <Box height={{ base: '80vh', md: '95vh' }} bgColor="gray.500">
@@ -82,6 +83,7 @@ export default function Landing() {
                   to="/search"
                   colorScheme="green"
                   bgColor="blackAlpha.500"
+                  color="white"
                 >
                   Find a project
                 </Button>
@@ -90,6 +92,7 @@ export default function Landing() {
                   to="/map"
                   colorScheme="green"
                   bgColor="blackAlpha.500"
+                  color="white"
                 >
                   Browse map
                 </Button>
@@ -98,6 +101,7 @@ export default function Landing() {
                   to="/crags"
                   colorScheme="green"
                   bgColor="blackAlpha.500"
+                  color="white"
                 >
                   View all crags
                 </Button>
@@ -106,6 +110,7 @@ export default function Landing() {
                   to="/add-crag"
                   colorScheme="green"
                   bgColor="blackAlpha.500"
+                  color="white"
                 >
                   Add crag
                 </Button>

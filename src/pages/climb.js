@@ -40,11 +40,15 @@ import { CragLatestDiscussions } from '../components/crag-latestdiscussions.js'
 import { PageFooter } from '../components/page-footer.js'
 import { CragComponentBox } from '../components/crag-component-box.js'
 import { TickRocksLogo } from '../components/tick-rocks-logo.js'
-
+import { useColorMode, useColorModeValue } from '@chakra-ui/color-mode'
 export default function Climb() {
   const { cragId, sectorId, climbId } = useParams()
   const { climb, error: errorClimb } = useClimb(climbId)
   const { lines, error: errorLines } = useLines({ climb_id: climbId })
+
+  const bg = useColorModeValue('offwhite', 'gray.700')
+  const boxBg = useColorModeValue('gray.300', 'gray.800')
+  const buttonBg = useColorModeValue('gray.200', 'gray.600')
 
   if (errorClimb || errorLines) {
     return (
@@ -66,13 +70,7 @@ export default function Climb() {
   return (
     <Box>
       <Flex direction="column" height="95vh">
-        <Container
-          bg="brand.100"
-          maxWidth="100%"
-          flexGrow="1"
-          padding="0px"
-          pb="30px"
-        >
+        <Container bg={bg} maxWidth="100%" flexGrow="1" padding="0px" pb="30px">
           <CragBanner cragId={cragId}>
             <ClimbBreadcrumb climbId={climbId} />
             <Flex>
@@ -129,7 +127,7 @@ export default function Climb() {
           <CragBannerMenu cragId={cragId}></CragBannerMenu>
           <Box>
             <Box>
-              <Box color="white">
+              <Box>
                 <Flex
                   direction={{ base: 'column', md: 'row' }}
                   justify="center"
@@ -142,7 +140,6 @@ export default function Climb() {
                           topo, go to Sector, Edit, New Topo.
                         </Text>
                         <Button
-                          color="black"
                           as={RouterLink}
                           to={`/crags/${cragId}/sectors/${sectorId}`}
                         >
@@ -227,13 +224,18 @@ export default function Climb() {
                         tick
                       </Button>
 
-                      <Button flexGrow="1" shadow="md" color="black">
+                      <Button
+                        flexGrow="1"
+                        shadow="md"
+                        bgColor={buttonBg}
+                        colorScheme="gray"
+                      >
                         Pre-tick
                       </Button>
                     </Flex>
                     <Box
                       padding="10px"
-                      bgColor="gray.700"
+                      bgColor={bg}
                       position={{ base: 'relative', md: 'sticky' }}
                       top={{ base: '0px', md: '54px' }}
                       zIndex="docked"
@@ -254,7 +256,7 @@ export default function Climb() {
                           as={RouterLink}
                           to={`/crags/${cragId}/sectors/${sectorId}/climbs/${climbId}/vote-name`}
                         >
-                          <Button size="sm" colorScheme="gray" color="black">
+                          <Button size="sm" colorScheme="gray">
                             Edit
                           </Button>
                         </LinkBox>
@@ -268,7 +270,7 @@ export default function Climb() {
                       </Box>
                     </Box>
                     <Box>
-                      <Box padding="10px" bgColor="gray.800" mt="10px">
+                      <Box padding="10px" bgColor={boxBg} mt="10px">
                         <Box>
                           <Flex justify="space-between" align="baseline">
                             <Heading size="sm">Grade votes</Heading>
@@ -276,11 +278,7 @@ export default function Climb() {
                               as={RouterLink}
                               to={`/crags/${cragId}/sectors/${sectorId}/climbs/${climbId}/vote-grade`}
                             >
-                              <Button
-                                size="sm"
-                                colorScheme="gray"
-                                color="black"
-                              >
+                              <Button size="sm" colorScheme="gray">
                                 Vote
                               </Button>
                             </LinkBox>
@@ -302,7 +300,7 @@ export default function Climb() {
                           )}
                         </Box>
                       </Box>
-                      <Box padding="10px" bgColor="gray.800" mt="10px">
+                      <Box padding="10px" bgColor={boxBg} mt="10px">
                         <Flex
                           wrap="wrap"
                           justify="space-between"
@@ -314,7 +312,7 @@ export default function Climb() {
                             as={RouterLink}
                             to={`/crags/${cragId}/sectors/${sectorId}/climbs/${climbId}/vote-rating`}
                           >
-                            <Button size="sm" colorScheme="gray" color="black">
+                            <Button size="sm" colorScheme="gray">
                               Vote
                             </Button>
                           </LinkBox>
@@ -335,7 +333,7 @@ export default function Climb() {
                           )}
                         </Box>
                       </Box>{' '}
-                      <Box mt="10px" padding="10px" bg="gray.800">
+                      <Box mt="10px" padding="10px" bgColor={boxBg}>
                         <Flex justify="space-between" align="baseline">
                           <Heading size="sm">Beta videos</Heading>
 
@@ -362,7 +360,7 @@ export default function Climb() {
                           </ListItem>
                         </OrderedList>
                       </Box>
-                      <Box mt="10px" padding="10px" bg="gray.800">
+                      <Box mt="10px" padding="10px" bgColor={boxBg}>
                         <Flex justify="space-between" align="baseline">
                           <Heading size="sm">External Links</Heading>
 
@@ -388,7 +386,7 @@ export default function Climb() {
                           </ListItem>
                         </OrderedList>
                       </Box>
-                      <Box padding="10px" bgColor="gray.800" mt="10px">
+                      <Box padding="10px" bgColor={boxBg} mt="10px">
                         <Flex justify="space-between" align="baseline">
                           <Heading size="sm">Ticks</Heading>
                           <Spacer />
@@ -403,16 +401,16 @@ export default function Climb() {
                             tick
                           </Button>
                           /
-                          <Button size="sm" colorScheme="gray" color="black">
+                          <Button size="sm" colorScheme="gray">
                             <TickRocksLogo h="12px" w="20px" mr="5px" />
                             ticked
                           </Button>
                         </Flex>
                       </Box>
-                      <Box padding="10px" bgColor="gray.800" mt="10px">
+                      <Box padding="10px" bgColor={boxBg} mt="10px">
                         <Flex justify="space-between" align="baseline">
                           <Heading size="sm">Pre-ticks</Heading>
-                          <Button size="sm" colorScheme="gray" color="black">
+                          <Button size="sm" colorScheme="gray">
                             Pre-tick
                           </Button>
                         </Flex>

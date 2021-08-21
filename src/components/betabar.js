@@ -10,7 +10,6 @@ export default function BetaBar() {
         top="0px"
         align="center"
         justify="center"
-        bgColor="white"
         height="13px"
         width="100%"
       >

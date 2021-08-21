@@ -25,6 +25,7 @@ import {
   CloseButton,
   IconButton,
 } from '@chakra-ui/react'
+import { useColorMode, useColorModeValue } from '@chakra-ui/color-mode'
 import { Link as RouterLink, useParams } from 'react-router-dom'
 import Loader from '../components/loader.js'
 import EditButton from '../components/edit-button.js'
@@ -57,6 +58,10 @@ import { PageFooter } from '../components/page-footer.js'
 import { isEmpty } from 'lodash'
 
 export default function Sector() {
+  const bg = useColorModeValue('offwhite', 'gray.700')
+  const boxBg = useColorModeValue('gray.300', 'gray.600')
+
+  const headingShadow = ('3px 3px 3px rgba(0, 0, 0, 0.2)', 'none')
   const { cragId, sectorId } = useParams()
   const { crag, error: errorCrag } = useCrag(cragId)
   const { sectors, error: errorSectors } = useSectors({ crag_id: cragId }, 100)
@@ -98,7 +103,7 @@ export default function Sector() {
 
   return (
     <Flex direction="column" height="95vh">
-      <Container bg="brand.100" maxWidth="100%" flexGrow="1" padding="0px">
+      <Container bg={bg} maxWidth="100%" flexGrow="1" padding="0px">
         <CragBanner cragId={cragId}>
           <SectorBreadcrumb sectorId={sectorId} />
           <Heading
@@ -248,20 +253,19 @@ export default function Sector() {
                 display={{ base: 'none', xl: 'block' }}
                 position="sticky"
                 top="65px"
-                bgColor="gray.800"
+                bgColor={boxBg}
                 margin="10px"
                 maxW="300px"
                 minW="200px"
               >
-                <Box color="white">
+                <Box>
                   <Heading
                     mb="10px"
                     size="md"
-                    color="white"
                     fontFamily="sans-serif"
                     fontWeight="bold"
                     letterSpacing="tighter"
-                    textShadow="2px 2px 2px rgba(0, 0, 0, 0.1)"
+                    textShadow={headingShadow}
                   >
                     Close by:
                   </Heading>
@@ -312,6 +316,7 @@ export default function Sector() {
 }
 
 function ImageWithLines({ cragId, sectorId, image, sectorName }) {
+  const boxBg = useColorModeValue('gray.300', 'gray.600')
   const [selectedIndex, setSelectedIndex] = useState(null)
 
   const { lines, error } = useLines({ image_id: image.id })
@@ -361,7 +366,7 @@ function ImageWithLines({ cragId, sectorId, image, sectorName }) {
       <Flex direction="column">
         <Flex
           direction={{ base: 'column', md: 'row' }}
-          bg="gray.300"
+          bg={boxBg}
           boxShadow="xl"
         >
           <Box alignSelf="baseline">
@@ -416,7 +421,7 @@ function ImageWithLines({ cragId, sectorId, image, sectorName }) {
                     {lines.map((line, index) => (
                       <ListItem
                         key={line.id}
-                        bg={index === selectedIndex ? 'whiteAlpha.600' : ''}
+                        bg={index === selectedIndex ? { boxBg } : ''}
                         onMouseOver={() => setSelectedIndex(index)}
                       >
                         <Climb

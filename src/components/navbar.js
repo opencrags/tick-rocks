@@ -31,19 +31,21 @@ import {
   Button,
   UnorderedList,
   ListItem,
+  Icon,
 } from '@chakra-ui/react'
 import StarRatings from 'react-star-ratings'
 
 import { Link as RouterLink } from 'react-router-dom'
 import React, { useEffect, useState } from 'react'
-import { SearchIcon, HamburgerIcon } from '@chakra-ui/icons'
+import { SearchIcon, HamburgerIcon, MoonIcon, SunIcon } from '@chakra-ui/icons'
 import { useUser, useQuickSearch, mostVoted } from '../utils/backend'
 import Grade from '../components/grade'
-
+import { useColorMode } from '@chakra-ui/color-mode'
 export function NavBar() {
   const { isAuthenticated, loginWithRedirect, logout } = useAuth0()
   const { user, error: userError } = useUser()
   const btnRef = React.useRef()
+  const { colorMode, toggleColorMode } = useColorMode()
   const MenuItems = ({ children, isLast, to = '/', ...props }) => {
     return (
       <Box
@@ -309,6 +311,7 @@ export function NavBar() {
                 <PhoneMenuItems to="/map">Map</PhoneMenuItems>
                 <PhoneMenuItems to="/crags">Crags</PhoneMenuItems>
                 <PhoneMenuItems to="/add-crag">Add crag</PhoneMenuItems>
+
                 <MenuDivider />
                 {isAuthenticated ? (
                   <>
@@ -440,6 +443,9 @@ export function NavBar() {
               <MenuItems to="/map">Map</MenuItems>
               <MenuItems to="/crags">Crags</MenuItems>
               <MenuItems to="/add-crag">Add crag</MenuItems>
+              <Button onClick={toggleColorMode}>
+                {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
+              </Button>
               {isAuthenticated ? (
                 <Menu>
                   <Avatar

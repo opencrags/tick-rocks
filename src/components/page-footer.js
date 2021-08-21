@@ -63,12 +63,14 @@ export function PageFooter({ ...props }) {
         <Text></Text>
         <Spacer />
         <Flex direction="row" justify="flex-end" flex="0 0 20%">
+          {' '}
+          <Link href="" margin={1}>
+            <Image height="45px" src="/discord.png" />
+          </Link>
           <Link href="https://github.com/opencrags/tick-rocks" margin={1}>
             <Image height="40px" src="/github.png" />
           </Link>
-
           <Link href="https://instagram.com/tick.rocks" margin={1}>
-            {' '}
             <Image height="40px" src="/instagram.png" />
           </Link>
         </Flex>
