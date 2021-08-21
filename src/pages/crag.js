@@ -324,10 +324,7 @@ export default function Crag() {
                 .filter((sector) => sector.name_votes.length >= 1 && sector)
                 .map((sector) => (
                   <Box key={sector.id}>
-                    <CragSector
-                      to={`/crags/${crag.id}/sectors/${sector.id}`}
-                      img="https://27crags.s3.amazonaws.com/photos/000/075/75038/size_xl-51f3b20cc4af.png"
-                    >
+                    <CragSector cragId={crag.id} sectorId={sector.id}>
                       <Text>{mostVoted(sector.name_votes)}</Text>
                       <VoteConflictWarning
                         anyVotes={[sector.name_votes, sector.coordinate_votes]}
