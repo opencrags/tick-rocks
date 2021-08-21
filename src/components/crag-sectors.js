@@ -1,6 +1,7 @@
 import { Box, SimpleGrid, Center, Flex } from '@chakra-ui/react'
 import React from 'react'
 import { Link as RouterLink } from 'react-router-dom'
+import { useImages } from '../utils/backend.js'
 
 function CragSectorGrid({ children, ...props }) {
   return (
@@ -21,11 +22,13 @@ function CragSectorGrid({ children, ...props }) {
   )
 }
 
-function CragSector({ img, to, children, ...props }) {
+function CragSector({ cragId, sectorId, children, ...props }) {
+  const { images, error: errorImages } = useImages({ sector_id: sectorId })
+
   return (
     <Box
       as={RouterLink}
-      to={to}
+      to={`/crags/${cragId}/sectors/${sectorId}`}
       flexGrow="1"
       height="100%"
       width="100%"
@@ -37,7 +40,11 @@ function CragSector({ img, to, children, ...props }) {
         h={{ base: '20vh', lg: '30vh' }}
         objectFit="cover"
         verticalAlign="bottom"
-        bgImage={img}
+        bgImage={
+          images !== undefined && images.length > 0
+            ? images[0].base64_image
+            : 'https://27crags.s3.amazonaws.com/photos/000/075/75038/size_xl-51f3b20cc4af.png'
+        }
         bgColor="Gray.100"
         bgPosition="center"
         borderRadius="5px"
