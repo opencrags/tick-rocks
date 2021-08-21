@@ -7,6 +7,8 @@ import {
   FormControl,
   FormLabel,
   Button,
+  Alert,
+  AlertIcon,
 } from '@chakra-ui/react'
 import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
@@ -17,6 +19,7 @@ export default function AddCrag() {
   const { authorizedFetcher, isLoading, error } = useAuthorizedFetcher()
   const history = useHistory()
   const [cragName, setCragName] = useState('')
+  const [attemptedEmptyName, setAttemptedEmptyName] = useState(false)
 
   const addCrag = () =>
     authorizedFetcher('/crags', {
@@ -35,10 +38,16 @@ export default function AddCrag() {
 
   const navigateToAddedCrag = (cragId) => history.replace(`/crags/${cragId}`)
 
-  const handleSubmit = () =>
-    addCrag().then((crag) =>
-      voteCragName(crag.id).then((_) => navigateToAddedCrag(crag.id))
-    )
+  const handleSubmit = () => {
+    if (cragName == '') {
+      setAttemptedEmptyName(true)
+    } else {
+      setAttemptedEmptyName(false)
+      addCrag().then((crag) =>
+        voteCragName(crag.id).then((_) => navigateToAddedCrag(crag.id))
+      )
+    }
+  }
 
   if (error) {
     return (
@@ -76,6 +85,12 @@ export default function AddCrag() {
         />
       </FormControl>
       <Button onClick={handleSubmit}>Submit</Button>
+      {attemptedEmptyName === true && (
+        <Alert status="warning" margin="0 2px 0px 2px" variant="left-accent">
+          <AlertIcon />
+          Crag name can't be empty
+        </Alert>
+      )}
     </Container>
   )
 }
