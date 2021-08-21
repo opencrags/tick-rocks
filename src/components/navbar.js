@@ -379,7 +379,7 @@ export function NavBar() {
           width="100%"
           position={{ base: 'fixed', md: 'relative' }}
           zIndex="overlay"
-          top="13px"
+          top={{ base: '13px', md: '0px' }}
           as="nav"
           pl={{ xxl: '14vw', xl: '80px', md: '5vw', base: '0px' }}
           pr={{ xxl: '14vw', xl: '80px', md: '5vw', base: '0px' }}
