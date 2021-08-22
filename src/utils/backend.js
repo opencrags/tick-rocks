@@ -259,6 +259,11 @@ const useSearchClimbs = (body, params) => {
   return { climbs, error }
 }
 
+const useAscents = (query, limit = 20, offset = 0) => {
+  const { data: ascents, error } = useQuery('ascents', query, limit, offset)
+  return { ascents, error }
+}
+
 export {
   useToken,
   fetcher,
@@ -288,4 +293,5 @@ export {
   conflicting,
   useUserVote,
   useSearchClimbs,
+  useAscents,
 }

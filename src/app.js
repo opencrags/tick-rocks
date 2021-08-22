@@ -29,6 +29,8 @@ import FilterSearch from './pages/filter-search'
 import VoteCragDescription from './pages/vote-crag-description'
 import VoteClimbBetaVideo from './pages/vote-climb-beta-video'
 import BetaBar from './components/betabar'
+import AddAscent from './pages/add-ascent'
+
 function App() {
   return (
     <ChakraProvider resetCSS theme={theme}>
@@ -128,6 +130,12 @@ function App() {
           </Route>
           <Route exact path="/crags/:cragId?/sectors/:sectorId?/lines/:lineId?">
             <Line />
+          </Route>
+          <Route
+            exact
+            path="/crags/:cragId?/sectors/:sectorId?/climbs/:climbId?/add-ascent"
+          >
+            <AddAscent />
           </Route>
           <Route path="/search">
             <FilterSearch />
