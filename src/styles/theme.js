@@ -22,16 +22,17 @@ const theme = extendTheme({
     offwhite: '#f8f8ff',
     brand: {
       100: '#2d3748',
-      200: '#93D0CC',
-      300: '#3CAB70',
-      400: '#fab7bf',
-      500: '#f1b2a5',
-      600: '#e8ae8b',
+      200: '#3CAB70',
+      300: '#2E8B57',
+      400: '#3CAB70',
+      500: '#3CAB70',
+      600: '#2E8B57',
       700: '#dfaa72',
     },
   },
   fonts,
   breakpoints,
+
   icons: {
     logo: {
       path: (
