@@ -64,8 +64,8 @@ export function PageFooter({ ...props }) {
         <Spacer />
         <Flex direction="row" justify="flex-end" flex="0 0 20%">
           {' '}
-          <Link href="" margin={1}>
-            <Image height="45px" src="/discord.png" />
+          <Link href="" margin={0}>
+            <Image height="48px" src="/discord.png" />
           </Link>
           <Link href="https://github.com/opencrags/tick-rocks" margin={1}>
             <Image height="40px" src="/github.png" />

@@ -40,12 +40,15 @@ import React, { useEffect, useState } from 'react'
 import { SearchIcon, HamburgerIcon, MoonIcon, SunIcon } from '@chakra-ui/icons'
 import { useCurrentUser, useQuickSearch, mostVoted } from '../utils/backend'
 import Grade from '../components/grade'
-import { useColorMode } from '@chakra-ui/color-mode'
+import { useColorMode, useColorModeValue } from '@chakra-ui/color-mode'
+import { TickRocksLogo } from './tick-rocks-logo'
 export function NavBar() {
   const { isAuthenticated, loginWithRedirect, logout } = useAuth0()
   const { user } = useCurrentUser()
   const btnRef = React.useRef()
   const { colorMode, toggleColorMode } = useColorMode()
+
+  const buttonColor = useColorModeValue('white', 'gold')
   const MenuItems = ({ children, isLast, to = '/', ...props }) => {
     return (
       <Box
@@ -315,7 +318,7 @@ export function NavBar() {
                 <MenuDivider />
                 {isAuthenticated ? (
                   <>
-                    <PhoneMenuItems to="/user-profile">
+                    <PhoneMenuItems to={`/user/${user?.id}`}>
                       <HStack>
                         <Avatar name={user?.display_name} src="..." size="xs" />
                         <Text>{user?.display_name}</Text>
@@ -379,44 +382,28 @@ export function NavBar() {
           width="100%"
           position={{ base: 'fixed', md: 'relative' }}
           zIndex="overlay"
-          top={{ base: '13px', md: '0px' }}
           as="nav"
+          top={{ base: '13px', md: '0px' }}
           pl={{ xxl: '14vw', xl: '80px', md: '5vw', base: '0px' }}
           pr={{ xxl: '14vw', xl: '80px', md: '5vw', base: '0px' }}
           align="center"
           justify="space-between"
           height="55px"
           bg="gray.700"
-          color="White"
         >
-          <MenuDrawer />
+          <HStack display={{ base: 'flex', md: 'none' }}>
+            <MenuDrawer />
+            <Button
+              color={buttonColor}
+              bgColor="gray.700"
+              onClick={toggleColorMode}
+            >
+              {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
+            </Button>
+          </HStack>
+          <Spacer display={{ base: 'flex', md: 'none' }} />
           <Flex as={RouterLink} to="/" align="center">
-            <Box h="30px" w="43px" mr="10px">
-              <svg
-                data-name="Lager 1"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 194.5 130.5"
-              >
-                <path
-                  d="M131 0L93 5a25 25 0 00-5 1L52 18a25 25 0 00-12 9L5 72a25 25 0 001 32l13 16a25 25 0 0019 9l106 1a25 25 0 0010-1l21-9a25 25 0 0015-20l4-40a25 25 0 00-8-21L151 7a25 25 0 00-20-7z"
-                  fill="#3CAB70"
-                  data-name="Lager 2"
-                />
-                <path
-                  d="M67 116a6 6 0 01-6 4h0-18a20 20 0 01-15-7l-10-12a21 21 0 010-26l27-35c1-2 5-6 7-6 3 0 4 5 3 7l-1 6-4 20a8 8 0 002 7l17 17a6 6 0 012 5z"
-                  stroke="#3CAB70"
-                  strokeWidth="4"
-                  fill="#fff"
-                  strokeMiterlimit="10"
-                  data-name="Lager 3"
-                />
-                <path
-                  d="M164 43l-7-6a3 3 0 00-4-1l-50 50a3 3 0 01-4 0L74 61a3 3 0 00-4 0l-7 7a3 3 0 000 5l36 35a3 3 0 004 1l61-61a3 3 0 000-5z"
-                  fill="#fff"
-                  data-name="Lager 5"
-                />
-              </svg>
-            </Box>
+            <TickRocksLogo />
 
             <Heading
               width="150px"
@@ -428,7 +415,10 @@ export function NavBar() {
               tick.rocks
             </Heading>
           </Flex>
-          <SearchModal />
+          <Spacer display={{ base: 'flex', md: 'none' }} />
+          <Box>
+            <SearchModal />
+          </Box>
           <Spacer display={{ base: 'none', md: 'block' }} />
           <Box
             display={{ base: show ? 'block' : 'none', md: 'block' }}
@@ -443,7 +433,11 @@ export function NavBar() {
               <MenuItems to="/map">Map</MenuItems>
               <MenuItems to="/crags">Crags</MenuItems>
               <MenuItems to="/add-crag">Add crag</MenuItems>
-              <Button onClick={toggleColorMode}>
+              <Button
+                color={buttonColor}
+                bgColor="gray.700"
+                onClick={toggleColorMode}
+              >
                 {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
               </Button>
               {isAuthenticated ? (
@@ -456,8 +450,8 @@ export function NavBar() {
                     src="..."
                     size="xs"
                   ></Avatar>
-                  <MenuList color="black">
-                    <MenuItem as={RouterLink} to="/user-profile">
+                  <MenuList>
+                    <MenuItem as={RouterLink} to={`/user/${user?.id}`}>
                       {user?.display_name || 'No display name set'}
                     </MenuItem>
                     <MenuItem as={RouterLink} to="/ticklist">

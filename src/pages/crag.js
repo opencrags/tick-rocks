@@ -70,20 +70,6 @@ export default function Crag() {
 
   return (
     <Container bg={bg} padding="0px" maxWidth="100%">
-      <Button
-        display={{ base: 'block', sm: 'none' }}
-        zIndex="banner"
-        position="fixed"
-        borderRadius="40px"
-        bottom="10px"
-        left="15px"
-        shadow="dark-lg"
-        w="75px"
-        colorScheme="green"
-      >
-        Sector
-      </Button>
-
       <CragFrontPageBanner cragId={cragId}>
         <Box position="absolute">
           <Heading
@@ -253,9 +239,18 @@ export default function Crag() {
           display={{ base: 'wrap', md: 'flex' }}
           padding="20px"
         >
-          <Button boxShadow="xl" pr={8} pl={8} m={2} colorScheme="green">
-            List all problems
-          </Button>
+          <LinkBox as={RouterLink} to={`/crags/${cragId}/list`}>
+            <Button
+              boxShadow="xl"
+              pr={8}
+              pl={8}
+              m={2}
+              colorScheme="brand"
+              color="white"
+            >
+              List all problems
+            </Button>
+          </LinkBox>
           <Button boxShadow="xl" pr={8} pl={8} m={2} colorScheme="gray">
             View topo
           </Button>
@@ -291,14 +286,16 @@ export default function Crag() {
                     icon={<AddIcon />}
                     display={{ base: 'block', md: 'none' }}
                     boxShadow="xl"
-                    colorScheme="green"
+                    colorScheme="brand"
+                    color="white"
                   ></IconButton>
                   <Button
                     display={{ base: 'none', md: 'block' }}
                     boxShadow="xl"
                     pr={4}
                     pl={4}
-                    colorScheme="green"
+                    colorScheme="brand"
+                    color="white"
                   >
                     <Flex align="center" direction="row">
                       <AddIcon /> <Text ml="5px">New sector </Text>
@@ -365,7 +362,8 @@ export default function Crag() {
                     pr={5}
                     pl={5}
                     m={3}
-                    colorScheme="green"
+                    colorScheme="brand"
+                    color="white"
                   >
                     <AddIcon />
                   </Button>
@@ -375,7 +373,8 @@ export default function Crag() {
                     pr={5}
                     pl={5}
                     m={3}
-                    colorScheme="green"
+                    colorScheme="brand"
+                    color="white"
                   >
                     <Flex align="center" direction="row">
                       <AddIcon /> <Text ml="5px">Upload </Text>

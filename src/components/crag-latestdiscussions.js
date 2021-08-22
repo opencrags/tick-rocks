@@ -43,7 +43,8 @@ function CragLatestDiscussions({ children, ...props }) {
               boxShadow="xl"
               pr={2}
               pl={2}
-              colorScheme="green"
+              colorScheme="brand"
+              color="white"
             >
               <AddIcon />
             </Button>
@@ -52,7 +53,8 @@ function CragLatestDiscussions({ children, ...props }) {
               boxShadow="xl"
               pr={4}
               pl={4}
-              colorScheme="green"
+              colorScheme="brand"
+              color="white"
             >
               <Flex align="center" direction="row">
                 <AddIcon /> <Text ml="5px">New post </Text>

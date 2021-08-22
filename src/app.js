@@ -30,6 +30,10 @@ import VoteCragDescription from './pages/vote-crag-description'
 import VoteClimbBetaVideo from './pages/vote-climb-beta-video'
 import BetaBar from './components/betabar'
 import AddAscent from './pages/add-ascent'
+import UserProfile from './pages/user-profile'
+import Map from './pages/map'
+import CragPhoto from './pages/crag-photo'
+import CragList from './pages/crag-list'
 
 function App() {
   return (
@@ -47,6 +51,12 @@ function App() {
           <Route exact path="/crags/:cragId?">
             <Crag />
           </Route>
+          <Route exact path="/crags/:cragId?/list">
+            <CragList />
+          </Route>
+          <Route exat path="/user/:userId?">
+            <UserProfile />
+          </Route>
           <Route path="/crags/:cragId?/vote-name">
             <VoteCragName />
           </Route>
@@ -58,6 +68,9 @@ function App() {
           </Route>
           <Route path="/crags/:cragId?/add-crag-photo">
             <AddCragPhoto />
+          </Route>
+          <Route exact path="/crags/:cragId?/crag-photo/:cragPhotoId?">
+            <CragPhoto />
           </Route>
           <Route path="/crags/:cragId?/vote-crag-description">
             <VoteCragDescription />
@@ -140,6 +153,10 @@ function App() {
           <Route path="/search">
             <FilterSearch />
           </Route>
+          <Route path="/map">
+            <Map />
+          </Route>
+
           <Route path="/">
             <Landing />
           </Route>

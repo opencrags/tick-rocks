@@ -7,29 +7,28 @@ import {
   Text,
   UnorderedList,
   ListItem,
-  Button,
   Box,
   HStack,
   Image,
   Flex,
-  AvatarGroup,
+  VStack,
   Avatar,
-  Wrap,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  Stack,
   Spacer,
 } from '@chakra-ui/react'
+import { CragPhotoGrid } from '../components/crag-photo-grid.js'
 import { Link as RouterLink, useParams } from 'react-router-dom'
 import Loader from '../components/loader.js'
-import { useUser, useSectors, mostVoted } from '../utils/backend.js'
-
+import { useUser } from '../utils/backend.js'
+import { useColorModeValue } from '@chakra-ui/color-mode'
+import { useCragPhotos } from '../utils/backend.js'
+import { PageFooter } from '../components/page-footer.js'
+import UserProfileBanner from '../components/user-profile-banner.js'
 export default function UserProfile() {
+  const bannerColor = useColorModeValue('gray.300', 'gray.800')
   const { userId } = useParams()
   const { user, error: erroruser } = useUser(userId)
-  if (erroruser || errorSectors) {
+  const { cragPhotos, error } = useCragPhotos({ userId })
+  if (erroruser) {
     return (
       <Container maxWidth="container.md">
         <Center>
@@ -45,7 +44,12 @@ export default function UserProfile() {
 
   return (
     <>
-      <Box></Box>
+      <Box h="100%">
+        <UserProfileBanner>
+          {' '}
+          <CragPhotoGrid />
+        </UserProfileBanner>
+      </Box>
     </>
   )
 }

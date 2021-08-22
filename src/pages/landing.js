@@ -12,6 +12,8 @@ import {
   Button,
   SimpleGrid,
   Link,
+  Avatar,
+  Wrap,
 } from '@chakra-ui/react'
 import Loader from '../components/loader.js'
 import { PageFooter } from '../components/page-footer.js'
@@ -32,6 +34,10 @@ export default function Landing() {
         </Box>
         <Box display={{ base: 'block', md: 'none' }}>
           <video autoPlay muted loop width="100%" src="emilstand.mp4" />
+        </Box>{' '}
+        <Box position="relative" bottom="100px">
+          Move of the Month September: Emil Abrahamsson, Total Eclipse, 8A+, Cul
+          di Chen, Fontaniebleau, France
         </Box>
       </Box>
       <Box
@@ -180,10 +186,15 @@ function SignedIn() {
     return (
       <Container bgColor="blackAlpha.500" borderRadius="6px" color="white">
         <Center marginTop="5px">
-          <Text>
-            Welcome back {user.display_name}! <br />
-            What would you like to do today?
-          </Text>
+          <HStack>
+            {' '}
+            <Avatar name={user.display_name} size="xs" />
+            <Text>
+              Welcome back {user.display_name}
+              ! <br />
+              What would you like to do today?
+            </Text>
+          </HStack>
         </Center>
       </Container>
     )
