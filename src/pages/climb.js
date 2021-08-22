@@ -15,6 +15,7 @@ import {
   AspectRatio,
   OrderedList,
   ListItem,
+  Skeleton,
 } from '@chakra-ui/react'
 import { Link as RouterLink, useParams } from 'react-router-dom'
 import Loader from '../components/loader.js'
@@ -25,8 +26,10 @@ import {
   useClimb,
   useLines,
   useImage,
+  useAscents,
   countVotes,
   mostVoted,
+  useUser,
 } from '../utils/backend.js'
 import LineImage from '../components/line-image.js'
 import { ClimbBreadcrumb } from '../components/breadcrumb.js'
@@ -41,16 +44,18 @@ import { PageFooter } from '../components/page-footer.js'
 import { CragComponentBox } from '../components/crag-component-box.js'
 import { TickRocksLogo } from '../components/tick-rocks-logo.js'
 import { useColorMode, useColorModeValue } from '@chakra-ui/color-mode'
+
 export default function Climb() {
   const { cragId, sectorId, climbId } = useParams()
   const { climb, error: errorClimb } = useClimb(climbId)
   const { lines, error: errorLines } = useLines({ climb_id: climbId })
+  const { ascents, error: errorAscents } = useAscents({ climb_id: climbId })
 
   const bg = useColorModeValue('offwhite', 'gray.700')
   const boxBg = useColorModeValue('gray.300', 'gray.800')
   const buttonBg = useColorModeValue('gray.200', 'gray.600')
 
-  if (errorClimb || errorLines) {
+  if (errorClimb || errorLines || errorAscents) {
     return (
       <Container maxWidth="container.md">
         <Center>
@@ -60,7 +65,7 @@ export default function Climb() {
     )
   }
 
-  if (climb === undefined || lines === undefined) {
+  if (climb === undefined || lines === undefined || ascents === undefined) {
     return <Loader />
   }
 
@@ -208,21 +213,26 @@ export default function Climb() {
                       justify="space-evenly"
                       w={{ base: '50%', xxxs: '100%', md: '100%' }}
                     >
-                      <Button
-                        flexGrow="2"
-                        shadow="md"
-                        colorScheme="green"
-                        mr="5px"
+                      <LinkBox
+                        as={RouterLink}
+                        to={`/crags/${cragId}/sectors/${sectorId}/climbs/${climbId}/add-ascent`}
                       >
-                        <TickRocksLogo
-                          colorGreen="#fff"
-                          colorWhite="#3CAB70"
-                          h="20px"
-                          w="30px"
+                        <Button
+                          flexGrow="2"
+                          shadow="md"
+                          colorScheme="green"
                           mr="5px"
-                        />
-                        tick
-                      </Button>
+                        >
+                          <TickRocksLogo
+                            colorGreen="#fff"
+                            colorWhite="#3CAB70"
+                            h="20px"
+                            w="30px"
+                            mr="5px"
+                          />
+                          tick
+                        </Button>
+                      </LinkBox>
 
                       <Button
                         flexGrow="1"
@@ -390,22 +400,32 @@ export default function Climb() {
                         <Flex justify="space-between" align="baseline">
                           <Heading size="sm">Ticks</Heading>
                           <Spacer />
-                          <Button size="sm" colorScheme="green">
-                            <TickRocksLogo
-                              colorGreen="#fff"
-                              colorWhite="#3CAB70"
-                              h="12px"
-                              w="20px"
-                              mr="5px"
-                            />
-                            tick
-                          </Button>
+                          <LinkBox
+                            as={RouterLink}
+                            to={`/crags/${cragId}/sectors/${sectorId}/climbs/${climbId}/add-ascent`}
+                          >
+                            <Button size="sm" colorScheme="green">
+                              <TickRocksLogo
+                                colorGreen="#fff"
+                                colorWhite="#3CAB70"
+                                h="12px"
+                                w="20px"
+                                mr="5px"
+                              />
+                              tick
+                            </Button>
+                          </LinkBox>
                           /
                           <Button size="sm" colorScheme="gray">
                             <TickRocksLogo h="12px" w="20px" mr="5px" />
                             ticked
                           </Button>
                         </Flex>
+                        {ascents.length === 0
+                          ? 'There are no ascents.'
+                          : ascents.map((ascent) => (
+                              <Ascent key={ascent.id} ascent={ascent} />
+                            ))}
                       </Box>
                       <Box padding="10px" bgColor={boxBg} mt="10px">
                         <Flex justify="space-between" align="baseline">
@@ -425,6 +445,22 @@ export default function Climb() {
         <PageFooter />
       </Flex>
     </Box>
+  )
+}
+
+function Ascent({ ascent }) {
+  const { user } = useUser(ascent.user_id)
+
+  return (
+    <Skeleton isLoaded={user !== undefined}>
+      <Box>
+        <Flex>
+          <Box>{user?.display_name || 'Unnamed user'} </Box>
+          <Spacer />
+          <Box>{new Date(ascent.ascent_date).toISOString().slice(0, 10)}</Box>
+        </Flex>
+      </Box>
+    </Skeleton>
   )
 }
 
