@@ -250,12 +250,12 @@ export default function Sector() {
             {sector.coordinate_votes.length >= 1 && nearbySectors.length >= 2 && (
               <Box
                 padding="10px"
-                display={{ base: 'none', xl: 'block' }}
+                display={{ base: 'wrap', xl: 'block' }}
                 position="sticky"
                 top="65px"
                 bgColor={boxBg}
-                margin="10px"
-                maxW="300px"
+                w="100%"
+                margin={{ base: '0px', md: '10px' }}
                 minW="200px"
               >
                 <Box>
@@ -267,7 +267,7 @@ export default function Sector() {
                     letterSpacing="tighter"
                     textShadow={headingShadow}
                   >
-                    Close by:
+                    Sectors close by:
                   </Heading>
                   <Box fontSize="sm">
                     {nearbySectors.map((nearbySector) => (
@@ -387,7 +387,8 @@ function ImageWithLines({ cragId, sectorId, image, sectorName }) {
                 <Spacer />
                 <Box>
                   <IconButton
-                    colorScheme="green"
+                    colorScheme="brand"
+                    color="white"
                     as={RouterLink}
                     to={`/crags/${cragId}/sectors/${sectorId}/images/${image.id}/add-line`}
                     size="sm"

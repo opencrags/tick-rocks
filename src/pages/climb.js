@@ -220,7 +220,8 @@ export default function Climb() {
                         <Button
                           flexGrow="2"
                           shadow="md"
-                          colorScheme="green"
+                          colorScheme="brand"
+                          color="white"
                           mr="5px"
                         >
                           <TickRocksLogo
@@ -351,7 +352,7 @@ export default function Climb() {
                             as={RouterLink}
                             to={`/crags/${cragId}/sectors/${sectorId}/climbs/${climbId}/vote-climb-beta-video`}
                           >
-                            <Button size="sm" colorScheme="green">
+                            <Button size="sm" colorScheme="brand" color="white">
                               Add
                             </Button>
                           </LinkBox>
@@ -378,7 +379,7 @@ export default function Climb() {
                             as={RouterLink}
                             to={`/crags/${cragId}/sectors/${sectorId}/climbs/${climbId}/vote-external-link`}
                           >
-                            <Button size="sm" colorScheme="green">
+                            <Button size="sm" colorScheme="brand" color="white">
                               Add
                             </Button>
                           </LinkBox>
@@ -404,7 +405,7 @@ export default function Climb() {
                             as={RouterLink}
                             to={`/crags/${cragId}/sectors/${sectorId}/climbs/${climbId}/add-ascent`}
                           >
-                            <Button size="sm" colorScheme="green">
+                            <Button size="sm" colorScheme="brand" color="white">
                               <TickRocksLogo
                                 colorGreen="#fff"
                                 colorWhite="#3CAB70"
@@ -466,6 +467,8 @@ function Ascent({ ascent }) {
 
 function ImageWithLines({ line }) {
   const { image, error: errorImage } = useImage(line.image_id)
+
+  const boxBg = useColorModeValue('gray.300', 'gray.600')
   // const { lines: otherLines, error: errorOtherLines } = useLines({ image_id: line.image_id })
 
   if (errorImage) {
@@ -481,7 +484,7 @@ function ImageWithLines({ line }) {
   }
 
   return (
-    <Box marginTop="20px" boxShadow="lg">
+    <Box marginTop="20px" boxShadow="lg" bg={boxBg}>
       <LineImage image={image} lines={[line]} />
     </Box>
   )

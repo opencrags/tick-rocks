@@ -4,11 +4,13 @@ import {
   SimpleGrid,
   useDisclosure,
   SlideFade,
+  LinkBox,
 } from '@chakra-ui/react'
+
+import { Link as RouterLink, useParams } from 'react-router-dom'
 import React from 'react'
 import { useCragPhotos, useUser } from '../utils/backend'
-
-function CragPhotoGrid({ cragId, children, ...props }) {
+function CragPhotoGrid({ userId, cragId, children, ...props }) {
   const { cragPhotos, error } = useCragPhotos({ crag_id: cragId })
 
   if (cragPhotos === undefined) {
@@ -32,8 +34,10 @@ function CragPhotoGrid({ cragId, children, ...props }) {
           return (
             <CragPhotos
               key={cragPhoto.id}
+              cragId={cragPhoto.crag_id}
+              imgId={cragPhoto.id}
               img={cragPhoto.base64_image}
-              user={cragPhoto.user_id}
+              userId={cragPhoto.user_id}
             />
           )
         })}
@@ -42,39 +46,41 @@ function CragPhotoGrid({ cragId, children, ...props }) {
   )
 }
 
-function CragPhotos({ img, user, ...props }) {
+function CragPhotos({ img, cragId, imgId, userId, ...props }) {
   const { isOpen, onToggle } = useDisclosure()
-
+  const { user } = useUser(userId)
   return (
     <Box onPointerEnter={onToggle} onPointerLeave={onToggle}>
-      <Box
-        FlexGrow="1"
-        h={{ base: '40vh', md: '60vh' }}
-        width="100%"
-        objectFit="cover"
-        verticalAlign="bottom"
-        bgImage={img}
-        bgPosition="center"
-        bgRepeat="no-repeat"
-        bgSize="cover"
-        position="relative"
-      >
-        <SlideFade in={isOpen}>
-          <Box
-            p="20px"
-            color="white"
-            mt="4"
-            bg="gray.500"
-            maxW="95%"
-            roundedRight="md"
-            shadow="md"
-            position="absolute"
-            left="0px"
-          >
-            Uploaded by {user}
-          </Box>
-        </SlideFade>
-      </Box>
+      <LinkBox as={RouterLink} to={`/crags/${cragId}/crag-photo/${imgId}`}>
+        <Box
+          FlexGrow="1"
+          h={{ base: '40vh', md: '60vh' }}
+          width="100%"
+          objectFit="cover"
+          verticalAlign="bottom"
+          bgImage={img}
+          bgPosition="center"
+          bgRepeat="no-repeat"
+          bgSize="cover"
+          position="relative"
+        >
+          <SlideFade in={isOpen}>
+            <Box
+              p="20px"
+              color="white"
+              mt="4"
+              bg="gray.500"
+              maxW="95%"
+              roundedRight="md"
+              shadow="md"
+              position="absolute"
+              left="0px"
+            >
+              Uploaded by {user.display_name}
+            </Box>
+          </SlideFade>
+        </Box>
+      </LinkBox>
     </Box>
   )
 }
