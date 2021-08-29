@@ -6,7 +6,7 @@ import {
   SlideFade,
 } from '@chakra-ui/react'
 import React from 'react'
-import { useCragPhotos, useUser } from '../utils/backend'
+import { useCragPhotos } from '../utils/backend'
 
 function CragPhotoGrid({ cragId, children, ...props }) {
   const { cragPhotos, error } = useCragPhotos({ crag_id: cragId })

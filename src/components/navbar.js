@@ -38,12 +38,12 @@ import StarRatings from 'react-star-ratings'
 import { Link as RouterLink } from 'react-router-dom'
 import React, { useEffect, useState } from 'react'
 import { SearchIcon, HamburgerIcon, MoonIcon, SunIcon } from '@chakra-ui/icons'
-import { useUser, useQuickSearch, mostVoted } from '../utils/backend'
+import { useCurrentUser, useQuickSearch, mostVoted } from '../utils/backend'
 import Grade from '../components/grade'
 import { useColorMode } from '@chakra-ui/color-mode'
 export function NavBar() {
   const { isAuthenticated, loginWithRedirect, logout } = useAuth0()
-  const { user, error: userError } = useUser()
+  const { user } = useCurrentUser()
   const btnRef = React.useRef()
   const { colorMode, toggleColorMode } = useColorMode()
   const MenuItems = ({ children, isLast, to = '/', ...props }) => {
@@ -317,8 +317,8 @@ export function NavBar() {
                   <>
                     <PhoneMenuItems to="/user-profile">
                       <HStack>
-                        <Avatar name={user.display_name} src="..." size="xs" />
-                        <Text>{user.display_name}</Text>
+                        <Avatar name={user?.display_name} src="..." size="xs" />
+                        <Text>{user?.display_name}</Text>
                       </HStack>
                     </PhoneMenuItems>
                     <PhoneMenuItems to="/ticklist">Ticklist</PhoneMenuItems>
@@ -452,13 +452,13 @@ export function NavBar() {
                     as={MenuButton}
                     display={{ base: 'none', md: 'block' }}
                     margin="5"
-                    name={user.display_name}
+                    name={user?.display_name}
                     src="..."
                     size="xs"
                   ></Avatar>
                   <MenuList color="black">
                     <MenuItem as={RouterLink} to="/user-profile">
-                      {user.display_name || 'No display name set'}
+                      {user?.display_name || 'No display name set'}
                     </MenuItem>
                     <MenuItem as={RouterLink} to="/ticklist">
                       Ticklist{' '}

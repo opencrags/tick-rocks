@@ -39,12 +39,12 @@ export default function AddCrag() {
   const navigateToAddedCrag = (cragId) => history.replace(`/crags/${cragId}`)
 
   const handleSubmit = () => {
-    if (cragName == '') {
+    if (cragName === '') {
       setAttemptedEmptyName(true)
     } else {
       setAttemptedEmptyName(false)
       addCrag().then((crag) =>
-        voteCragName(crag.id).then((_) => navigateToAddedCrag(crag.id))
+        voteCragName(crag.id).then(() => navigateToAddedCrag(crag.id))
       )
     }
   }

@@ -20,7 +20,7 @@ import { TickRocksLogo } from '../components/tick-rocks-logo.js'
 import { useDisclosure } from '@chakra-ui/hooks'
 import { SearchIcon } from '@chakra-ui/icons'
 
-import { useUser, useQuickSearch, mostVoted } from '../utils/backend'
+import { useCurrentUser, useQuickSearch, mostVoted } from '../utils/backend'
 import { Link as RouterLink } from 'react-router-dom'
 
 export default function Landing() {
@@ -148,7 +148,7 @@ function LandingPageSlider({ imageUrl }) {
 
 function SignedIn() {
   const { isLoading, isAuthenticated, loginWithRedirect } = useAuth0()
-  const { user, error: userError } = useUser()
+  const { user } = useCurrentUser()
   if (isLoading) {
     return <Loader />
   }
