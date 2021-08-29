@@ -10,10 +10,10 @@ import {
   Button,
 } from '@chakra-ui/react'
 import Loader from '../components/loader.js'
-import { useUser, useAuthorizedFetcher } from '../utils/backend.js'
+import { useCurrentUser, useAuthorizedFetcher } from '../utils/backend.js'
 
 export default function Settings() {
-  const { user, userError, mutate } = useUser()
+  const { user, userError, mutate } = useCurrentUser()
   const { authorizedFetcher, isLoading, authError } = useAuthorizedFetcher()
   const [displayName, setDisplayName] = useState(null)
 

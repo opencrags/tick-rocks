@@ -50,6 +50,7 @@ function CragGrades({ children, ...props }) {
               direction="column"
               as={RouterLink}
               to={`list/filter=${grades.grade}`}
+              key={grades.grade}
             >
               <Box>
                 <Box

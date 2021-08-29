@@ -139,10 +139,23 @@ const useGradeSystemGrade = (gradeSystemGradeId) => {
   return { grade, error }
 }
 
-const useUser = () => {
-  const { user, error: auth0Error } = useAuth0()
-  const { data, error, mutate } = useBackend(user ? `/users/${user.sub}` : null)
-  return { user: { ...data, ...user }, error: error || auth0Error, mutate }
+const useUser = (userId) => {
+  const {
+    data: user,
+    error,
+    mutate,
+  } = useBackend(userId ? `/users/${userId}` : null)
+  return { user, error, mutate }
+}
+
+const useCurrentUser = () => {
+  const { user: auth0User, error: auth0Error } = useAuth0()
+  const { user, error, mutate } = useUser(auth0User?.sub)
+  return {
+    user,
+    error: auth0Error || error,
+    mutate,
+  }
 }
 
 const useQuery = (collection, query, limit, offset) =>
@@ -287,6 +300,7 @@ export {
   useCragPhotos,
   useGradeSystemGrades,
   useUser,
+  useCurrentUser,
   useQuickSearch,
   countVotes,
   mostVoted,
