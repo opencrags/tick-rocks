@@ -32,6 +32,12 @@ import {
   UnorderedList,
   ListItem,
   Icon,
+  InputGroup,
+  InputLeftElement,
+  Tooltip,
+  Wrap,
+  LinkBox,
+  Link,
 } from '@chakra-ui/react'
 import StarRatings from 'react-star-ratings'
 
@@ -42,6 +48,12 @@ import { useCurrentUser, useQuickSearch, mostVoted } from '../utils/backend'
 import Grade from '../components/grade'
 import { useColorMode, useColorModeValue } from '@chakra-ui/color-mode'
 import { TickRocksLogo } from './tick-rocks-logo'
+import { ClimbBreadcrumb, CragBreadcrumb, SectorBreadcrumb } from './breadcrumb'
+import AddCragModal from './modal-dialog'
+import { BoxZoomHandler } from 'mapbox-gl'
+import ModalDialog from './modal-dialog'
+import AddCrag from '../pages/add-crag'
+
 export function NavBar() {
   const { isAuthenticated, loginWithRedirect, logout } = useAuth0()
   const { user } = useCurrentUser()
@@ -114,6 +126,7 @@ export function NavBar() {
         return (
           <UnorderedList
             listStyleType="none"
+            padding="0px"
             width="100%"
             margin="0px"
             maxH={{ base: '72vh', md: '100%' }}
@@ -145,11 +158,25 @@ export function NavBar() {
                 return (
                   <QuickSearchResultItem
                     link={`/crags/${result.sector.crag_id}/sectors/${result.sector.id}`}
-                    displayName={mostVoted(result.sector.name_votes)}
+                    displayName={
+                      <>
+                        <Wrap>
+                          <Box lineHeight="15px">
+                            {' '}
+                            {mostVoted(result.sector.name_votes)}
+                          </Box>
+
+                          <CragBreadcrumb
+                            fontSize="xs"
+                            cragId={result.sector.crag_id}
+                          ></CragBreadcrumb>
+                        </Wrap>
+                      </>
+                    }
                     resultId={result.id}
                     resultType={result.type}
                     onClose={onClose}
-                  />
+                  ></QuickSearchResultItem>
                 )
               }
               if (result.type === 'climb') {
@@ -158,8 +185,10 @@ export function NavBar() {
                     link={`/crags/${result.climb.crag_id}/sectors/${result.climb.sector_id}/climbs/${result.climb.id}`}
                     displayName={
                       <>
-                        <HStack>
-                          <Box>{mostVoted(result.climb.name_votes)}</Box>
+                        <Wrap align="center">
+                          <Box lineHeight="15px">
+                            {mostVoted(result.climb.name_votes)}
+                          </Box>
                           <Grade gradeId={result.climb.most_voted_grade} />
                           {result.climb.average_rating >= 1 ? (
                             <StarRatings
@@ -172,15 +201,39 @@ export function NavBar() {
                               starSpacing="1px"
                             />
                           ) : (
-                            'No rating votes'
-                          )}
-                        </HStack>
+                            ''
+                          )}{' '}
+                          <SectorBreadcrumb
+                            fontSize="xs"
+                            sectorId={result.climb.sector_id}
+                          />
+                        </Wrap>
                       </>
                     }
                     resultId={result.id}
                     resultType={result.type}
                     onClose={onClose}
-                  />
+                  >
+                    <Spacer />
+                    <Box>
+                      <Button
+                        as={RouterLink}
+                        to={`/crags/${result.climb.crag_id}/sectors/${result.climb.sector_id}/climbs/${result.climb.id}/add-ascent`}
+                        size="sm"
+                        colorScheme="brand"
+                        color="white"
+                      >
+                        <TickRocksLogo
+                          colorGreen="#fff"
+                          colorWhite="#3CAB70"
+                          h="12px"
+                          w="20px"
+                          mr="5px"
+                        />
+                        tick
+                      </Button>
+                    </Box>
+                  </QuickSearchResultItem>
                 )
               }
             })}
@@ -201,17 +254,23 @@ export function NavBar() {
             height="100%"
             onClick={onOpen}
           />
-          <Input
-            onClick={onOpen}
-            border="none"
-            alignSelf="flex-start"
-            isReadOnly={true}
-            placeholder="Search crags, routes, climbers, etc."
-            display={{ base: 'none', md: 'block' }}
-            background="gray.600"
-            color="brand.100"
-            minW={{ sm: '10vw', md: '12vw', lg: '350px' }}
-          />
+
+          <InputGroup display={{ base: 'none', md: 'block' }}>
+            <InputLeftElement
+              pointerEvents="none"
+              children={<SearchIcon color="gray.300" />}
+            />
+            <Input
+              onClick={onOpen}
+              border="none"
+              alignSelf="flex-start"
+              isReadOnly={true}
+              placeholder="Search for crags, routes, climbers, etc."
+              background="gray.600"
+              color="brand.100"
+              minW={{ sm: '10vw', md: '12vw', lg: '350px' }}
+            />
+          </InputGroup>
           <Modal isOpen={isOpen} onClose={onClose} size="2xl">
             <ModalOverlay marginTop={{ base: '0px', md: '0px' }} />
             <ModalContent
@@ -224,7 +283,7 @@ export function NavBar() {
                   <Input
                     color="white"
                     variant="unstyled"
-                    placeholder="Search crags, routes, climbers, etc."
+                    placeholder="Search for crags, routes, climbers, etc."
                     onChange={(event) => setSearchText(event.target.value)}
                     value={searchText || ''}
                   />
@@ -309,7 +368,7 @@ export function NavBar() {
                 </HStack>
 
                 <PhoneMenuItems textAlign="left" to="/search">
-                  Search
+                  Scan
                 </PhoneMenuItems>
                 <PhoneMenuItems to="/map">Map</PhoneMenuItems>
                 <PhoneMenuItems to="/crags">Crags</PhoneMenuItems>
@@ -375,15 +434,15 @@ export function NavBar() {
 
   return (
     <Box>
-      <Box h="55px" display={{ base: 'block', md: 'none' }} />
+      <Box h="55px" display={{ base: 'block', md: 'block' }} />
 
       <Box height="100%">
         <Flex
           width="100%"
-          position={{ base: 'fixed', md: 'relative' }}
+          position={{ base: 'fixed', md: 'fixed' }}
           zIndex="overlay"
           as="nav"
-          top={{ base: '13px', md: '0px' }}
+          top="0px"
           pl={{ xxl: '14vw', xl: '80px', md: '5vw', base: '0px' }}
           pr={{ xxl: '14vw', xl: '80px', md: '5vw', base: '0px' }}
           align="center"
@@ -393,6 +452,7 @@ export function NavBar() {
         >
           <HStack display={{ base: 'flex', md: 'none' }}>
             <MenuDrawer />
+
             <Button
               color={buttonColor}
               bgColor="gray.700"
@@ -402,19 +462,29 @@ export function NavBar() {
             </Button>
           </HStack>
           <Spacer display={{ base: 'flex', md: 'none' }} />
+
           <Flex as={RouterLink} to="/" align="center">
             <TickRocksLogo />
-
             <Heading
               width="150px"
               size="sm"
               color="white"
-              display={{ base: 'none', md: 'flex' }}
               letterSpacing="1.5"
+              display={{ base: 'none', xxs: 'block' }}
             >
               tick.rocks
             </Heading>
           </Flex>
+          <Link
+            mx="20px"
+            href="https://github.com/opencrags/tick-rocks/issues"
+            isExternal
+          >
+            <Tooltip label="tick.rocks is currently in open alpha, report bug?">
+              <Tag colorScheme="red">ALPHA</Tag>
+            </Tooltip>
+          </Link>
+
           <Spacer display={{ base: 'flex', md: 'none' }} />
           <Box>
             <SearchModal />
@@ -429,10 +499,20 @@ export function NavBar() {
               justify={['center', 'space-between', 'flex-end', 'flex-end']}
               direction={['column', 'row', 'row', 'row']}
             >
-              <MenuItems to="/search">Search</MenuItems>
+              <MenuItems to="/search">Scan</MenuItems>
               <MenuItems to="/map">Map</MenuItems>
-              <MenuItems to="/crags">Crags</MenuItems>
-              <MenuItems to="/add-crag">Add crag</MenuItems>
+              <Box mx="5px">
+                <ModalDialog
+                  button={
+                    <Button colorScheme="brand" color="white">
+                      Add Crag
+                    </Button>
+                  }
+                >
+                  <AddCrag />
+                </ModalDialog>
+              </Box>
+
               <Button
                 color={buttonColor}
                 bgColor="gray.700"
@@ -440,6 +520,7 @@ export function NavBar() {
               >
                 {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
               </Button>
+
               {isAuthenticated ? (
                 <Menu>
                   <Avatar
@@ -505,7 +586,7 @@ const QuickSearchResultItem = ({
   children,
 }) => {
   return (
-    <Box onClick={onClose} as={RouterLink} to={link} key={key}>
+    <Box onClick={onClose} as={RouterLink} to={link} key={key} w="100%">
       <ListItem
         padding={4}
         mb={1}
@@ -516,18 +597,14 @@ const QuickSearchResultItem = ({
           cursor: 'pointer',
         }}
       >
-        <Flex>
-          <Flex direction="row" w="70px">
+        <Flex direction="row" align="center">
+          <Flex direction="row" minW="70px">
             <Tag>{resultType}</Tag>
           </Flex>
-          <Box
-            color="white"
-            fontFamily="sans-serif"
-            fontWeight="bold"
-            fontSize="md"
-          >
-            {displayName} {children}
-          </Box>
+          <Wrap color="white" fontFamily="sans-serif" fontWeight="bold">
+            {displayName}
+          </Wrap>
+          {children}
         </Flex>
       </ListItem>
     </Box>

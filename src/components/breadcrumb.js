@@ -85,12 +85,13 @@ const useImageBreadcrumbs = (imageId) => {
   }
 }
 
-function RockBreadcrumb({ breadcrumbs }) {
+function RockBreadcrumb({ breadcrumbs, ...props }) {
   return (
     <Breadcrumb
       fontWeight="normal"
       fontSize={{ base: 'sm', sm: 'sm', md: 'md' }}
       fontFamily="sans-serif"
+      {...props}
     >
       {breadcrumbs.map((breadcrumb, index) => (
         <BreadcrumbItem key={`${breadcrumb.text}&${breadcrumb.link}`}>
@@ -107,7 +108,7 @@ function RockBreadcrumb({ breadcrumbs }) {
   )
 }
 
-function CragBreadcrumb({ cragId, extra }) {
+function CragBreadcrumb({ cragId, extra, ...props }) {
   const { breadcrumbs, error } = useCragBreadcrumbs(cragId)
 
   if (breadcrumbs === undefined) {
@@ -118,10 +119,15 @@ function CragBreadcrumb({ cragId, extra }) {
     return 'Unable to load breadcrumb'
   }
 
-  return <RockBreadcrumb breadcrumbs={[...breadcrumbs, ...(extra || [])]} />
+  return (
+    <RockBreadcrumb
+      breadcrumbs={[...breadcrumbs, ...(extra || [])]}
+      {...props}
+    />
+  )
 }
 
-function SectorBreadcrumb({ sectorId, extra }) {
+function SectorBreadcrumb({ sectorId, extra, ...props }) {
   const { breadcrumbs, error } = useSectorBreadcrumbs(sectorId)
 
   if (breadcrumbs === undefined) {
@@ -132,10 +138,15 @@ function SectorBreadcrumb({ sectorId, extra }) {
     return 'Unable to load breadcrumb'
   }
 
-  return <RockBreadcrumb breadcrumbs={[...breadcrumbs, ...(extra || [])]} />
+  return (
+    <RockBreadcrumb
+      breadcrumbs={[...breadcrumbs, ...(extra || [])]}
+      {...props}
+    />
+  )
 }
 
-function ClimbBreadcrumb({ climbId, extra }) {
+function ClimbBreadcrumb({ climbId, extra, ...props }) {
   const { breadcrumbs, error } = useClimbBreadcrumbs(climbId)
 
   if (breadcrumbs === undefined) {
@@ -146,10 +157,15 @@ function ClimbBreadcrumb({ climbId, extra }) {
     return 'Unable to load breadcrumb'
   }
 
-  return <RockBreadcrumb breadcrumbs={[...breadcrumbs, ...(extra || [])]} />
+  return (
+    <RockBreadcrumb
+      breadcrumbs={[...breadcrumbs, ...(extra || [])]}
+      {...props}
+    />
+  )
 }
 
-function ImageBreadcrumb({ imageId, extra }) {
+function ImageBreadcrumb({ imageId, extra, ...props }) {
   const { breadcrumbs, error } = useImageBreadcrumbs(imageId)
 
   if (breadcrumbs === undefined) {
@@ -160,7 +176,12 @@ function ImageBreadcrumb({ imageId, extra }) {
     return 'Unable to load breadcrumb'
   }
 
-  return <RockBreadcrumb breadcrumbs={[...breadcrumbs, ...(extra || [])]} />
+  return (
+    <RockBreadcrumb
+      breadcrumbs={[...breadcrumbs, ...(extra || [])]}
+      {...props}
+    />
+  )
 }
 
 export {

@@ -17,7 +17,11 @@ import {
   Link,
   Spacer,
   IconButton,
+  Grid,
+  Wrap,
 } from '@chakra-ui/react'
+import Linkify from 'react-linkify'
+
 import { Link as RouterLink, useParams } from 'react-router-dom'
 import Loader from '../components/loader.js'
 import EditButton from '../components/edit-button.js'
@@ -31,6 +35,7 @@ import {
 import {
   CragFrontPageBannerMenu,
   CragFrontPageBanner,
+  CragBannerMenu,
 } from '../components/crag-banner.js'
 import { CragPhotoGrid } from '../components/crag-photo-grid.js'
 import { CragComponentBox } from '../components/crag-component-box'
@@ -38,14 +43,20 @@ import { CragSectorGrid, CragSector } from '../components/crag-sectors.js'
 import { CragGrades } from '../components/crag-grades.js'
 import { CragLatestDiscussions } from '../components/crag-latestdiscussions'
 import { ChevronDownIcon, EditIcon, AddIcon } from '@chakra-ui/icons'
-import { isEmpty } from 'lodash'
 import { PageFooter } from '../components/page-footer.js'
 import { useColorMode, useColorModeValue } from '@chakra-ui/color-mode'
+import ModalDialog from '../components/modal-dialog.js'
+import AddSector from './add-sector.js'
+import AddCragPhoto from './add-crag-photo.js'
 export default function Crag() {
   const bg = useColorModeValue('offwhite', 'gray.700')
-  const boxBg = useColorModeValue('gray.300', 'gray.600')
+  const boxBg = useColorModeValue('gray.100', 'gray.600')
   const buttonBg = useColorModeValue('gray.200', 'gray.600')
-  const headingShadow = ('3px 3px 3px rgba(0, 0, 0, 0.2)', 'none')
+  const headingColor = useColorModeValue('gray.900', 'gray.100')
+  const headingShadow = useColorModeValue(
+    'none',
+    '3px 3px 3px rgba(0, 0, 0, 0.2)'
+  )
 
   const { cragId } = useParams()
   const { crag, error: errorCrag } = useCrag(cragId)
@@ -111,16 +122,19 @@ export default function Crag() {
           </Text>
         </Box>
       </CragFrontPageBanner>
-      <CragFrontPageBannerMenu>
+      <CragBannerMenu>
         <Menu>
-          <MenuButton _hover={{ textColor: 'brand.200' }} padding="8px">
+          <MenuButton
+            color="white"
+            _hover={{ textColor: 'brand.200' }}
+            padding="8px"
+          >
             <Center>
               <Text
                 display={{ base: 'none', sm: 'block' }}
                 fontWeight="normal"
                 fontSize={{ base: 'sm', sm: 'sm', md: 'md' }}
                 letterSpacing="1.5pt"
-                _hover={{ color: 'brand.200' }}
               >
                 Edit <ChevronDownIcon />
               </Text>
@@ -128,24 +142,25 @@ export default function Crag() {
             </Center>
           </MenuButton>
           <MenuList zIndex="popover">
-            <MenuItem as={RouterLink} to={`/crags/${crag.id}/add-sector`}>
-              Add Sector
-            </MenuItem>
-            <MenuItem as={RouterLink} to="/">
-              Add Photo
-            </MenuItem>
+            <ModalDialog button={<MenuItem>Add Sector</MenuItem>}>
+              <AddSector />
+            </ModalDialog>
+            <ModalDialog button={<MenuItem>Add Photo</MenuItem>}>
+              <AddCragPhoto />
+            </ModalDialog>
           </MenuList>
         </Menu>
-      </CragFrontPageBannerMenu>
+      </CragBannerMenu>
 
       <CragComponentBox>
         <Flex
           justify="space-between"
-          direction={{ base: 'column', md: 'row' }}
+          direction={{ base: 'column', xl: 'row' }}
           margin="0px"
         >
-          <Box id="cragAccess" mt="5px" mb="5px" mr="5px" flex="0 0 30%">
+          <Box id="cragDescription" mt="5px" mb="5px" mr="5px" flex="0 0 60%">
             <Heading
+              color={headingColor}
               textShadow={headingShadow}
               padding="10px"
               size="xl"
@@ -165,71 +180,80 @@ export default function Crag() {
               </LinkBox>
             </Heading>
             <Box pl="10px" pr="10px" pb="10px" w="100%">
-              <Text overflowWrap="break-word">
-                {crag.description_votes.length === 0
-                  ? 'No description has been added.'
-                  : mostVoted(crag.description_votes)}
+              <Text>
+                <Linkify overflowWrap="break-word">
+                  {crag.description_votes.length === 0
+                    ? 'No description has been added.'
+                    : mostVoted(crag.description_votes)}
+                </Linkify>
               </Text>
             </Box>
           </Box>
-          <Spacer />
-          <Box id="cragAccess" mt="5px" mb="5px" mr="5px" flex="0 0 30%">
-            <Heading
-              textShadow={headingShadow}
-              padding="10px"
-              size="xl"
-              fontFamily="sans-serif"
-              fontWeight="bold"
-              letterSpacing="tighter"
-            >
-              Access
-              <LinkBox
-                as={RouterLink}
-                to={`/crags/${cragId}/vote-access-information`}
+
+          <Wrap id="cragAccess" mt="5px" mb="5px" mr="5px">
+            <Box>
+              <Heading
+                color={headingColor}
+                textShadow={headingShadow}
+                padding="10px"
+                size="xl"
+                fontFamily="sans-serif"
+                fontWeight="bold"
+                letterSpacing="tighter"
               >
-                <Box as="sup">
-                  <EditButton />
-                  <VoteConflictWarning votes={crag.access_information_votes} />
-                </Box>
-              </LinkBox>
-            </Heading>
-            <Box pl="10px" pr="10px" pb="10px" w="100%">
-              <Text overflowWrap="break-word">
-                {crag.access_information_votes.length === 0
-                  ? 'No access information has been added.'
-                  : mostVoted(crag.access_information_votes)}
-              </Text>
+                Access
+                <LinkBox
+                  as={RouterLink}
+                  to={`/crags/${cragId}/vote-access-information`}
+                >
+                  <Box as="sup">
+                    <EditButton />
+                    <VoteConflictWarning
+                      votes={crag.access_information_votes}
+                    />
+                  </Box>
+                </LinkBox>
+              </Heading>
+              <Box pl="10px" pr="10px" pb="10px" w="100%">
+                <Text>
+                  <Linkify overflowWrap="break-word">
+                    {crag.access_information_votes.length === 0
+                      ? 'No access information has been added.'
+                      : mostVoted(crag.access_information_votes)}
+                  </Linkify>
+                </Text>
+              </Box>
             </Box>
-          </Box>
-          <Spacer />
-          <Box as={RouterLink} to="/authors" margin="5px" flex="0 0 10%">
-            <Heading
-              textShadow={headingShadow}
-              padding="10px"
-              size="xl"
-              fontFamily="sans-serif"
-              fontWeight="bold"
-              letterSpacing="tighter"
-            >
-              Authors
-            </Heading>
-            <Box pl="10px" pb="10px">
-              <AvatarGroup overflow="auto" size="md" max={2}>
-                <Avatar
-                  name="Åke R"
-                  src="https://scontent.fbma2-1.fna.fbcdn.net/v/t31.18172-8/920404_10151455603843355_1163235424_o.jpg?_nc_cat=106&ccb=1-3&_nc_sid=09cbfe&_nc_ohc=__whM8sZa-wAX-N_SVY&_nc_ht=scontent.fbma2-1.fna&oh=a4420a9db953e4f66a20aaf74c2b2a6e&oe=612E8092"
-                />
-                <Avatar
-                  name="Richard L"
-                  src="https://scontent.fbma2-1.fna.fbcdn.net/v/t1.6435-9/221168110_10158374552417522_582055814329159086_n.jpg?_nc_cat=103&ccb=1-3&_nc_sid=09cbfe&_nc_ohc=8B6QFRj4Z2IAX861-e6&_nc_ht=scontent.fbma2-1.fna&oh=4c4d83f1f00af3cce3488add14c17798&oe=612DFA73"
-                />
-                <Avatar
-                  name="Rasmus E"
-                  src="https://scontent.fbma2-1.fna.fbcdn.net/v/t1.6435-9/62182564_10217135936723107_5145342899025608704_n.jpg?_nc_cat=111&ccb=1-3&_nc_sid=09cbfe&_nc_ohc=eU2XkPusFy4AX9aYd8m&_nc_ht=scontent.fbma2-1.fna&oh=bd399e4af704b6ed3bdf2bdcb0467038&oe=612E3205"
-                />
-              </AvatarGroup>
+            <Box as={RouterLink} to="/authors" margin="5px" flex="0 0 10%">
+              <Heading
+                color={headingColor}
+                textShadow={headingShadow}
+                padding="10px"
+                size="xl"
+                fontFamily="sans-serif"
+                fontWeight="bold"
+                letterSpacing="tighter"
+              >
+                Authors
+              </Heading>
+              <Box pl="10px" pb="10px">
+                <AvatarGroup overflow="auto" size="md" max={2}>
+                  <Avatar
+                    name="Åke R"
+                    src="https://scontent.fbma2-1.fna.fbcdn.net/v/t31.18172-8/920404_10151455603843355_1163235424_o.jpg?_nc_cat=106&ccb=1-3&_nc_sid=09cbfe&_nc_ohc=__whM8sZa-wAX-N_SVY&_nc_ht=scontent.fbma2-1.fna&oh=a4420a9db953e4f66a20aaf74c2b2a6e&oe=612E8092"
+                  />
+                  <Avatar
+                    name="Richard L"
+                    src="https://scontent.fbma2-1.fna.fbcdn.net/v/t1.6435-9/221168110_10158374552417522_582055814329159086_n.jpg?_nc_cat=103&ccb=1-3&_nc_sid=09cbfe&_nc_ohc=8B6QFRj4Z2IAX861-e6&_nc_ht=scontent.fbma2-1.fna&oh=4c4d83f1f00af3cce3488add14c17798&oe=612DFA73"
+                  />
+                  <Avatar
+                    name="Rasmus E"
+                    src="https://scontent.fbma2-1.fna.fbcdn.net/v/t1.6435-9/62182564_10217135936723107_5145342899025608704_n.jpg?_nc_cat=111&ccb=1-3&_nc_sid=09cbfe&_nc_ohc=eU2XkPusFy4AX9aYd8m&_nc_ht=scontent.fbma2-1.fna&oh=bd399e4af704b6ed3bdf2bdcb0467038&oe=612E3205"
+                  />
+                </AvatarGroup>
+              </Box>
             </Box>
-          </Box>
+          </Wrap>
         </Flex>
       </CragComponentBox>
       <CragComponentBox>
@@ -264,12 +288,13 @@ export default function Crag() {
           <Box
             zIndex="2"
             position="sticky"
-            top="60px"
+            top={{ base: '50px', md: '102px' }}
             bottom="0px"
             padding="10px"
           >
             <Flex flexWrap="wrap">
               <Heading
+                color={headingColor}
                 size="2xl"
                 fontFamily="sans-serif"
                 fontWeight="bold"
@@ -281,55 +306,65 @@ export default function Crag() {
               <Spacer />
 
               <Stack direction="row" align="center">
-                <Box as={RouterLink} to={`/crags/${crag.id}/add-sector`}>
-                  <IconButton
-                    icon={<AddIcon />}
-                    display={{ base: 'block', md: 'none' }}
-                    boxShadow="xl"
-                    colorScheme="brand"
-                    color="white"
-                  ></IconButton>
-                  <Button
-                    display={{ base: 'none', md: 'block' }}
-                    boxShadow="xl"
-                    pr={4}
-                    pl={4}
-                    colorScheme="brand"
-                    color="white"
+                <Box mx="5px">
+                  <ModalDialog
+                    button={
+                      <Box>
+                        <IconButton
+                          icon={<AddIcon />}
+                          display={{ base: 'block', md: 'none' }}
+                          boxShadow="xl"
+                          colorScheme="brand"
+                          color="white"
+                        ></IconButton>
+                        <Button
+                          display={{ base: 'none', md: 'block' }}
+                          boxShadow="xl"
+                          pr={4}
+                          pl={4}
+                          colorScheme="brand"
+                          color="white"
+                        >
+                          <Flex align="center" direction="row">
+                            <AddIcon /> <Text ml="5px">New sector </Text>
+                          </Flex>
+                        </Button>
+                      </Box>
+                    }
                   >
-                    <Flex align="center" direction="row">
-                      <AddIcon /> <Text ml="5px">New sector </Text>
-                    </Flex>
+                    <AddSector />
+                  </ModalDialog>
+                </Box>
+                <Box>
+                  <Button boxShadow="xl" pr={4} pl={4} colorScheme="gray">
+                    List All
                   </Button>
                 </Box>
-                <Button
-                  boxShadow="xl"
-                  pr={4}
-                  pl={4}
-                  margin={0}
-                  colorScheme="gray"
-                >
-                  View all
-                </Button>
               </Stack>
             </Flex>
           </Box>
 
           <Box pb="10px">
-            <CragSectorGrid>
-              {sectors
-                .filter((sector) => sector.name_votes.length >= 1 && sector)
-                .map((sector) => (
-                  <Box key={sector.id}>
-                    <CragSector cragId={crag.id} sectorId={sector.id}>
+            {sectors.length > 0 ? (
+              <CragSectorGrid sectors={sectors}>
+                {sectors
+                  .filter((sector) => sector.name_votes.length >= 1 && sector)
+                  .map((sector) => (
+                    <CragSector
+                      key={sector.id}
+                      cragId={crag.id}
+                      sectorId={sector.id}
+                    >
                       <Text>{mostVoted(sector.name_votes)}</Text>
                       <VoteConflictWarning
                         anyVotes={[sector.name_votes, sector.coordinate_votes]}
                       />
                     </CragSector>
-                  </Box>
-                ))}
-            </CragSectorGrid>
+                  ))}
+              </CragSectorGrid>
+            ) : (
+              <Center> No sectors has been added yet.</Center>
+            )}
           </Box>
         </Box>
       </CragComponentBox>
@@ -337,50 +372,63 @@ export default function Crag() {
         <CragLatestDiscussions />
       </CragComponentBox>
       <CragComponentBox>
-        <Box id="cragPhotos">
-          <Box position="sticky" top="55px" mt="10px" mb="5px" zIndex="2">
+        <Box className="photos">
+          <Box
+            position="sticky"
+            top={{ base: '55px', md: '105' }}
+            mt="10px"
+            mb="5px"
+            zIndex="2"
+          >
             <Box mt="10px" mb="5px">
               <Flex>
                 <Heading
+                  color={headingColor}
                   flex="1"
                   size="2xl"
                   fontFamily="sans-serif"
                   fontWeight="bold"
                   letterSpacing="tighter"
                   padding="10px"
-                  textShadow="3px 3px 3px rgba(0, 0, 0, 0.2)"
+                  textShadow={headingShadow}
                 >
                   Photos of{' '}
                   {crag.name_votes.length >= 1
                     ? mostVoted(crag.name_votes)
                     : 'No name votes'}
                 </Heading>
-                <Box as={RouterLink} to={`/crags/${crag.id}/add-crag-photo`}>
-                  <Button
-                    display={{ base: 'block', md: 'none' }}
-                    boxShadow="xl"
-                    pr={5}
-                    pl={5}
-                    m={3}
-                    colorScheme="brand"
-                    color="white"
-                  >
-                    <AddIcon />
-                  </Button>
-                  <Button
-                    display={{ base: 'none', md: 'Block' }}
-                    boxShadow="xl"
-                    pr={5}
-                    pl={5}
-                    m={3}
-                    colorScheme="brand"
-                    color="white"
-                  >
-                    <Flex align="center" direction="row">
-                      <AddIcon /> <Text ml="5px">Upload </Text>
-                    </Flex>
-                  </Button>
-                </Box>
+                <ModalDialog
+                  button={
+                    <Box>
+                      <Button
+                        display={{ base: 'block', md: 'none' }}
+                        boxShadow="xl"
+                        pr={5}
+                        pl={5}
+                        m={3}
+                        colorScheme="brand"
+                        color="white"
+                      >
+                        <AddIcon />
+                      </Button>
+                      <Button
+                        display={{ base: 'none', md: 'Block' }}
+                        boxShadow="xl"
+                        pr={5}
+                        pl={5}
+                        m={3}
+                        colorScheme="brand"
+                        color="white"
+                      >
+                        <Flex align="center" direction="row">
+                          <AddIcon /> <Text ml="5px">Upload </Text>
+                        </Flex>
+                      </Button>
+                    </Box>
+                  }
+                >
+                  <AddCragPhoto />
+                </ModalDialog>
               </Flex>
             </Box>
           </Box>

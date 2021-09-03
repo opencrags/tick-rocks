@@ -1,13 +1,13 @@
 import { Box, HStack } from '@chakra-ui/react'
 
-export function TickRocksLogo({ colorGreen, colorWhite, h, w, mr }) {
+export function TickRocksLogo({ colorGreen, colorWhite, h, w, mr, props }) {
   var colorGreen = colorGreen || '#3CAB70'
   var colorWhite = colorWhite || '#fff'
   var h = h || '30px'
   var w = w || '45px'
   var mr = mr || '10px'
   return (
-    <Box h={h} w={w} mr={mr}>
+    <Box h={h} w={w} mr={mr} {...props}>
       <svg
         data-name="Lager 1"
         xmlns="http://www.w3.org/2000/svg"

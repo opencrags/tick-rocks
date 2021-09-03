@@ -6,12 +6,13 @@ import { useCallback, useEffect, useState } from 'react'
 import { climbTypes } from '../utils/constants'
 import SearchMap from '../components/search-map'
 import RangeSlider from '../components/range-slider'
-import { Center, Container, Text } from '@chakra-ui/react'
+import { Box, Center, Container, DarkMode, Text } from '@chakra-ui/react'
 import { useGradeSystemGrades, useSearchClimbs } from '../utils/backend'
 import Loader from '../components/loader'
 import FilterSlider from '../components/filter-slider'
 import circleToPolygon from 'circle-to-polygon'
 import SearchResults from '../components/search-results'
+import { useColorMode, useColorModeValue } from '@chakra-ui/color-mode'
 
 export default function FilterSearch({ ...props }) {
   const [climbType, setClimbType] = useState('')
@@ -29,6 +30,7 @@ export default function FilterSearch({ ...props }) {
     longitude: 18.103421414223476,
     latitude: 59.356688222237636,
   })
+
   const [distanceType, setDistanceType] = useState('Linear')
   const [isochrone, setIsochrone] = useState(null)
   const [sphericalArea, setSphericalArea] = useState(
@@ -74,6 +76,8 @@ export default function FilterSearch({ ...props }) {
     )
   }
 
+  const boxBg = useColorModeValue('offwhite', 'blackAlpha.700')
+  const bg = useColorModeValue('offwhite', 'gray.700')
   const { climbs, searchClimbError } = useSearchClimbs(
     {
       ...(fontGrades && {
@@ -144,6 +148,7 @@ export default function FilterSearch({ ...props }) {
   if (distanceType === 'Linear') {
     distanceSlider = (
       <FilterSlider
+        color="black"
         label="Linear distance"
         value={linearDistance}
         onChange={(value) => setLinearDistance(value)}
@@ -156,6 +161,7 @@ export default function FilterSearch({ ...props }) {
   } else if (distanceType === 'Driving') {
     distanceSlider = (
       <FilterSlider
+        color="black"
         label="Driving distance"
         value={drivingDistance}
         onChange={(value) => setDrivingDistance(value)}
@@ -181,76 +187,104 @@ export default function FilterSearch({ ...props }) {
       )
     }
   }
-
   return (
     <Container maxWidth="container.md">
-      <Flex direction="column" sx={{ gap: '16px' }} bg="white" {...props}>
+      <Box
+        mt={{ base: '55px', md: '0px' }}
+        position="absolute"
+        left="0px"
+        top="0px"
+        h={{ base: '30vh', xxs: '40vh', md: '100vh' }}
+        w="100%"
+      >
         <SearchMap
+          h="100%"
           location={location}
           setLocation={setLocation}
           searchArea={searchArea}
           climbs={climbs}
         />
+      </Box>
+      <Box
+        overflowY={{ base: 'auto', md: 'hidden' }}
+        height={{ base: '100%', md: '80vh' }}
+        ml={{ base: '0px', md: '10px' }}
+        mt={{ base: '30vh', xxs: '40vh', md: '10px' }}
+        mb={{ base: '0px', md: '10px' }}
+        borderRadius="10px"
+        padding="10px"
+        w={{ base: '100%', md: '20vw' }}
+        position={{ base: 'block', md: 'absolute' }}
+        left="0px"
+        top="100px"
+        zIndex="overlay"
+        bg={boxBg}
+        boxShadow="base"
+      >
+        <Flex direction="column" sx={{ gap: '16px' }} {...props}>
+          <Select
+            placeholder="Type of climb"
+            value={climbType}
+            onChange={(event) => setClimbType(event.target.value)}
+            boxShadow="base"
+          >
+            {climbTypes.map((climbType) => (
+              <option key={climbType} value={climbType}>
+                {climbType}
+              </option>
+            ))}
+          </Select>
 
-        <Select
-          placeholder="Type of climb"
-          value={climbType}
-          onChange={(event) => setClimbType(event.target.value)}
-          boxShadow="base"
-        >
-          {climbTypes.map((climbType) => (
-            <option key={climbType} value={climbType}>
-              {climbType}
-            </option>
-          ))}
-        </Select>
+          <Select
+            placeholder="Distance type"
+            value={distanceType}
+            onChange={handleDistanceTypeChange}
+            boxShadow="base"
+          >
+            <option value="Linear">Linear</option>
+            <option value="Driving">Driving</option>
+          </Select>
 
-        <Select
-          placeholder="Distance type"
-          value={distanceType}
-          onChange={handleDistanceTypeChange}
-          boxShadow="base"
-        >
-          <option value="Linear">Linear</option>
-          <option value="Driving">Driving</option>
-        </Select>
+          {distanceSlider}
 
-        {distanceSlider}
+          <HStack align="center" justify="space-between" mr={0}>
+            <Heading ml={4} size="md">
+              Grade
+            </Heading>
+            <RangeSlider
+              color="black"
+              value={gradeRange}
+              onChange={(value) => setGradeRange(value)}
+              onChangeEnd={(value) => setGradeRangeEnd(value)}
+              w="80%"
+              fromArray={gradeArray}
+            />
+          </HStack>
 
-        <HStack align="center" justify="space-between" mr={0}>
-          <Heading ml={4} size="md">
-            Grade
-          </Heading>
-          <RangeSlider
-            value={gradeRange}
-            onChange={(value) => setGradeRange(value)}
-            onChangeEnd={(value) => setGradeRangeEnd(value)}
-            w="80%"
-            fromArray={gradeArray}
+          <FilterSlider
+            color="black"
+            label="Min rating"
+            min={0}
+            max={3}
+            step={0.1}
+            value={stars}
+            onChange={(value) => setStars(value)}
+            onChangeEnd={handleStarsEnd}
           />
-        </HStack>
 
-        <FilterSlider
-          label="Min rating"
-          min={0}
-          max={3}
-          step={0.1}
-          value={stars}
-          onChange={(value) => setStars(value)}
-          onChangeEnd={handleStarsEnd}
-        />
+          <FilterSlider
+            color="black"
+            label="Min Ascents"
+            min={0}
+            max={100}
+            value={ascents}
+            onChange={(value) => setAscents(value)}
+            onChangeEnd={handleAscentsEnd}
+          />
 
-        <FilterSlider
-          label="Min Ascents"
-          min={0}
-          max={100}
-          value={ascents}
-          onChange={(value) => setAscents(value)}
-          onChangeEnd={handleAscentsEnd}
-        />
-
-        <SearchResults climbs={climbs} />
-      </Flex>
+          <SearchResults climbs={climbs} />
+        </Flex>
+      </Box>
     </Container>
   )
 }

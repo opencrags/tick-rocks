@@ -17,6 +17,7 @@ import {
   Alert,
   AlertIcon,
   Box,
+  HStack,
 } from '@chakra-ui/react'
 import { useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
@@ -25,6 +26,8 @@ import Loader from '../components/loader.js'
 import { useAuthorizedFetcher } from '../utils/backend.js'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
+import StarRatings from 'react-star-ratings'
+import { MdRadioButtonChecked, MdRadioButtonUnchecked } from 'react-icons/md'
 
 export default function AddAscent() {
   const { cragId, sectorId, climbId } = useParams()
@@ -78,44 +81,85 @@ export default function AddAscent() {
   return (
     <Container maxWidth="container.md">
       <ClimbBreadcrumb climbId={climbId} extra={[{ text: 'Add ascent' }]} />
-      <Heading>Add ascent</Heading>
-      <FormControl isRequired>
-        <FormLabel>Ascent date</FormLabel>
-        <DatePicker selected={ascentDate} onChange={setAscentDate} />
-      </FormControl>
-      <FormControl isRequired>
-        <FormLabel>Number of attempts</FormLabel>
-        <NumberInput
-          step={1}
-          defaultValue={attempts}
-          min={1}
-          onChange={setAttempts}
-        >
-          <NumberInputField />
-          <NumberInputStepper>
-            <NumberIncrementStepper />
-            <NumberDecrementStepper />
-          </NumberInputStepper>
-        </NumberInput>
-        {attempts == 1 && (
-          <Box>
-            <Alert status="success">
-              <AlertIcon />
-              Flash!
-            </Alert>
-          </Box>
-        )}
-      </FormControl>
-      <FormControl>
-        <FormLabel>Anonymous</FormLabel>
-        <Checkbox
-          isChecked={anonymous}
-          onChange={() => {
-            setAnonymous(!anonymous)
-          }}
-        />
-      </FormControl>
-      <Button onClick={handleSubmit}>Submit</Button>
+      <Heading size="md">Add ascent</Heading>
+      <HStack my="20px">
+        <FormControl isRequired>
+          <FormLabel>Ascent date</FormLabel>
+          <Input
+            as={DatePicker}
+            variant="flushed"
+            selected={ascentDate}
+            onChange={setAscentDate}
+          />
+        </FormControl>
+        <FormControl alignItems="right">
+          <FormLabel>Ascent type</FormLabel>
+          <HStack>
+            <Text> Rotpunkt</Text> <MdRadioButtonChecked />
+          </HStack>
+          <HStack>
+            <Text> Flash</Text> <MdRadioButtonUnchecked />
+          </HStack>
+        </FormControl>
+      </HStack>
+      <HStack my="20px">
+        <FormControl>
+          <FormLabel>Grade opinion</FormLabel>
+          <Input defaultValue="7A" variant="flushed" />
+        </FormControl>
+        <FormControl>
+          <FormLabel>Rating</FormLabel>
+          <StarRatings
+            rating={2}
+            starRatedColor="gold"
+            numberOfStars={5}
+            name="rating"
+            starEmptyColor="gray"
+            starDimension="20px"
+            starSpacing="2px"
+          />
+        </FormControl>
+      </HStack>
+      <HStack my="20px">
+        <FormControl isRequired>
+          <FormLabel>Number of attempts</FormLabel>
+          <NumberInput
+            variant="flushed"
+            step={1}
+            defaultValue={attempts}
+            min={1}
+            onChange={setAttempts}
+          >
+            <NumberInputField />
+            <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+            </NumberInputStepper>
+          </NumberInput>
+          {attempts == 1 && (
+            <Box>
+              <Alert status="success">
+                <AlertIcon />
+                Flash!
+              </Alert>
+            </Box>
+          )}
+        </FormControl>
+      </HStack>
+      <HStack>
+        <FormControl>
+          <FormLabel>Anonymous</FormLabel>
+          <Checkbox
+            isChecked={anonymous}
+            onChange={() => {
+              setAnonymous(!anonymous)
+            }}
+          />
+        </FormControl>
+        <Button color="white" colorScheme="brand" onClick={handleSubmit}>
+          Submit
+        </Button>{' '}
+      </HStack>
     </Container>
   )
 }
