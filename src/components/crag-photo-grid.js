@@ -87,11 +87,11 @@ function CragPhoto({ img, cragId, imgId, userId, ...props }) {
                   position="absolute"
                   bottom="0px"
                 >
-                  Uploaded by {user.display_name}
+                  Uploaded by {user?.display_name}
                 </Box>
               </Fade>
               <Box padding="10px" position="absolute" left="0px" bottom="0px">
-                <Avatar shadow="md" name={user.display_name} />
+                <Avatar shadow="md" name={user?.display_name} />
               </Box>
             </Box>
           </Box>
