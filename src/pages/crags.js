@@ -12,6 +12,7 @@ import {
   Box,
   Text,
   StackDivider,
+  Button,
 } from '@chakra-ui/react'
 import { Link as RouterLink } from 'react-router-dom'
 import Loader from '../components/loader.js'
@@ -46,6 +47,9 @@ export default function Crags() {
 
   return (
     <Container maxWidth="container.sm">
+      <Button as={RouterLink} to="/add-crag">
+        Add crag
+      </Button>
       <Center>
         <VStack
           marginTop="20px"

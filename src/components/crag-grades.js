@@ -6,76 +6,230 @@ import {
   Flex,
   Button,
   Spacer,
+  Container,
+  Text,
 } from '@chakra-ui/react'
 import React, { useState } from 'react'
-import { Link as RouterLink } from 'react-router-dom'
+import { Link as RouterLink, useParams } from 'react-router-dom'
 import Grade from '../components/grade'
-const gradeId = ''
-function CragGrades({ children, ...props }) {
-  const gradeArray = [
-    {
-      grade: 'bfeb8d57-d12b-4876-b77a-b9cd592bbd70',
-      number_of_problems: 19,
-      color: 'blue.400',
-      textColor: 'black',
-    },
-    {
-      grade: 'cafc5e62-dac4-4426-9acf-bad6fee56f6e',
-      number_of_problems: 22,
-      color: 'gray.600',
-      textColor: 'white',
-    },
-    {
-      grade: 'd2de5736-9426-4507-ad2e-851b8d9cdbda',
-      number_of_problems: 19,
-      color: 'gray.900',
-      textColor: 'white',
-    },
-    {
-      grade: '95e95161-abd2-4cae-b956-a77df2eb96ec',
-      number_of_problems: 12,
-      color: 'gray.800',
-      textColor: 'white',
-    },
+import { useClimbs, useCrag } from '../utils/backend'
+const climbId = ''
+function CragGrades({ selection, children, ...props }) {
+  const { cragId } = useParams()
+  const { climbs, error: errorClimbs } = useClimbs({ crag_id: cragId })
+  if (errorClimbs) {
+    return (
+      <Container maxWidth="container.md">
+        <Center>
+          <Text margin="20px">Failed to load climbs.</Text>
+        </Center>
+      </Container>
+    )
+  }
+
+  if (climbs === undefined) {
+    return <Center>Climbs undefined.</Center>
+  }
+
+  if (climbs.length < 1) {
+    return <Center>This crag does not yet have any climbs.</Center>
+  }
+
+  const reducer = (climbs, most_voted_grade) => {
+    if (climbs[most_voted_grade] == null) {
+      climbs[most_voted_grade] = 1
+    } else {
+      ++climbs[most_voted_grade]
+    }
+    return climbs
+  }
+
+  const reducedGrades = climbs
+    .sort((a, b) => (a.itemM > b.itemM ? 1 : -1))
+    .map((reducedGrades) => reducedGrades.most_voted_grade)
+    .reduce(reducer, {})
+
+  const numberOfClimbs = Object.keys(climbs).length
+
+  const gradeColorScheme = [
+    ['1', 'Green'],
+    ['2', 'Green'],
+    ['3', 'Green'],
+    ['4', 'Green'],
+    ['4+', 'Green'],
+    ['5', 'Green'],
+    ['5+', 'Green'],
+    ['6A', 'Green'],
+    ['6A+', 'Green'],
+    ['6B', 'Green'],
+    ['6B+', 'Green'],
+    ['6C', 'Green'],
+    ['6C+', 'Green'],
+    ['7A', 'Green'],
+    ['7A+', 'Green'],
+    ['7B', 'Green'],
+    ['7B+', 'Green'],
+    ['7C', 'Green'],
+    ['7C+', 'Green'],
+    ['8A', 'Green'],
+    ['8A+', 'Green'],
+    ['8B', 'Green'],
+    ['8B+', 'Green'],
+    ['8C', 'Green'],
+    ['8C+', 'Green'],
+    ['9A', 'Green'],
   ]
 
   return (
     <Box id="cragGrades" mt="5px" mb="5px">
-      <Box ml={{ base: '3vW', md: '15vw' }} mr={{ base: '3vW', md: '15vw' }}>
+      <Box mx={{ base: '10px', xl: '10vw' }}>
         <Flex align="flex-end" justify="center" height="200px" direction="row">
-          {gradeArray.map((grades) => (
-            <Flex
-              minWidth="40px"
-              width="20vw"
-              direction="column"
-              as={RouterLink}
-              to={`list/filter=${grades.grade}`}
-              key={grades.grade}
-            >
-              <Box>
-                <Box
-                  borderColor="brand.100"
-                  fontSize="sm"
-                  boxShadow="2px 2px 4px -2px rgba(0,0,0,0.56)"
-                  key={grades}
-                  height={`1${grades.number_of_problems}px`}
-                  bgColor={grades.color}
-                  color={grades.textColor}
-                  _hover={{ mb: '5px' }}
-                  transition="all .2s"
-                >
-                  <Center>{grades.number_of_problems}</Center>
+          {Object.entries(reducedGrades).map((grade) => {
+            const height = (grade[1] / numberOfClimbs) * 400
+            return (
+              <Flex
+                minWidth="40px"
+                width="20vw"
+                direction="column"
+                as={RouterLink}
+                to={`list/filter=?${grade[0]}`}
+              >
+                <Box>
+                  <Box
+                    borderColor="brand.100"
+                    fontSize="sm"
+                    boxShadow="2px 2px 4px -2px rgba(0,0,0,0.56)"
+                    key={grade[0]}
+                    maxHeight="100%"
+                    height={`${height}px`}
+                    bgColor="gray.800"
+                    color="white"
+                    _hover={{ mb: '5px' }}
+                    transition="all .2s"
+                  >
+                    <Center>{grade[1]}</Center>
+                  </Box>
+                  <Center>
+                    <Grade gradeId={grade[0]} />
+                  </Center>
                 </Box>
-                <Center color="white">
-                  <Grade gradeId={grades.grade} />
-                </Center>
-              </Box>
-            </Flex>
-          ))}
+              </Flex>
+            )
+          })}
         </Flex>
       </Box>
     </Box>
   )
 }
 
-export { CragGrades }
+function SectorGrades({ sectorId, selection, children, ...props }) {
+  const { climbs, error: errorClimbs } = useClimbs({ sector_id: sectorId })
+  if (errorClimbs) {
+    return (
+      <Container maxWidth="container.md">
+        <Center>
+          <Text margin="20px">Failed to load climbs.</Text>
+        </Center>
+      </Container>
+    )
+  }
+
+  if (climbs === undefined) {
+    return <Center>Climbs undefined.</Center>
+  }
+
+  if (climbs.length < 1) {
+    return (
+      <Center padding="5px" bg="blackAlpha.600">
+        This crag does not yet have any climbs.
+      </Center>
+    )
+  }
+
+  const reducer = (climbs, most_voted_grade) => {
+    if (climbs[most_voted_grade] == null) {
+      climbs[most_voted_grade] = 1
+    } else {
+      ++climbs[most_voted_grade]
+    }
+    return climbs
+  }
+
+  const reducedGrades = climbs
+    .sort((a, b) => (a.itemM > b.itemM ? 1 : -1))
+    .map((reducedGrades) => reducedGrades.most_voted_grade)
+    .reduce(reducer, {})
+
+  const numberOfClimbs = Object.keys(climbs).length
+
+  const gradeColorScheme = [
+    ['1', 'Green'],
+    ['2', 'Green'],
+    ['3', 'Green'],
+    ['4', 'Green'],
+    ['4+', 'Green'],
+    ['5', 'Green'],
+    ['5+', 'Green'],
+    ['6A', 'Green'],
+    ['6A+', 'Green'],
+    ['6B', 'Green'],
+    ['6B+', 'Green'],
+    ['6C', 'Green'],
+    ['6C+', 'Green'],
+    ['7A', 'Green'],
+    ['7A+', 'Green'],
+    ['7B', 'Green'],
+    ['7B+', 'Green'],
+    ['7C', 'Green'],
+    ['7C+', 'Green'],
+    ['8A', 'Green'],
+    ['8A+', 'Green'],
+    ['8B', 'Green'],
+    ['8B+', 'Green'],
+    ['8C', 'Green'],
+    ['8C+', 'Green'],
+    ['9A', 'Green'],
+  ]
+
+  return (
+    <Box id="cragGrades" mt="5px" mb="5px">
+      <Box>
+        <Flex align="flex-end" justify="center" height="200px" direction="row">
+          {Object.entries(reducedGrades).map((grade) => {
+            const height = (grade[1] / numberOfClimbs) * 300
+            return (
+              <Flex
+                flexGrow="1"
+                direction="column"
+                as={RouterLink}
+                to={`list/filter=?${grade[0]}`}
+              >
+                <Box>
+                  <Box
+                    borderColor="brand.100"
+                    fontSize="sm"
+                    boxShadow="2px 2px 4px -2px rgba(0,0,0,0.56)"
+                    key={grade[0]}
+                    maxHeight="100%"
+                    height={`${height}px`}
+                    bgColor="gray.800"
+                    color="white"
+                    _hover={{ mb: '5px' }}
+                    transition="all .2s"
+                  >
+                    <Center>{grade[1]}</Center>
+                  </Box>
+                  <Center>
+                    <Grade gradeId={grade[0]} />
+                  </Center>
+                </Box>
+              </Flex>
+            )
+          })}
+        </Flex>
+      </Box>
+    </Box>
+  )
+}
+
+export { CragGrades, SectorGrades }

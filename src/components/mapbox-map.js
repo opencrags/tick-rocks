@@ -11,6 +11,7 @@ export default function MapboxMap({
   onMapLoad,
   mapEffects,
   deps,
+  h = '50vh',
 }) {
   const [mapLoaded, setMapLoaded] = useState(false)
   const [stylesLoaded, setStylesLoaded] = useState(false)
@@ -63,5 +64,5 @@ export default function MapboxMap({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lat, lng, zoom, effects, ...deps, stylesLoaded, mapLoaded])
 
-  return <Box ref={mapContainer} className="map-container" h="50vh" />
+  return <Box ref={mapContainer} className="map-container" h={h} />
 }

@@ -11,6 +11,7 @@ import MapPopupPortal from './map-popup-portal'
 import MapPopup from './map-popup'
 
 export default function SearchMap({
+  h,
   searchArea,
   climbs,
   location,
@@ -73,6 +74,7 @@ export default function SearchMap({
   return (
     <>
       <MapboxMap
+        h={h}
         lng={location.longitude}
         lat={location.latitude}
         zoom={zoom}

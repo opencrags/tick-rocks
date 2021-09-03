@@ -28,7 +28,6 @@ import { ParallaxProvider } from 'react-scroll-parallax'
 import FilterSearch from './pages/filter-search'
 import VoteCragDescription from './pages/vote-crag-description'
 import VoteClimbBetaVideo from './pages/vote-climb-beta-video'
-import BetaBar from './components/betabar'
 import AddAscent from './pages/add-ascent'
 import UserProfile from './pages/user-profile'
 import Map from './pages/map'
@@ -38,7 +37,6 @@ import CragList from './pages/crag-list'
 function App() {
   return (
     <ChakraProvider resetCSS theme={theme}>
-      <BetaBar />
       <NavBar />
       <ParallaxProvider>
         <Switch>

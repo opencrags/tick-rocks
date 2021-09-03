@@ -47,7 +47,7 @@ export default function UserProfile() {
       <Box h="100%">
         <UserProfileBanner>
           {' '}
-          <CragPhotoGrid />
+          <CragPhotoGrid userId={userId} />
         </UserProfileBanner>
       </Box>
     </>

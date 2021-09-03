@@ -9,6 +9,7 @@ import {
   Button,
   NumberInput,
   NumberInputField,
+  HStack,
 } from '@chakra-ui/react'
 import Loader from '../components/loader.js'
 import { useState } from 'react'
@@ -93,28 +94,34 @@ export default function AddSector() {
       <CragBreadcrumb cragId={cragId} extra={[{ text: 'Add sector' }]} />
       <Heading>Add sector</Heading>
       <FormControl id="sector-name" isRequired>
-        <FormLabel>Sector name</FormLabel>
+        <FormLabel margin="0px">Sector name</FormLabel>
         <Input
+          variant="flushed"
+          size="lg"
           placeholder="Sector name"
           onChange={(event) => setSectorName(event.target.value)}
         />
       </FormControl>
-      <FormControl id="longitude">
-        <FormLabel>Latitude</FormLabel>
-        <NumberInput precision={7}>
-          <NumberInputField
-            onChange={(event) => setLatitude(event.target.value)}
-          />
-        </NumberInput>
-      </FormControl>
-      <FormControl id="longitude">
-        <FormLabel>Longitude</FormLabel>
-        <NumberInput precision={7}>
-          <NumberInputField
-            onChange={(event) => setLongitude(event.target.value)}
-          />
-        </NumberInput>
-      </FormControl>
+      <HStack>
+        <FormControl id="longitude">
+          <FormLabel margin="0px">Latitude</FormLabel>
+          <NumberInput variant="flushed" precision={7}>
+            <NumberInputField
+              placeholder="13"
+              onChange={(event) => setLatitude(event.target.value)}
+            />
+          </NumberInput>
+        </FormControl>
+        <FormControl id="longitude">
+          <FormLabel margin="0px">Longitude</FormLabel>
+          <NumberInput variant="flushed" precision={7}>
+            <NumberInputField
+              placeholder="37"
+              onChange={(event) => setLongitude(event.target.value)}
+            />
+          </NumberInput>
+        </FormControl>
+      </HStack>
       <Button onClick={handleSubmit}>Submit</Button>
     </Container>
   )

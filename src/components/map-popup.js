@@ -3,9 +3,10 @@ import { Flex, Text, VStack } from '@chakra-ui/layout'
 import { useState } from 'react'
 import { IconButton } from '@chakra-ui/button'
 import SearchResult from './search-result'
-
+import { useColorMode, useColorModeValue } from '@chakra-ui/color-mode'
 export default function MapPopup({ climbs }) {
   const [climbIndex, setClimbIndex] = useState(0)
+  const textColor = useColorModeValue('black', 'black')
 
   if (!climbs) return null
 
@@ -19,6 +20,7 @@ export default function MapPopup({ climbs }) {
   if (nClimbs > 1) {
     leftArrow = (
       <IconButton
+        color={textColor}
         aria-label="previous-climb"
         icon={<ChevronLeftIcon />}
         flex="0 0 0"
@@ -31,6 +33,7 @@ export default function MapPopup({ climbs }) {
     )
     rightArrow = (
       <IconButton
+        color={textColor}
         aria-label="next-climb"
         icon={<ChevronRightIcon />}
         flex="0 0 0"
@@ -47,8 +50,14 @@ export default function MapPopup({ climbs }) {
   }
 
   return (
-    <VStack align="center">
-      <Flex align="center" direction="row" mt={2} width="100%">
+    <VStack color={textColor} align="center">
+      <Flex
+        align="center"
+        direction="row"
+        mt={2}
+        width="100%"
+        color={textColor}
+      >
         {leftArrow}
         <SearchResult climb={climb} />
         {rightArrow}

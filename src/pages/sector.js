@@ -24,6 +24,7 @@ import {
   AlertDescription,
   CloseButton,
   IconButton,
+  Wrap,
 } from '@chakra-ui/react'
 import { useColorMode, useColorModeValue } from '@chakra-ui/color-mode'
 import { Link as RouterLink, useParams } from 'react-router-dom'
@@ -42,7 +43,8 @@ import { CalcDistance } from '../components/cordinate-distance-calc.js'
 import StarRatings from 'react-star-ratings'
 import { ChevronDownIcon, EditIcon } from '@chakra-ui/icons'
 import ModalLink from '../components/modal-link.js'
-
+import AddClimb from './add-climb.js'
+import AddImage from './add-image.js'
 import {
   useCrag,
   useSectors,
@@ -56,6 +58,7 @@ import {
 import { useState } from 'react'
 import { PageFooter } from '../components/page-footer.js'
 import { isEmpty } from 'lodash'
+import ModalDialog from '../components/modal-dialog.js'
 
 export default function Sector() {
   const bg = useColorModeValue('offwhite', 'gray.700')
@@ -151,6 +154,7 @@ export default function Sector() {
               fontWeight="normal"
               fontSize={{ base: 'sm', sm: 'sm', md: 'md' }}
               letterSpacing="1.5pt"
+              color="white"
               _hover={{ color: 'brand.200' }}
               transition="all .1s"
             >
@@ -162,24 +166,31 @@ export default function Sector() {
               </Center>
             </MenuButton>
             <MenuList>
-              <MenuItem
-                as={RouterLink}
-                to={`/crags/${cragId}/sectors/${sector.id}/add-climb`}
-              >
-                Add climb
-              </MenuItem>
-              <MenuItem
-                as={RouterLink}
-                to={`/crags/${cragId}/sectors/${sector.id}/add-image`}
-              >
-                Add topo
-              </MenuItem>
+              <ModalDialog button={<MenuItem>Add climb</MenuItem>}>
+                <AddClimb />
+              </ModalDialog>
+
+              <ModalDialog button={<MenuItem>Add topo</MenuItem>}>
+                <AddImage />
+              </ModalDialog>
             </MenuList>
           </Menu>
         </CragBannerMenu>
 
         <Flex display={{ base: 'wrap', md: 'flex' }} justify="Center">
           <Flex direction="column" mb="10px">
+            <Box>
+              {images &&
+                images.map((image) => (
+                  <ImageWithLines
+                    key={image.id}
+                    cragId={cragId}
+                    sectorId={sectorId}
+                    sectorName={mostVoted(sector.name_votes)}
+                    image={image}
+                  />
+                ))}
+            </Box>
             <Box mt={1}>
               {climbs.filter(
                 (climb) =>
@@ -187,15 +198,30 @@ export default function Sector() {
                   !climbIdsWithLines.has(climb.id)
               ).length >= 1 && (
                 <>
-                  <Alert status="warning">
-                    <Flex direction="column">
-                      <Flex direction="row">
+                  <Alert status="warning" colorScheme="red">
+                    <Flex direction="column" w="100%">
+                      <Flex direction="row" w="100%">
                         <AlertIcon />
-                        <AlertTitle mr={2}>
-                          There are undrawn lines on this sector.
-                          <Text fontWeight="normal">
-                            Please edit and add topo to contribute.
-                          </Text>
+                        <AlertTitle mr={2} w="100%">
+                          <Flex
+                            display={{ base: 'wrap', md: 'flex' }}
+                            justify="space-between"
+                          >
+                            <Box>
+                              There are undrawn lines on this sector.
+                              <Text fontWeight="normal">
+                                Please edit and add topo to contribute.
+                              </Text>
+                            </Box>
+                            <Button
+                              size="sm"
+                              as={RouterLink}
+                              to={`${sector.id}/list`}
+                            >
+                              List all problems of{' '}
+                              {mostVoted(sector.name_votes)}
+                            </Button>
+                          </Flex>
                         </AlertTitle>
                       </Flex>
                       <AlertDescription ml={{ base: 0, lg: 10 }}>
@@ -231,19 +257,6 @@ export default function Sector() {
                   </Alert>
                 </>
               )}
-            </Box>
-
-            <Box>
-              {images &&
-                images.map((image) => (
-                  <ImageWithLines
-                    key={image.id}
-                    cragId={cragId}
-                    sectorId={sectorId}
-                    sectorName={mostVoted(sector.name_votes)}
-                    image={image}
-                  />
-                ))}
             </Box>
           </Flex>
           <Box>
@@ -378,7 +391,7 @@ function ImageWithLines({ cragId, sectorId, image, sectorName }) {
               onMouseMove={handleMouseMove}
             />
           </Box>
-          <Box>
+          <Box flexGrow="1">
             <Flex direction="column">
               <Flex padding="10px" justify="space-between" alignItems="center">
                 <Box>

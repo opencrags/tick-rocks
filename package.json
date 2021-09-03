@@ -24,6 +24,8 @@
         "react-dropzone": "^11.3.4",
         "react-icons": "^4.2.0",
         "react-image-gallery": "^1.2.7",
+        "react-linkify": "^1.0.0-alpha",
+        "react-medium-image-zoom": "^4.3.5",
         "react-router": "^5.2.0",
         "react-router-dom": "^5.2.0",
         "react-scripts": "4.0.3",

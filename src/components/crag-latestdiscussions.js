@@ -14,7 +14,7 @@ import { AddIcon } from '@chakra-ui/icons'
 import { useColorMode, useColorModeValue } from '@chakra-ui/color-mode'
 function CragLatestDiscussions({ children, ...props }) {
   const bg = useColorModeValue('offwhite', 'gray.700')
-  const boxBg = useColorModeValue('gray.300', 'gray.800')
+  const boxBg = useColorModeValue('gray.100', 'gray.800')
   const buttonBg = useColorModeValue('gray.200', 'gray.600')
   const headingShadow = ('3px 3px 3px rgba(0, 0, 0, 0.2)', 'none')
   return (
@@ -73,7 +73,7 @@ function CragLatestDiscussions({ children, ...props }) {
         padding="5px"
         {...props}
       >
-        <Box bg={boxBg} padding="10px" margin="5px" flex="0 0 33%">
+        <Box bg={boxBg} padding="10px" margin="5px">
           <Flex m="1">
             <Tooltip label="Rasmus E" aria-label="A tooltip">
               <Avatar
@@ -105,7 +105,7 @@ function CragLatestDiscussions({ children, ...props }) {
           </Flex>
         </Box>
 
-        <Box bg={boxBg} padding="10px" margin="5px" flex="0 0 33%">
+        <Box bg={boxBg} padding="10px" margin="5px">
           <Flex m="1">
             <Tooltip label="Åke R" aria-label="A tooltip">
               <Avatar
@@ -137,7 +137,7 @@ function CragLatestDiscussions({ children, ...props }) {
           </Flex>
         </Box>
 
-        <Box bg={boxBg} padding="10px" margin="5px" flex="0 0 33%">
+        <Box bg={boxBg} padding="10px" margin="5px">
           <Flex m="1">
             <Tooltip label="Richard L" aria-label="A tooltip">
               <Avatar

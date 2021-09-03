@@ -35,10 +35,6 @@ export default function Landing() {
         <Box display={{ base: 'block', md: 'none' }}>
           <video autoPlay muted loop width="100%" src="emilstand.mp4" />
         </Box>{' '}
-        <Box position="relative" bottom="100px">
-          Move of the Month September: Emil Abrahamsson, Total Eclipse, 8A+, Cul
-          di Chen, Fontaniebleau, France
-        </Box>
       </Box>
       <Box
         position="relative"
@@ -47,6 +43,10 @@ export default function Landing() {
         height="100%"
       >
         <Box>
+          <Box position="absolute" bottom="0px" padding="10px" color="white">
+            Big tick Move of the Month - September: Emil Abrahamsson, Total
+            Eclipse, 8A+, Cul de Chen, Fontaniebleau, France.
+          </Box>
           <Flex direction="column" align="center" justify="center">
             <Box mt={{ base: '2vh', md: '15vh' }}>
               <Flex
