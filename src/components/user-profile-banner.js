@@ -66,8 +66,8 @@ export default function UserProfileBanner({ children, ...props }) {
                 justify="space-between"
               >
                 <Flex align="center">
-                  <Avatar name={user.display_name} size="xl" mr="10px" />
-                  <Heading>{user.display_name}</Heading>
+                  <Avatar name={user?.display_name} size="xl" mr="10px" />
+                  <Heading>{user?.display_name}</Heading>
                 </Flex>
                 <Box></Box>
                 <VStack></VStack>
@@ -99,7 +99,7 @@ export default function UserProfileBanner({ children, ...props }) {
                 position="relative"
                 w="100%"
               >
-                <MenuButton to={`/user/${user.id}`}>Latest updates</MenuButton>{' '}
+                <MenuButton to={`/user/${user?.id}`}>Latest updates</MenuButton>{' '}
                 <MenuButton>Ticks</MenuButton>
                 <MenuButton>Pre-ticks</MenuButton>{' '}
                 <MenuButton>Photos</MenuButton>

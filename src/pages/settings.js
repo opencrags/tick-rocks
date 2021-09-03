@@ -27,7 +27,7 @@ export default function Settings() {
 
   useEffect(() => {
     if (displayName === null && user) {
-      setDisplayName(user.display_name)
+      setDisplayName(user?.display_name)
     }
   }, [displayName, user])
 
@@ -39,7 +39,7 @@ export default function Settings() {
             display_name: displayName,
           }),
         })
-      : authorizedFetcher(`/users/${user.sub}`, {
+      : authorizedFetcher(`/users/${user?.sub}`, {
           method: 'PUT',
           body: JSON.stringify({
             display_name: displayName,

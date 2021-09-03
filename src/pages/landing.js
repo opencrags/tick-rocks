@@ -188,9 +188,9 @@ function SignedIn() {
         <Center marginTop="5px">
           <HStack>
             {' '}
-            <Avatar name={user.display_name} size="xs" />
+            <Avatar name={user?.display_name} size="xs" />
             <Text>
-              Welcome back {user.display_name}
+              Welcome back {user?.display_name}
               ! <br />
               What would you like to do today?
             </Text>
