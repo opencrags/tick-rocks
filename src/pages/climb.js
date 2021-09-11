@@ -24,6 +24,11 @@ import {
   TagRightIcon,
   Tooltip,
   Wrap,
+  Alert,
+  AlertIcon,
+  CloseButton,
+  Image,
+  Collapse,
 } from '@chakra-ui/react'
 import Linkify from 'react-linkify'
 import { Link as RouterLink, useParams } from 'react-router-dom'
@@ -36,9 +41,11 @@ import {
   useLines,
   useImage,
   useAscents,
+  useBetaVideos,
   countVotes,
   mostVoted,
   useUser,
+  useCurrentUser,
 } from '../utils/backend.js'
 import LineImage from '../components/line-image.js'
 import { ClimbBreadcrumb } from '../components/breadcrumb.js'
@@ -56,18 +63,24 @@ import { useColorMode, useColorModeValue } from '@chakra-ui/color-mode'
 import { AddIcon, SunIcon } from '@chakra-ui/icons'
 import ModalDialog from '../components/modal-dialog.js'
 import AddAscent from './add-ascent.js'
+import Comments from './comments.js'
+import AddBetaVideo from './add-beta-video.js'
+import React from 'react'
 
 export default function Climb() {
   const { cragId, sectorId, climbId } = useParams()
   const { climb, error: errorClimb } = useClimb(climbId)
   const { lines, error: errorLines } = useLines({ climb_id: climbId })
   const { ascents, error: errorAscents } = useAscents({ climb_id: climbId })
+  const { betaVideos, error: errorBetaVideos } = useBetaVideos({
+    climb_id: climbId,
+  })
 
   const bg = useColorModeValue('offwhite', 'gray.700')
   const boxBg = useColorModeValue('gray.100', 'gray.800')
   const buttonBg = useColorModeValue('gray.100', 'gray.600')
 
-  if (errorClimb || errorLines || errorAscents) {
+  if (errorClimb || errorLines || errorAscents || errorBetaVideos) {
     return (
       <Container maxWidth="container.md">
         <Center>
@@ -82,7 +95,7 @@ export default function Climb() {
   }
 
   const countedGradeVotes = countVotes(climb.grade_votes)
-  const maxGradeVoteCount = Math.max(Object.values(countedGradeVotes))
+  const maxGradeVoteCount = Math.max(Object?.values(countedGradeVotes))
 
   return (
     <Box>
@@ -150,6 +163,18 @@ export default function Climb() {
                   justify="center"
                 >
                   <Box>
+                    <Box>
+                      <Alert status="info">
+                        <AlertIcon />
+                        New comment! Rasmus: Kul och så men va i hela jäv...
+                        View now{' '}
+                        <CloseButton
+                          position="absolute"
+                          right="8px"
+                          top="8px"
+                        />
+                      </Alert>
+                    </Box>
                     {lines.length === 0 ? (
                       <Box boxShadow="xl">
                         <Text>
@@ -170,38 +195,51 @@ export default function Climb() {
                         ))}
                       </Flex>
                     )}
-                    <Box mt="10px">
-                      <Box
-                        display={{ base: 'none', md: 'block' }}
-                        position="absolute"
-                        transform="translate(-130%, 0%)"
-                      >
-                        <Heading size="sm">#1</Heading>
-                      </Box>
-                      <Box
-                        display={{ base: 'block', md: 'none' }}
-                        pl="10px"
-                        pb="10px"
-                      >
-                        <Heading size="sm">Most popular beta footage</Heading>
-                      </Box>
-                      <VStack>
-                        <Box boxShadow="lg" width="100%">
-                          <AspectRatio ratio={16 / 9} width="100%">
-                            <iframe
-                              src="https://www.youtube.com/embed/0pFZYjmuTmE"
-                              title="YouTube video player"
-                              frameborder="0"
-                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-                              objectFit="cover"
-                            ></iframe>
-                          </AspectRatio>
+                    <Box>
+                      {betaVideos?.length > 0 ? (
+                        <Box>
+                          <Box mt="10px">
+                            <Box
+                              display={{ base: 'none', md: 'block' }}
+                              position="absolute"
+                              transform="translate(-110%, 0%)"
+                            >
+                              <Heading size="sm">#1 Beta video</Heading>
+                            </Box>
+                            <Box
+                              display={{ base: 'block', md: 'none' }}
+                              pl="10px"
+                              pb="10px"
+                            >
+                              <Heading size="sm">
+                                Most popular beta video
+                              </Heading>
+                            </Box>
+                            <Box boxShadow="lg" width="100%">
+                              <AspectRatio ratio={16 / 9} width="100%">
+                                <iframe
+                                  src={`https://www.youtube.com/embed/${youtube_parser(
+                                    betaVideos[0]?.video_url
+                                  )}`}
+                                  title="YouTube video player"
+                                  frameborder="0"
+                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                                  objectFit="cover"
+                                ></iframe>
+                              </AspectRatio>
+                            </Box>
+                          </Box>
                         </Box>
-                      </VStack>
+                      ) : (
+                        <Box></Box>
+                      )}
                     </Box>
                     <Box mt="20px">
-                      <Box pl="10px" pb="10px">
-                        <CragLatestDiscussions direction="column" />
+                      <Box pl="10px" pb="10px" mx="10px">
+                        <Heading fontSize={{ base: 'md', md: 'xl' }} mb="10px">
+                          Comments
+                        </Heading>
+                        <Comments relatedId={climbId} wrap={false} />
                       </Box>
                     </Box>
                   </Box>
@@ -364,29 +402,34 @@ export default function Climb() {
                       <Box mt="10px" padding="10px" bgColor={boxBg}>
                         <Flex justify="space-between" align="baseline">
                           <Heading size="sm">Beta videos</Heading>
-
-                          <LinkBox
-                            as={RouterLink}
-                            to={`/crags/${cragId}/sectors/${sectorId}/climbs/${climbId}/vote-climb-beta-video`}
+                          <ModalDialog
+                            button={
+                              <Box>
+                                <Button
+                                  size="sm"
+                                  shadow="md"
+                                  colorScheme="brand"
+                                  color="white"
+                                >
+                                  Add
+                                </Button>
+                              </Box>
+                            }
                           >
-                            <Button size="sm" colorScheme="brand" color="white">
-                              Add
-                            </Button>
-                          </LinkBox>
+                            <AddBetaVideo />
+                          </ModalDialog>
                         </Flex>
 
-                        <OrderedList>
-                          <ListItem>
-                            <Link href="https://www.youtube.com/watch?v=0pFZYjmuTmE">
-                              Username - Date - TimeStamp
-                            </Link>
-                          </ListItem>
-                          <ListItem>
-                            <Link href="https://www.youtube.com/watch?v=0pFZYjmuTmE">
-                              Username - Date - TimeStamp
-                            </Link>
-                          </ListItem>
-                        </OrderedList>
+                        <Box>
+                          {betaVideos?.length === 0
+                            ? 'There are no beta videos.'
+                            : betaVideos?.map((betaVideo) => (
+                                <BetaVideo
+                                  key={betaVideo.id}
+                                  betaVideo={betaVideo}
+                                />
+                              ))}
+                        </Box>
                       </Box>
                       <Box mt="10px" padding="10px" bgColor={boxBg}>
                         <Flex justify="space-between" align="baseline">
@@ -444,13 +487,7 @@ export default function Climb() {
                             </ModalDialog>
                           </Box>
                         </Flex>
-                        {ascents.length === 0
-                          ? 'There are no ascents.'
-                          : ascents
-                              .filter((ascent) => ascent.public === true)
-                              .map((ascent) => (
-                                <Ascent key={ascent.id} ascent={ascent} />
-                              ))}
+                        <Ascents ascents={ascents} />
                       </Box>
                       <Box padding="10px" bgColor={boxBg} mt="10px">
                         <Flex justify="space-between" align="baseline">
@@ -473,6 +510,42 @@ export default function Climb() {
   )
 }
 
+function Ascents({ ascents }) {
+  const [show, setShow] = React.useState(false)
+  const handleToggle = () => setShow(!show)
+  const startingHeight = {}
+  return (
+    <Box>
+      <Collapse startingHeight="600px" in={show}>
+        {ascents.length === 0
+          ? 'There are no ascents.'
+          : ascents
+              .filter((ascent) => ascent.public === true)
+              .map((ascent) => <Ascent key={ascent.id} ascent={ascent} />)}
+      </Collapse>{' '}
+      {ascents.length > 9 ? (
+        <Box>
+          {show ? (
+            ''
+          ) : (
+            <Button
+              w="100%"
+              onClick={handleToggle}
+              mt="5px"
+              colorScheme="gray"
+              boxShadow="md"
+            >
+              View all
+            </Button>
+          )}
+        </Box>
+      ) : (
+        ''
+      )}
+    </Box>
+  )
+}
+
 function Ascent({ ascent }) {
   const { user } = useUser(ascent.user_id)
   const RedPoint = (props) => (
@@ -484,7 +557,7 @@ function Ascent({ ascent }) {
     </Icon>
   )
   const ascentType =
-    ascent.attempts > 1 ? (
+    ascent.ascentType > 1 ? (
       <HStack spacing={4}>
         <Tooltip
           closeDelay={500}
@@ -515,7 +588,6 @@ function Ascent({ ascent }) {
         </Tooltip>
       </HStack>
     )
-
   return (
     <Skeleton
       borderBottom="1px"
@@ -524,15 +596,15 @@ function Ascent({ ascent }) {
     >
       <Box mt="7px" mb="7px" fontSize="xs">
         <Flex justify="flex-start">
-          <Box w="50px" as={RouterLink} to={`/user/${user.id}`}>
-            <Avatar h="40px" w="40px" name={user.display_name}></Avatar>
+          <Box w="50px" as={RouterLink} to={`/user/${user?.id}`}>
+            <Avatar h="40px" w="40px" name={user?.display_name}></Avatar>
           </Box>
           <Flex direction="column" flexGrow="5">
             <Flex justify="space-between">
               <Box
                 fontWeight="semibold"
                 as={RouterLink}
-                to={`/user/${user.id}`}
+                to={`/user/${user?.id}`}
               >
                 <Text> {user?.display_name || 'Unnamed user'} </Text>
               </Box>
@@ -541,13 +613,40 @@ function Ascent({ ascent }) {
                 {new Date(ascent.ascent_date).toISOString().slice(0, 10)}
               </Box>
               <Box>
-                <Button ml="5px" colorScheme="gray" size="xs">
-                  Edit
-                </Button>
+                {user?.id === useCurrentUser().user?.id ? (
+                  <Box>
+                    <ModalDialog
+                      button={
+                        <Box>
+                          <Button size="xs">Edit</Button>
+                        </Box>
+                      }
+                    >
+                      <AddAscent ascent={ascent} />
+                    </ModalDialog>
+                  </Box>
+                ) : (
+                  ''
+                )}
               </Box>
             </Flex>
             <HStack>
-              <Box>{ascentType}</Box>
+              <Box>
+                <HStack spacing={4}>
+                  <Tooltip
+                    closeDelay={500}
+                    hasArrow
+                    label={ascent.attempts}
+                    bg="gray.300"
+                    color="black"
+                  >
+                    <Tag size="sm" variant="subtle" colorScheme="red">
+                      <TagLeftIcon boxSize="15px" as={RedPoint} color="red" />
+                      <TagLabel size="sm">{ascent.ascent_type}</TagLabel>
+                    </Tag>
+                  </Tooltip>
+                </HStack>
+              </Box>
               <Box>
                 <Grade />
               </Box>
@@ -565,12 +664,65 @@ function Ascent({ ascent }) {
             </HStack>
             <Box>
               <Text fontSize="xs">
-                <Linkify>
-                  Såååå jävla bra, höger sen vänster sen höger sen vänster omg
-                </Linkify>
+                <Linkify>{ascent.description}</Linkify>
               </Text>
             </Box>
           </Flex>
+        </Flex>
+      </Box>
+    </Skeleton>
+  )
+}
+
+function BetaVideo({ betaVideo }) {
+  const { user } = useUser(betaVideo.user_id)
+  const youtubeVideoId = youtube_parser(betaVideo.video_url)
+
+  return (
+    <Skeleton
+      borderBottom="1px"
+      _last={{ borderBottom: '0px' }}
+      isLoaded={user !== undefined}
+    >
+      <Box mt="7px" mb="7px" fontSize="xs">
+        <Flex justify="space-between" align="center">
+          <Flex direction="column">
+            <Flex align="center">
+              <Box minW="80px" maxW="80px">
+                <Link href={betaVideo.video_url}>
+                  <Image
+                    src={`https://img.youtube.com/vi/${youtubeVideoId}/sddefault.jpg`}
+                  ></Image>
+                </Link>
+              </Box>
+              <Flex ml="10px" direction="column">
+                <Heading size="xs" as={RouterLink} to={`/user/${user?.id}`}>
+                  {user?.display_name || 'Unnamed user'}
+                </Heading>
+                <Link href={betaVideo.video_url}>{betaVideo.timestamp}</Link>
+              </Flex>
+            </Flex>
+          </Flex>
+          <Box>
+            {user?.id === useCurrentUser().user?.id ? (
+              <VStack align="right">
+                <Box>
+                  <Button size="xs">Like</Button>
+                </Box>
+                <ModalDialog
+                  button={
+                    <Box>
+                      <Button size="xs">Edit</Button>
+                    </Box>
+                  }
+                ></ModalDialog>
+              </VStack>
+            ) : (
+              <Box>
+                <Button size="xs">Like</Button>
+              </Box>
+            )}
+          </Box>
         </Flex>
       </Box>
     </Skeleton>
@@ -596,8 +748,15 @@ function ImageWithLines({ line }) {
   }
 
   return (
-    <Box marginTop="10px" boxShadow="lg" bg={boxBg}>
+    <Box marginTop="5px" boxShadow="lg" bg={boxBg}>
       <LineImage image={image} lines={[line]} />
     </Box>
   )
+}
+
+function youtube_parser(url) {
+  var regExp =
+    /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/
+  var match = url.match(regExp)
+  return match && match[7].length == 11 ? match[7] : false
 }

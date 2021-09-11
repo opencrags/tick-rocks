@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import useSwr from 'swr'
+import useSwr, { mutate } from 'swr'
 import { useAuth0 } from '@auth0/auth0-react'
 
 const useToken = () => {
@@ -204,6 +204,23 @@ const useCragPhotos = (query, limit = 20, offset = 0) => {
   return { cragPhotos, error }
 }
 
+const useComments = (relatedId, limit = 20, offset = 0) => {
+  const {
+    data: comments,
+    error,
+    mutate,
+  } = useBackend(
+    relatedId
+      ? `/comments?related_id=${relatedId}&limit=${limit}&offset=${offset}`
+      : null,
+    {
+      method: 'GET',
+    }
+  )
+
+  return { comments, error, mutate }
+}
+
 const useGradeSystemGrades = () => {
   const { data: gradeSystemGrades, error } = useBackend('/grade-system-grades')
   return { gradeSystemGrades, error }
@@ -252,7 +269,7 @@ const useUserVote = (votes) => {
       error,
     }
   } else {
-    const userVotes = votes.filter((vote) => vote.user_id === user.sub)
+    const userVotes = votes.filter((vote) => vote.user_id === user?.sub)
     const userVote = userVotes && userVotes.length >= 1 ? userVotes[0] : null
     return {
       userVote,
@@ -275,6 +292,16 @@ const useSearchClimbs = (body, params) => {
 const useAscents = (query, limit = 20, offset = 0) => {
   const { data: ascents, error } = useQuery('ascents', query, limit, offset)
   return { ascents, error }
+}
+
+const useBetaVideos = (query, limit = 20, offset = 0) => {
+  const { data: betaVideos, error } = useQuery(
+    'beta_videos',
+    query,
+    limit,
+    offset
+  )
+  return { betaVideos, error }
 }
 
 export {
@@ -302,10 +329,12 @@ export {
   useUser,
   useCurrentUser,
   useQuickSearch,
+  useComments,
   countVotes,
   mostVoted,
   conflicting,
   useUserVote,
   useSearchClimbs,
   useAscents,
+  useBetaVideos,
 }

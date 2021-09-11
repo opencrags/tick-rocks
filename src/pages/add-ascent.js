@@ -18,6 +18,11 @@ import {
   AlertIcon,
   Box,
   HStack,
+  RadioGroup,
+  Radio,
+  Stack,
+  VStack,
+  Textarea,
 } from '@chakra-ui/react'
 import { useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
@@ -27,24 +32,27 @@ import { useAuthorizedFetcher } from '../utils/backend.js'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import StarRatings from 'react-star-ratings'
-import { MdRadioButtonChecked, MdRadioButtonUnchecked } from 'react-icons/md'
+import React from 'react'
 
 export default function AddAscent() {
   const { cragId, sectorId, climbId } = useParams()
-
   const history = useHistory()
   const { authorizedFetcher, isLoading, authError } = useAuthorizedFetcher()
   const [ascentDate, setAscentDate] = useState(Date.now())
   const [attempts, setAttempts] = useState(null)
   const [anonymous, setAnonymous] = useState(false)
-
+  const [ascentType, setAscentType] = useState('redpoint')
+  const [description, setDescription] = useState(null)
+  console.log(description)
   const addAscent = () =>
     authorizedFetcher('/ascents', {
       method: 'POST',
       body: JSON.stringify({
         climb_id: climbId,
         ascent_date: ascentDate,
+        ascent_type: ascentType,
         attempts: attempts,
+        description: description,
         public: !anonymous,
       }),
     })
@@ -94,12 +102,13 @@ export default function AddAscent() {
         </FormControl>
         <FormControl alignItems="right">
           <FormLabel>Ascent type</FormLabel>
-          <HStack>
-            <Text> Rotpunkt</Text> <MdRadioButtonChecked />
-          </HStack>
-          <HStack>
-            <Text> Flash</Text> <MdRadioButtonUnchecked />
-          </HStack>
+          <RadioGroup onChange={setAscentType} value={ascentType}>
+            <VStack alignItems="right" direction="row">
+              <Radio value="flash">Flash</Radio>
+              <Radio value="onsight">On-sight</Radio>
+              <Radio value="redpoint">Redpoint</Radio>
+            </VStack>
+          </RadioGroup>
         </FormControl>
       </HStack>
       <HStack my="20px">
@@ -136,14 +145,13 @@ export default function AddAscent() {
               <NumberDecrementStepper />
             </NumberInputStepper>
           </NumberInput>
-          {attempts == 1 && (
-            <Box>
-              <Alert status="success">
-                <AlertIcon />
-                Flash!
-              </Alert>
-            </Box>
-          )}
+        </FormControl>
+        <FormControl>
+          <FormLabel>Description</FormLabel>
+          <Input
+            onChange={(event) => setDescription(event.target.value)}
+            defaultValue={description}
+          ></Input>
         </FormControl>
       </HStack>
       <HStack>

@@ -49,7 +49,7 @@ function CragGrades({ selection, children, ...props }) {
     .map((reducedGrades) => reducedGrades.most_voted_grade)
     .reduce(reducer, {})
 
-  const numberOfClimbs = Object.keys(climbs).length
+  const numberOfClimbs = Object.keys(climbs).length + 1
 
   const gradeColorScheme = [
     ['1', 'Green'],
@@ -83,9 +83,9 @@ function CragGrades({ selection, children, ...props }) {
   return (
     <Box id="cragGrades" mt="5px" mb="5px">
       <Box mx={{ base: '10px', xl: '10vw' }}>
-        <Flex align="flex-end" justify="center" height="200px" direction="row">
+        <Flex align="flex-end" justify="center" height="20vh" direction="row">
           {Object.entries(reducedGrades).map((grade) => {
-            const height = (grade[1] / numberOfClimbs) * 400
+            const height = (grade[1] / numberOfClimbs) * 15
             return (
               <Flex
                 minWidth="40px"
@@ -101,7 +101,7 @@ function CragGrades({ selection, children, ...props }) {
                     boxShadow="2px 2px 4px -2px rgba(0,0,0,0.56)"
                     key={grade[0]}
                     maxHeight="100%"
-                    height={`${height}px`}
+                    height={`${height}vh`}
                     bgColor="gray.800"
                     color="white"
                     _hover={{ mb: '5px' }}
@@ -160,7 +160,7 @@ function SectorGrades({ sectorId, selection, children, ...props }) {
     .map((reducedGrades) => reducedGrades.most_voted_grade)
     .reduce(reducer, {})
 
-  const numberOfClimbs = Object.keys(climbs).length
+  const numberOfClimbs = Object.keys(climbs).length + 1
 
   const gradeColorScheme = [
     ['1', 'Green'],
@@ -196,14 +196,9 @@ function SectorGrades({ sectorId, selection, children, ...props }) {
       <Box>
         <Flex align="flex-end" justify="center" height="200px" direction="row">
           {Object.entries(reducedGrades).map((grade) => {
-            const height = (grade[1] / numberOfClimbs) * 300
+            const height = (grade[1] / numberOfClimbs) * 10
             return (
-              <Flex
-                flexGrow="1"
-                direction="column"
-                as={RouterLink}
-                to={`list/filter=?${grade[0]}`}
-              >
+              <Flex flexGrow="1" direction="column">
                 <Box>
                   <Box
                     borderColor="brand.100"
@@ -211,7 +206,7 @@ function SectorGrades({ sectorId, selection, children, ...props }) {
                     boxShadow="2px 2px 4px -2px rgba(0,0,0,0.56)"
                     key={grade[0]}
                     maxHeight="100%"
-                    height={`${height}px`}
+                    height={`${height}vh`}
                     bgColor="gray.800"
                     color="white"
                     _hover={{ mb: '5px' }}

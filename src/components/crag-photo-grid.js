@@ -31,7 +31,7 @@ function CragPhotoGrid({ userId, cragId, children, ...props }) {
         columns={[1, 2, 2, 2, 3]}
         gridAutoFlow="row dense"
         spacing="5px"
-        margin="5px"
+        p="5px"
       >
         {cragPhotos.map((cragPhoto) => {
           return (

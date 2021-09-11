@@ -62,9 +62,9 @@ function CragBannerMenu({ children }) {
 
   return (
     <Box
-      position={{ base: 'relative', md: 'sticky' }}
+      position={{ base: 'relative', xxs: 'sticky' }}
       zIndex="3"
-      top={{ base: '0px', md: '52px' }}
+      top={{ base: '0px', xxs: '52px' }}
       bottom="0px"
       w="100%"
       bg={bannerColor}

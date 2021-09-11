@@ -19,6 +19,10 @@ import {
   IconButton,
   Grid,
   Wrap,
+  Alert,
+  AlertIcon,
+  CloseButton,
+  AlertTitle,
 } from '@chakra-ui/react'
 import Linkify from 'react-linkify'
 
@@ -41,13 +45,13 @@ import { CragPhotoGrid } from '../components/crag-photo-grid.js'
 import { CragComponentBox } from '../components/crag-component-box'
 import { CragSectorGrid, CragSector } from '../components/crag-sectors.js'
 import { CragGrades } from '../components/crag-grades.js'
-import { CragLatestDiscussions } from '../components/crag-latestdiscussions'
 import { ChevronDownIcon, EditIcon, AddIcon } from '@chakra-ui/icons'
 import { PageFooter } from '../components/page-footer.js'
 import { useColorMode, useColorModeValue } from '@chakra-ui/color-mode'
 import ModalDialog from '../components/modal-dialog.js'
 import AddSector from './add-sector.js'
 import AddCragPhoto from './add-crag-photo.js'
+import Comments from './comments.js'
 export default function Crag() {
   const bg = useColorModeValue('offwhite', 'gray.700')
   const boxBg = useColorModeValue('gray.100', 'gray.600')
@@ -122,6 +126,20 @@ export default function Crag() {
           </Text>
         </Box>
       </CragFrontPageBanner>
+      <Box position="sticky" bottom="55px" zIndex="1">
+        <Alert status="warning" variant="solid">
+          <AlertIcon />
+          <AlertTitle>Access Issue!</AlertTitle>
+          Climbing is prohibited during May-July due to birds. Kraa-kraaa!
+          <CloseButton position="absolute" right="8px" top="8px" />
+        </Alert>
+        <Alert status="info" variant="solid">
+          <AlertIcon />
+          <AlertTitle>New comment!</AlertTitle>
+          Rasmus: Kul och så men va i hela jäv... View now
+          <CloseButton position="absolute" right="8px" top="8px" />
+        </Alert>
+      </Box>
       <CragBannerMenu>
         <Menu>
           <MenuButton
@@ -284,10 +302,10 @@ export default function Crag() {
         </Flex>
       </CragComponentBox>
       <CragComponentBox bg={boxBg}>
-        <Box id="cragSectors" mt="5px" mb="5px">
+        <Box id="cragSectors" mt="5px" pb="5px">
           <Box
             zIndex="2"
-            position="sticky"
+            position={{ base: 'initial', md: 'sticky' }}
             top={{ base: '50px', md: '102px' }}
             bottom="0px"
             padding="10px"
@@ -369,12 +387,30 @@ export default function Crag() {
         </Box>
       </CragComponentBox>
       <CragComponentBox>
-        <CragLatestDiscussions />
+        <Box mt="10px" mt="5px" pb="5px">
+          <Flex>
+            <Heading
+              color={headingColor}
+              flex="1"
+              size="2xl"
+              fontFamily="sans-serif"
+              fontWeight="bold"
+              letterSpacing="tighter"
+              padding="10px"
+              textShadow={headingShadow}
+            >
+              Recent comments
+            </Heading>
+          </Flex>
+          <Box>
+            <Comments relatedId={cragId} wrap={true} />
+          </Box>
+        </Box>
       </CragComponentBox>
       <CragComponentBox>
         <Box className="photos">
           <Box
-            position="sticky"
+            position={{ base: 'initial', md: 'sticky' }}
             top={{ base: '55px', md: '105' }}
             mt="10px"
             mb="5px"
@@ -421,7 +457,7 @@ export default function Crag() {
                         color="white"
                       >
                         <Flex align="center" direction="row">
-                          <AddIcon /> <Text ml="5px">Upload </Text>
+                          <AddIcon /> <Text ml="5px">Add image</Text>
                         </Flex>
                       </Button>
                     </Box>

@@ -29,8 +29,6 @@ function CragSectorGrid({ sectors, children, ...props }) {
     xxl: 5,
     xxxl: 5,
   })
-  console.log(responsiveColumns)
-  console.log(sectors.length)
   return (
     <Box>
       <Collapse startingHeight="30vh" in={show}>
@@ -104,6 +102,7 @@ function CragSector({ cragId, sectorId, children, ...props }) {
         >
           <Fade in={isOpen}>
             <Box
+              display={{ base: 'none', md: 'block' }}
               borderRadius="5px"
               color="white"
               position="absolute"
