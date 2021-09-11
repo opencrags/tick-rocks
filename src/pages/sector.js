@@ -59,6 +59,7 @@ import { useState } from 'react'
 import { PageFooter } from '../components/page-footer.js'
 import { isEmpty } from 'lodash'
 import ModalDialog from '../components/modal-dialog.js'
+import { Comments } from '../pages/comments.js'
 
 export default function Sector() {
   const bg = useColorModeValue('offwhite', 'gray.700')
@@ -180,6 +181,13 @@ export default function Sector() {
         <Flex display={{ base: 'wrap', md: 'flex' }} justify="Center">
           <Flex direction="column" mb="10px">
             <Box>
+              <Alert status="info">
+                <AlertIcon />
+                New comment! Rasmus: Kul och så men va i hela jäv... View now{' '}
+                <CloseButton position="absolute" right="8px" top="8px" />
+              </Alert>
+            </Box>
+            <Box>
               {images &&
                 images.map((image) => (
                   <ImageWithLines
@@ -258,6 +266,18 @@ export default function Sector() {
                 </>
               )}
             </Box>
+            <Flex justify="center">
+              <Box w="100%" maxW="880px" px="10px">
+                <Box mt="20px">
+                  <Box pl="10px" pb="10px">
+                    <Heading fontSize={{ base: 'md', md: 'xl' }} mb="10px">
+                      Comments
+                    </Heading>
+                    <Comments relatedId={sector.id} />
+                  </Box>
+                </Box>
+              </Box>
+            </Flex>
           </Flex>
           <Box>
             {sector.coordinate_votes.length >= 1 && nearbySectors.length >= 2 && (
