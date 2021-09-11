@@ -187,7 +187,6 @@ function SignedIn() {
       <Container bgColor="blackAlpha.500" borderRadius="6px" color="white">
         <Center marginTop="5px">
           <HStack>
-            {' '}
             <Avatar name={user?.display_name} size="xs" />
             <Text>
               Welcome back {user?.display_name}

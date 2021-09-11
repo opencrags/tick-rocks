@@ -34,7 +34,7 @@ function CragLatestDiscussions({ children, ...props }) {
             letterSpacing="tighter"
             textShadow={headingShadow}
           >
-            Discussion
+            Discussions
           </Heading>
           <Spacer />
           <Stack spacing={2} direction="row" align="center">

@@ -27,7 +27,7 @@ import VoteBanner from './pages/vote-banner'
 import { ParallaxProvider } from 'react-scroll-parallax'
 import FilterSearch from './pages/filter-search'
 import VoteCragDescription from './pages/vote-crag-description'
-import VoteClimbBetaVideo from './pages/vote-climb-beta-video'
+import AddBetaVideo from './pages/add-beta-video'
 import AddAscent from './pages/add-ascent'
 import UserProfile from './pages/user-profile'
 import Map from './pages/map'
@@ -120,9 +120,9 @@ function App() {
           </Route>
           <Route
             exact
-            path="/crags/:cragId?/sectors/:sectorId?/climbs/:climbId?/vote-climb-beta-video"
+            path="/crags/:cragId?/sectors/:sectorId?/climbs/:climbId?/add-beta-video"
           >
-            <VoteClimbBetaVideo />
+            <AddBetaVideo />
           </Route>
           <Route exact path="/crags/:cragId?/sectors/:sectorId?/add-image">
             <AddImage />

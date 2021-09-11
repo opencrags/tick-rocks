@@ -1,11 +1,11 @@
-import { Container, Center, Spinner } from '@chakra-ui/react'
+import { Container, Center, CircularProgress, Flex } from '@chakra-ui/react'
 
 export default function Loader() {
   return (
-    <Container maxWidth="container.md">
-      <Center>
-        <Spinner margin="20px" />
-      </Center>
+    <Container h="100%" maxWidth="container.md">
+      <Flex mt="50%" align="center" justify="center">
+        <CircularProgress isIndeterminate color="brand.300" />
+      </Flex>
     </Container>
   )
 }

@@ -368,9 +368,8 @@ export function NavBar() {
                 </HStack>
 
                 <PhoneMenuItems textAlign="left" to="/search">
-                  Scan
+                  Map
                 </PhoneMenuItems>
-                <PhoneMenuItems to="/map">Map</PhoneMenuItems>
                 <PhoneMenuItems to="/crags">Crags</PhoneMenuItems>
                 <PhoneMenuItems to="/add-crag">Add crag</PhoneMenuItems>
 
@@ -464,13 +463,13 @@ export function NavBar() {
           <Spacer display={{ base: 'flex', md: 'none' }} />
 
           <Flex as={RouterLink} to="/" align="center">
-            <TickRocksLogo />
+            <TickRocksLogo display={{ base: 'none', sm: 'block' }} />
             <Heading
               width="150px"
               size="sm"
               color="white"
               letterSpacing="1.5"
-              display={{ base: 'none', xxs: 'block' }}
+              display={{ base: 'none', xs: 'block' }}
             >
               tick.rocks
             </Heading>
@@ -495,12 +494,14 @@ export function NavBar() {
             flexBasis={{ base: '100%', md: 'auto' }}
           >
             <Flex
+              ml="5px"
               align="center"
               justify={['center', 'space-between', 'flex-end', 'flex-end']}
               direction={['column', 'row', 'row', 'row']}
             >
-              <MenuItems to="/search">Scan</MenuItems>
-              <MenuItems to="/map">Map</MenuItems>
+              <Button as={RouterLink} to="/search">
+                Map
+              </Button>
               <Box mx="5px">
                 <ModalDialog
                   button={
