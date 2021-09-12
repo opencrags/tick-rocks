@@ -513,34 +513,41 @@ export default function Climb() {
 function Ascents({ ascents }) {
   const [show, setShow] = React.useState(false)
   const handleToggle = () => setShow(!show)
-  const startingHeight = {}
   return (
     <Box>
-      <Collapse startingHeight="600px" in={show}>
-        {ascents.length === 0
-          ? 'There are no ascents.'
-          : ascents
-              .filter((ascent) => ascent.public === true)
-              .map((ascent) => <Ascent key={ascent.id} ascent={ascent} />)}
-      </Collapse>{' '}
       {ascents.length > 9 ? (
         <Box>
-          {show ? (
-            ''
-          ) : (
-            <Button
-              w="100%"
-              onClick={handleToggle}
-              mt="5px"
-              colorScheme="gray"
-              boxShadow="md"
-            >
-              View all
-            </Button>
-          )}
+          <Collapse startingHeight="600px" in={show}>
+            {ascents.length === 0
+              ? 'There are no ascents.'
+              : ascents
+                  .filter((ascent) => ascent.public === true)
+                  .map((ascent) => <Ascent key={ascent.id} ascent={ascent} />)}
+          </Collapse>
+          <Box>
+            {show ? (
+              ''
+            ) : (
+              <Button
+                w="100%"
+                onClick={handleToggle}
+                mt="5px"
+                colorScheme="gray"
+                boxShadow="md"
+              >
+                View all
+              </Button>
+            )}
+          </Box>
         </Box>
       ) : (
-        ''
+        <Box>
+          {ascents.length === 0
+            ? 'There are no ascents.'
+            : ascents
+                .filter((ascent) => ascent.public === true)
+                .map((ascent) => <Ascent key={ascent.id} ascent={ascent} />)}
+        </Box>
       )}
     </Box>
   )
