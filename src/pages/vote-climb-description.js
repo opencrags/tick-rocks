@@ -29,40 +29,45 @@ import {
   CragBannerMenu,
   CragBannerMenuButton,
 } from '../components/crag-banner.js'
-export default function VoteClimbName() {
+export default function VoteClimbDescription() {
   const { cragId, sectorId, climbId } = useParams()
   const { climb, error: errorClimb } = useClimb(climbId)
-  const { userVote, error: errorUserVote } = useUserVote(climb?.name_votes)
+  const { userVote, error: errorUserVote } = useUserVote(
+    climb?.description_votes
+  )
   const {
     authorizedFetcher,
     isLoading,
     error: authError,
   } = useAuthorizedFetcher()
   const history = useHistory()
-  const [climbName, setClimbName] = useState(null)
+  const [climbDescription, setClimbDescription] = useState(null)
   const [publicVote, setPublicVote] = useState(true)
   const bg = useColorModeValue('offwhite', 'gray.700')
   const boxBg = useColorModeValue('gray.100', 'gray.800')
   const inputBg = useColorModeValue('gray.300', 'gray.700')
 
   useEffect(() => {
-    if (climbName === null && userVote) {
-      setClimbName(userVote.value)
+    if (climbDescription === null && userVote) {
+      setClimbDescription(userVote.value)
       setPublicVote(userVote.public)
     }
-  }, [climbName, userVote])
+  }, [climbDescription, userVote])
 
-  const voteClimbName = (climbId) => {
+  const voteClimbDescription = (climbId) => {
     const body = JSON.stringify({
-      value: climbName,
+      value: climbDescription,
       public: publicVote,
     })
     return userVote
-      ? authorizedFetcher(`/climbs/${climbId}/name_votes/${userVote.id}`, {
-          method: 'PUT',
-          body: body,
-        })
-      : authorizedFetcher(`/climbs/${climbId}/name_votes`, {
+      ? authorizedFetcher(
+          `/climbs/${climbId}/description_votes/${userVote.id}`,
+          {
+            method: 'PUT',
+            body: body,
+          }
+        )
+      : authorizedFetcher(`/climbs/${climbId}/description_votes`, {
           method: 'POST',
           body: body,
         })
@@ -72,7 +77,7 @@ export default function VoteClimbName() {
     history.replace(`/crags/${cragId}/sectors/${sectorId}/climbs/${climbId}`)
 
   const handleSubmit = () =>
-    voteClimbName(climbId).then(() => navigateToClimb(climbId))
+    voteClimbDescription(climbId).then(() => navigateToClimb(climbId))
 
   if (authError || errorClimb || errorUserVote) {
     return (
@@ -105,13 +110,13 @@ export default function VoteClimbName() {
           <CragBanner cragId={cragId}>
             <ClimbBreadcrumb
               climbId={climbId}
-              extra={[{ text: 'Vote for climb name' }]}
+              extra={[{ text: 'Vote for climb Description' }]}
             />
             <Heading>
               Edit:{' '}
-              {climb.name_votes.length >= 1
-                ? mostVoted(climb.name_votes)
-                : 'No name votes'}{' '}
+              {climb.description_votes.length >= 1
+                ? mostVoted(climb.description_votes)
+                : 'No description votes'}{' '}
             </Heading>
           </CragBanner>
           <CragBannerMenu>
@@ -122,7 +127,7 @@ export default function VoteClimbName() {
             <Flex direction={{ base: 'column', md: 'row' }} justify="center">
               <Box bg={boxBg} padding="10px">
                 <Votes
-                  votes={climb.name_votes}
+                  votes={climb.description_votes}
                   countedVoteItem={(countedVote) => (
                     <Text>
                       {countedVote.value} ({countedVote.count} votes)
@@ -130,21 +135,23 @@ export default function VoteClimbName() {
                   )}
                   onChange={(countedVote) => {
                     if (countedVote === null) {
-                      setClimbName('')
+                      setClimbDescription('')
                     } else {
-                      setClimbName(countedVote.value)
+                      setClimbDescription(countedVote.value)
                     }
                   }}
                   value={userVote?.value || null}
                 />
                 <Heading size="sm">Your vote</Heading>
                 <FormControl isRequired>
-                  <FormLabel>Climb name</FormLabel>
+                  <FormLabel>Climb Description</FormLabel>
                   <Input
                     bgColor={inputBg}
-                    placeholder="Climb name"
-                    value={climbName === null ? '' : climbName}
-                    onChange={(event) => setClimbName(event.target.value)}
+                    placeholder="Climb description"
+                    value={climbDescription === null ? '' : climbDescription}
+                    onChange={(event) =>
+                      setClimbDescription(event.target.value)
+                    }
                   />
                 </FormControl>
                 <FormControl>

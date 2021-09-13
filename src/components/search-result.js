@@ -1,10 +1,9 @@
 import { Box, Link, Skeleton, Text } from '@chakra-ui/react'
 import { Link as RouterLink } from 'react-router-dom'
-import { mostVoted, useGradeSystemGrade } from '../utils/backend'
+import { mostVoted, useClimb, useGradeSystemGrade } from '../utils/backend'
 
 export default function SearchResult({ climb }) {
   const { grade, error } = useGradeSystemGrade(mostVoted(climb.grade_votes))
-
   if (error) {
     return <Text>Failed to load grade.</Text>
   }
@@ -16,7 +15,6 @@ export default function SearchResult({ climb }) {
       </Skeleton>
     )
   }
-
   return (
     <Box>
       <Link

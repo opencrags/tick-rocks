@@ -43,7 +43,7 @@ import {
 } from '../components/crag-banner.js'
 import { CragPhotoGrid } from '../components/crag-photo-grid.js'
 import { CragComponentBox } from '../components/crag-component-box'
-import { CragSectorGrid, CragSector } from '../components/crag-sectors.js'
+import { SectorGrid, Sector } from '../components/sectors.js'
 import { CragGrades } from '../components/crag-grades.js'
 import { ChevronDownIcon, EditIcon, AddIcon } from '@chakra-ui/icons'
 import { PageFooter } from '../components/page-footer.js'
@@ -121,7 +121,7 @@ export default function Crag() {
           >
             in the area of{' '}
             <Link color="white" as={RouterLink} to="/">
-              Fontaniebleau, France
+              Uppsala, Sweden
             </Link>
           </Text>
         </Box>
@@ -302,7 +302,7 @@ export default function Crag() {
         </Flex>
       </CragComponentBox>
       <CragComponentBox bg={boxBg}>
-        <Box id="cragSectors" mt="5px" pb="5px">
+        <Box mt="5px" pb="5px">
           <Box
             zIndex="2"
             position={{ base: 'initial', md: 'sticky' }}
@@ -364,11 +364,11 @@ export default function Crag() {
 
           <Box pb="10px">
             {sectors.length > 0 ? (
-              <CragSectorGrid sectors={sectors}>
+              <SectorGrid sectors={sectors}>
                 {sectors
                   .filter((sector) => sector.name_votes.length >= 1 && sector)
                   .map((sector) => (
-                    <CragSector
+                    <Sector
                       key={sector.id}
                       cragId={crag.id}
                       sectorId={sector.id}
@@ -377,9 +377,9 @@ export default function Crag() {
                       <VoteConflictWarning
                         anyVotes={[sector.name_votes, sector.coordinate_votes]}
                       />
-                    </CragSector>
+                    </Sector>
                   ))}
-              </CragSectorGrid>
+              </SectorGrid>
             ) : (
               <Center> No sectors has been added yet.</Center>
             )}

@@ -69,19 +69,6 @@ export default function Landing() {
                 </Box>
               </Flex>
 
-              <Flex
-                padding="10px"
-                w="100%"
-                borderRadius="6px"
-                backgroundColor="blackAlpha.500"
-              >
-                <SearchIcon color="gray.300" w={8} h={5} mr={5} />
-                <Input
-                  color="white"
-                  variant="unstyled"
-                  placeholder="Search crags, routes, climbers, etc."
-                />
-              </Flex>
               <SignedIn />
               <SimpleGrid columns="2" spacing="5px" mt="5px">
                 <Button

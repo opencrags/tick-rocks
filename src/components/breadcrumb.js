@@ -1,9 +1,13 @@
+import { ChevronRightIcon } from '@chakra-ui/icons'
 import {
   Breadcrumb,
   Text,
   BreadcrumbItem,
   BreadcrumbLink,
   Code,
+  Tag,
+  useColorModeValue,
+  Button,
 } from '@chakra-ui/react'
 import { Link as RouterLink } from 'react-router-dom'
 
@@ -86,8 +90,10 @@ const useImageBreadcrumbs = (imageId) => {
 }
 
 function RockBreadcrumb({ breadcrumbs, ...props }) {
+  const textColor = useColorModeValue('black', 'white')
   return (
     <Breadcrumb
+      separator={<ChevronRightIcon color="gray.200" />}
       fontWeight="normal"
       fontSize={{ base: 'sm', sm: 'sm', md: 'md' }}
       fontFamily="sans-serif"
@@ -97,7 +103,9 @@ function RockBreadcrumb({ breadcrumbs, ...props }) {
         <BreadcrumbItem key={`${breadcrumb.text}&${breadcrumb.link}`}>
           {breadcrumb.link && index !== breadcrumbs.length - 1 ? (
             <BreadcrumbLink as={RouterLink} to={breadcrumb.link}>
-              {breadcrumb.text}
+              <Button fontSize="md" color={textColor}>
+                {breadcrumb.text}
+              </Button>
             </BreadcrumbLink>
           ) : (
             <Text>{breadcrumb.text}</Text>
