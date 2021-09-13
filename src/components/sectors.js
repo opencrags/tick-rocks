@@ -15,7 +15,7 @@ import React, { useState } from 'react'
 import { Link as RouterLink } from 'react-router-dom'
 import { useImages } from '../utils/backend.js'
 import { CragGrades, SectorGrades } from './crag-grades.js'
-function CragSectorGrid({ sectors, children, ...props }) {
+function SectorGrid({ sectors, children, ...props }) {
   const [show, setShow] = React.useState(false)
   const handleToggle = () => setShow(!show)
   const responsiveColumns = useBreakpointValue({
@@ -31,7 +31,7 @@ function CragSectorGrid({ sectors, children, ...props }) {
   })
   return (
     <Box>
-      <Collapse startingHeight="30vh" in={show}>
+      <Collapse startingHeight="30vh" in={show} animateOpacity>
         <SimpleGrid
           display="grid"
           overflowX="auto"
@@ -65,7 +65,7 @@ function CragSectorGrid({ sectors, children, ...props }) {
   )
 }
 
-function CragSector({ cragId, sectorId, children, ...props }) {
+function Sector({ cragId, sectorId, children, ...props }) {
   const { images, error: errorImages } = useImages({ sector_id: sectorId })
   const { isOpen, onToggle } = useDisclosure()
   return (
@@ -73,7 +73,7 @@ function CragSector({ cragId, sectorId, children, ...props }) {
       onPointerEnter={onToggle}
       onPointerLeave={onToggle}
       bgColor="gray.500"
-      borderRadius="5px"
+      borderRadius="15px"
     >
       <LinkBox
         as={RouterLink}
@@ -94,7 +94,7 @@ function CragSector({ cragId, sectorId, children, ...props }) {
               : '/icon-no-image.svg'
           }
           bgPosition="center"
-          borderRadius="5px"
+          borderRadius="15px"
           bgRepeat="no-repeat"
           bgSize="cover"
           position="relative"
@@ -103,7 +103,7 @@ function CragSector({ cragId, sectorId, children, ...props }) {
           <Fade in={isOpen}>
             <Box
               display={{ base: 'none', md: 'block' }}
-              borderRadius="5px"
+              borderRadius="15px"
               color="white"
               position="absolute"
               left="0px"
@@ -119,7 +119,7 @@ function CragSector({ cragId, sectorId, children, ...props }) {
             flexWrap="wrap"
             justify="center"
             bg="blackAlpha.500"
-            borderTopRadius="5px"
+            borderTopRadius="15px"
             maxW="100%"
             color="white"
             fontWeight="normal"
@@ -134,4 +134,95 @@ function CragSector({ cragId, sectorId, children, ...props }) {
   )
 }
 
-export { CragSectorGrid, CragSector }
+function SectorList({ sectors, children, ...props }) {
+  const [show, setShow] = React.useState(false)
+  const handleToggle = () => setShow(!show)
+
+  return (
+    <Box>
+      <SimpleGrid
+        display="grid"
+        overflowX="auto"
+        columns={[3, 4, 5, 8]}
+        gridAutoFlow="row dense"
+        spacing="5px"
+        marginLeft="10px"
+        marginRight="10px"
+        position="relative"
+      >
+        {children}
+      </SimpleGrid>
+    </Box>
+  )
+}
+
+function SectorListItem({ cragId, sectorId, children, ...props }) {
+  const { images, error: errorImages } = useImages({ sector_id: sectorId })
+  const { isOpen, onToggle } = useDisclosure()
+  return (
+    <Box
+      onPointerEnter={onToggle}
+      onPointerLeave={onToggle}
+      bgColor="gray.500"
+      borderRadius="15px"
+    >
+      <LinkBox
+        as={RouterLink}
+        to={`/crags/${cragId}/sectors/${sectorId}`}
+        flexGrow="1"
+        height="100%"
+        width="100%"
+        position="relative"
+      >
+        <Box
+          flexGrow="1"
+          h={{ base: '12vh', lg: '12vh' }}
+          objectFit="cover"
+          verticalAlign="bottom"
+          bgImage={
+            images !== undefined && images.length > 0
+              ? images[0].base64_image
+              : '/icon-no-image.svg'
+          }
+          bgPosition="center"
+          borderRadius="15px"
+          bgRepeat="no-repeat"
+          bgSize="cover"
+          position="relative"
+          transition="all .2s"
+        >
+          <Fade in={isOpen}>
+            <Box
+              display={{ base: 'none', md: 'block' }}
+              borderRadius="15px"
+              color="white"
+              position="absolute"
+              left="0px"
+              bottom="0px"
+              w="100%"
+            >
+              <SectorGrades sectorId={sectorId} />
+            </Box>
+          </Fade>
+          <Flex
+            textOverflow="ellipsis"
+            whiteSpace="normal"
+            flexWrap="wrap"
+            justify="center"
+            bg="blackAlpha.500"
+            borderTopRadius="15px"
+            maxW="100%"
+            color="white"
+            fontWeight="normal"
+            fontSize="sm"
+            letterSpacing="0.5pt"
+          >
+            {children}
+          </Flex>
+        </Box>
+      </LinkBox>
+    </Box>
+  )
+}
+
+export { SectorGrid, Sector, SectorList, SectorListItem }

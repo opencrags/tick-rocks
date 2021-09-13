@@ -79,7 +79,7 @@ export default function AddComment({}) {
       <FormControl id="comment" isRequired>
         <Flex align="center">
           <Avatar mr="5px" size="sm" name={user?.display_name}></Avatar>
-          <InputGroup bg={boxBg} borderRadius="15px" m="5px">
+          <InputGroup bg={boxBg} borderRadius="15px" m="4px">
             <Input
               borderRadius="15px"
               variant="filled"

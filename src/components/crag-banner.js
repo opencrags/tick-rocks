@@ -7,16 +7,22 @@ import {
   Center,
   Text,
   LinkBox,
+  Heading,
+  Button,
+  Wrap,
 } from '@chakra-ui/react'
 import React from 'react'
 import { Link as RouterLink, useParams } from 'react-router-dom'
 import { ParallaxBanner } from 'react-scroll-parallax'
-import { useCrag, useCragPhoto, mostVoted } from '../utils/backend'
+import { useCrag, useCragPhoto, mostVoted, useSectors } from '../utils/backend'
 import { CragComponentBox } from './crag-component-box'
 import EditButton from './edit-button'
 import VoteConflictWarning from './vote-conflict-warning'
 
 import { useColorMode, useColorModeValue } from '@chakra-ui/color-mode'
+import { Sector, SectorGrid, SectorList, SectorListItem } from './sectors'
+import ModalDialog from './modal-dialog'
+import DrawerDialog from './drawer-dialog'
 function CragBannerMenuButton({ children, to, buttonicon, ...props }) {
   const bg = useColorModeValue('gray.200', 'white')
   return (
@@ -59,7 +65,8 @@ function CragBannerMenu({ children }) {
   const bannerColor = useColorModeValue('gray.600', 'gray.800')
   const { cragId } = useParams()
   const { crag, error: cragError } = useCrag(cragId)
-
+  const { sectors, error: errorSectors } = useSectors({ crag_id: cragId }, 100)
+  console.log(crag)
   return (
     <Box
       position={{ base: 'relative', xxs: 'sticky' }}
@@ -89,9 +96,20 @@ function CragBannerMenu({ children }) {
             position="relative"
             w="100%"
           >
-            <CragBannerMenuButton to={`/crags/${cragId}#sectors`}>
-              Sectors
-            </CragBannerMenuButton>
+            <DrawerDialog
+              placement="top"
+              button={<CragBannerMenuButton>Sectors</CragBannerMenuButton>}
+              header={
+                <Wrap align="center">
+                  <Heading>Sectors of {mostVoted(crag?.name_votes)}</Heading>{' '}
+                  <Box left="10px">
+                    <Button size="sm">Show in list</Button>
+                  </Box>
+                </Wrap>
+              }
+            >
+              <CragBannerSectors />
+            </DrawerDialog>
             <CragBannerMenuDivider />
             <CragBannerMenuButton to={`/crags/${cragId}/map`}>
               Map
@@ -256,6 +274,37 @@ function CragFrontPageBanner({
           }}
         ></ParallaxBanner>
       </Box>
+    </Box>
+  )
+}
+function CragBannerSectors({}) {
+  const bannerColor = useColorModeValue('gray.600', 'gray.800')
+  const { cragId } = useParams()
+  const { crag, error: cragError } = useCrag(cragId)
+  const { sectors, error: errorSectors } = useSectors({ crag_id: cragId }, 100)
+
+  return (
+    <Box>
+      {sectors.length > 0 ? (
+        <SectorList sectors={sectors}>
+          {sectors
+            .filter((sector) => sector.name_votes.length >= 1 && sector)
+            .map((sector) => (
+              <SectorListItem
+                key={sector.id}
+                cragId={crag.id}
+                sectorId={sector.id}
+              >
+                <Text>{mostVoted(sector.name_votes)}</Text>
+                <VoteConflictWarning
+                  anyVotes={[sector.name_votes, sector.coordinate_votes]}
+                />
+              </SectorListItem>
+            ))}
+        </SectorList>
+      ) : (
+        <Center> No sectors has been added yet.</Center>
+      )}
     </Box>
   )
 }

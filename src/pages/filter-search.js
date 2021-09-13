@@ -265,8 +265,8 @@ export default function FilterSearch({ ...props }) {
             color="black"
             label="Min rating"
             min={0}
-            max={3}
-            step={0.1}
+            max={5}
+            step={0.5}
             value={stars}
             onChange={(value) => setStars(value)}
             onChangeEnd={handleStarsEnd}
