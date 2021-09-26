@@ -39,7 +39,7 @@ export default function Settings() {
             display_name: displayName,
           }),
         })
-      : authorizedFetcher(`/users/${user?.sub}`, {
+      : authorizedFetcher(`/users/${user?.id}`, {
           method: 'PUT',
           body: JSON.stringify({
             display_name: displayName,
