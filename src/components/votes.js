@@ -36,7 +36,10 @@ export default function Votes({ votes, countedVoteItem, value, onChange }) {
             >
               {countedVoteItem(countedVote, maxVoteCount)}
             </Checkbox>
-            <Progress value={(countedVote.count / maxVoteCount) * 100} />
+            <Progress
+              colorScheme="brand"
+              value={(countedVote.count / maxVoteCount) * 100}
+            />
           </Box>
         ))
       )}

@@ -15,6 +15,7 @@ import {
   Avatar,
   Spacer,
 } from '@chakra-ui/react'
+import { PhotoGrid } from '../components/photo-grid.js'
 import { Link as RouterLink, useParams } from 'react-router-dom'
 import Loader from '../components/loader.js'
 import { useUser } from '../utils/backend.js'
@@ -24,11 +25,12 @@ import { PageFooter } from '../components/page-footer.js'
 import UserProfileBanner from '../components/user-profile-banner.js'
 import Feed from '../components/feed.js'
 import { CragComponentBox } from '../components/crag-component-box.js'
-export default function UserProfile() {
+export default function UserPhotos() {
   const bannerColor = useColorModeValue('gray.300', 'gray.800')
   const { userId } = useParams()
   const { user, error: erroruser } = useUser(userId)
-  const { cragPhotos, error: errorphotos } = useCragPhotos({ userId })
+  const { cragPhotos, error: errorphotos } = useCragPhotos({ user_id: userId })
+
   const bg = useColorModeValue('gray.50', 'gray.700')
   if (erroruser) {
     return (
@@ -50,7 +52,7 @@ export default function UserProfile() {
         <UserProfileBanner userId={userId}></UserProfileBanner>
         <CragComponentBox bg={bg}>
           <Box py="10px">
-            <Feed />
+            <PhotoGrid cragPhotos={cragPhotos} error={errorphotos} />
           </Box>
         </CragComponentBox>
         <PageFooter />

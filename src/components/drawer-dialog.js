@@ -30,10 +30,12 @@ export default function DrawerDialog({
         {button}
       </Box>
       <Drawer
+        preserveScrollBarGap={1}
         isOpen={isOpen}
         placement={placement}
         onClose={onClose}
         finalFocusRef={btnRef}
+        del
         {...props}
       >
         <DrawerOverlay />

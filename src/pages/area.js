@@ -41,7 +41,6 @@ import {
   CragFrontPageBanner,
   CragBannerMenu,
 } from '../components/crag-banner.js'
-import { CragPhotoGrid } from '../components/crag-photo-grid.js'
 import { CragComponentBox } from '../components/crag-component-box'
 import { CragGrades } from '../components/crag-grades.js'
 import { ChevronDownIcon, EditIcon, AddIcon } from '@chakra-ui/icons'

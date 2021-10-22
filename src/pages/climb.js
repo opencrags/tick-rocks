@@ -34,12 +34,15 @@ import {
   MenuList,
   MenuItem,
   MenuDivider,
+  IconButton,
 } from '@chakra-ui/react'
 import Linkify from 'react-linkify'
 import { Link as RouterLink, useParams } from 'react-router-dom'
 import Loader from '../components/loader.js'
 import EditButton from '../components/edit-button.js'
 import VoteConflictWarning from '../components/vote-conflict-warning.js'
+import { BetaVideo, youtube_parser } from '../components/beta-video.js'
+import AscentType from '../components/ascent-type.js'
 import Grade from '../components/grade.js'
 import {
   useClimb,
@@ -71,6 +74,8 @@ import AddAscent from './add-ascent.js'
 import Comments from './comments.js'
 import AddBetaVideo from './add-beta-video.js'
 import React from 'react'
+import VoteClimbBroken from './vote-climb-broken.js'
+import RemovePage from './remove-page.js'
 
 export default function Climb() {
   const { cragId, sectorId, climbId } = useParams()
@@ -81,9 +86,9 @@ export default function Climb() {
     climb_id: climbId,
   })
 
-  const bg = useColorModeValue('offwhite', 'gray.700')
-  const boxBg = useColorModeValue('gray.100', 'gray.800')
-  const buttonBg = useColorModeValue('gray.100', 'gray.600')
+  const bg = useColorModeValue('gray.100', 'gray.700')
+  const boxBg = useColorModeValue('offwhite', 'gray.800')
+  const buttonBg = useColorModeValue('gray.200', 'gray.600')
 
   if (errorClimb || errorLines || errorAscents || errorBetaVideos) {
     return (
@@ -168,30 +173,35 @@ export default function Climb() {
                   justify="center"
                 >
                   <Box>
-                    <Box>
-                      <Alert status="info">
-                        <AlertIcon />
-                        New comment! Rasmus: Kul och så men va i hela jäv...
-                        View now{' '}
-                        <CloseButton
-                          position="absolute"
-                          right="8px"
-                          top="8px"
-                        />
-                      </Alert>
-                    </Box>
+                    {climb.broken_votes.length >= 1 ? (
+                      <Box>
+                        <Alert status="warning">
+                          <AlertIcon />
+                          This problem is flagged as broken by{' '}
+                          {climb.broken_votes.length} user(s).
+                        </Alert>
+                      </Box>
+                    ) : (
+                      ''
+                    )}
+
                     {lines.length === 0 ? (
-                      <Box boxShadow="xl">
-                        <Text>
-                          There are no drawn lines for this climb. To add new
-                          topo, go to Sector, Edit, New Topo.
-                        </Text>
-                        <Button
-                          as={RouterLink}
-                          to={`/crags/${cragId}/sectors/${sectorId}`}
-                        >
-                          Back to sector
-                        </Button>
+                      <Box>
+                        {' '}
+                        <Alert status="warning">
+                          <Text>
+                            There are no drawn lines for this climb. Go to
+                            Sector, Edit, New Topo.
+                          </Text>
+                          <Button
+                            ml="10px"
+                            size="sm"
+                            as={RouterLink}
+                            to={`/crags/${cragId}/sectors/${sectorId}`}
+                          >
+                            Back to sector
+                          </Button>{' '}
+                        </Alert>
                       </Box>
                     ) : (
                       <Flex direction="column">
@@ -227,9 +237,8 @@ export default function Climb() {
                                     betaVideos[0]?.video_url
                                   )}`}
                                   title="YouTube video player"
-                                  frameborder="0"
+                                  frameBorder="0"
                                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-                                  objectFit="cover"
                                 ></iframe>
                               </AspectRatio>
                             </Box>
@@ -347,6 +356,12 @@ export default function Climb() {
                             >
                               Edit description
                             </MenuItem>
+
+                            <ModalDialog
+                              button={<MenuItem>Vote broken</MenuItem>}
+                            >
+                              <VoteClimbBroken />
+                            </ModalDialog>
                           </MenuList>
                         </Menu>
                       </Flex>
@@ -384,6 +399,7 @@ export default function Climb() {
                                   <Text>({vote.count} votes)</Text>
                                 </HStack>
                                 <Progress
+                                  colorScheme="brand"
                                   value={vote.count / maxGradeVoteCount}
                                 />
                               </Box>
@@ -496,6 +512,7 @@ export default function Climb() {
                               button={
                                 <Box>
                                   <Button
+                                    px="20px"
                                     size="sm"
                                     shadow="md"
                                     colorScheme="brand"
@@ -504,8 +521,8 @@ export default function Climb() {
                                     <TickRocksLogo
                                       colorGreen="#fff"
                                       colorWhite="#3CAB70"
-                                      h="12px"
-                                      w="20px"
+                                      h="18px"
+                                      w="25px"
                                       mr="5px"
                                     />
                                     tick
@@ -594,11 +611,17 @@ function Ascent({ ascent }) {
     >
       <Box mt="7px" mb="7px" fontSize="xs">
         <Flex justify="flex-start">
-          <Box w="50px" as={RouterLink} to={`/user/${user?.id}`}>
+          <Box
+            mr="5px"
+            mt="5px"
+            w="50px"
+            as={RouterLink}
+            to={`/user/${user?.id}`}
+          >
             <Avatar h="40px" w="40px" name={user?.display_name}></Avatar>
           </Box>
           <Flex direction="column" flexGrow="5">
-            <Flex justify="space-between">
+            <Flex justify="space-between" align="center">
               <Box
                 fontWeight="semibold"
                 as={RouterLink}
@@ -609,23 +632,6 @@ function Ascent({ ascent }) {
               <Spacer />
               <Box>
                 {new Date(ascent.ascent_date).toISOString().slice(0, 10)}
-              </Box>
-              <Box>
-                {user?.id === useCurrentUser().user?.id ? (
-                  <Box>
-                    <ModalDialog
-                      button={
-                        <Box>
-                          <Button size="xs">Edit</Button>
-                        </Box>
-                      }
-                    >
-                      <AddAscent ascent={ascent} />
-                    </ModalDialog>
-                  </Box>
-                ) : (
-                  ''
-                )}
               </Box>
             </Flex>
             <HStack>
@@ -652,155 +658,30 @@ function Ascent({ ascent }) {
               </Text>
             </Box>
           </Flex>
-        </Flex>
-      </Box>
-    </Skeleton>
-  )
-}
-
-function AscentType({ ascent }) {
-  const RedPoint = (props) => (
-    <Icon viewBox="0 0 200 200" {...props}>
-      <path
-        fill="currentColor"
-        d="M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0"
-      />
-    </Icon>
-  )
-  const OnSight = (props) => (
-    <Icon viewBox="0 0 55 40" {...props}>
-      <path
-        fill="currentColor"
-        d="M29.07.07h-.52S10.74-2.05 0 17.01c10.74 19.02 28.55 16.95 28.55 16.95h.52s17.81 2.07 28.55-16.95C46.88-2.05 29.07.07 29.07.07zm0 7.88c3.07 0 5.56 2.52 5.56 5.62 0 3.11-2.49 5.62-5.56 5.62s-5.56-2.52-5.56-5.62S26 7.95 29.07 7.95zm.1 20.35h-.34S17.4 29.64 10.51 17.63c1.91-3.34 4.17-5.63 6.45-7.23-.31 1.1-.48 2.24-.48 3.44 0 7.03 5.64 12.73 12.59 12.73 6.96 0 12.59-5.7 12.59-12.73 0-1.15-.16-2.26-.44-3.31 2.21 1.58 4.41 3.85 6.28 7.1C40.6 29.64 29.17 28.3 29.17 28.3z"
-      />
-    </Icon>
-  )
-
-  const Flash = (props) => (
-    <Icon viewBox="-50 0 300 100" {...props}>
-      <path
-        fill="currentColor"
-        d="M0 186.31 54.38 38.831 4.602 37.24l67.434-143.95 67.424.132-33.097 87.63 52.235-.454L0 186.309z"
-      />
-    </Icon>
-  )
-
-  if (ascent.ascent_type === 'redpoint') {
-    return (
-      <Tooltip
-        closeDelay={500}
-        hasArrow
-        label={ascent.attempts}
-        bg="gray.300"
-        color="black"
-      >
-        <Tag size="sm" variant="subtle" colorScheme="red">
-          <TagLeftIcon boxSize="15px" as={RedPoint} color="red" />
-          <TagLabel size="sm">Rotpunkt</TagLabel>
-        </Tag>
-      </Tooltip>
-    )
-  }
-
-  if (ascent.ascent_type === 'onsight') {
-    return (
-      <Tooltip
-        closeDelay={500}
-        hasArrow
-        label="First try!"
-        bg="gray.300"
-        color="black"
-      >
-        <Tag size="sm" variant="subtle" colorScheme="orange">
-          <TagLeftIcon boxSize="15px" as={OnSight} />
-          <TagLabel>On-sight</TagLabel>
-        </Tag>
-      </Tooltip>
-    )
-  }
-  if (ascent.ascent_type === 'flash') {
-    return (
-      <Tooltip
-        closeDelay={500}
-        hasArrow
-        label="First try!"
-        bg="gray.300"
-        color="black"
-      >
-        <Tag size="sm" variant="subtle" colorScheme="yellow">
-          <TagLeftIcon boxSize="15px" as={Flash} />
-          <TagLabel>Flash!</TagLabel>
-        </Tag>
-      </Tooltip>
-    )
-  }
-  return ''
-}
-
-function BetaVideo({ betaVideo }) {
-  const { user } = useUser(betaVideo.user_id)
-  const youtubeVideoId = youtube_parser(betaVideo.video_url)
-
-  return (
-    <Skeleton
-      borderBottom="1px"
-      _last={{ borderBottom: '0px' }}
-      isLoaded={user !== undefined}
-    >
-      <Box mt="7px" mb="7px" fontSize="xs">
-        <Flex justify="space-between" align="flex-start">
-          <Flex direction="column">
-            <Flex align="flex-start">
-              <Box minW="80px" maxW="80px">
-                <ModalDialog
-                  size="4xl"
-                  button={
-                    <Image
-                      cursor="pointer"
-                      mt="5px"
-                      src={`https://img.youtube.com/vi/${youtubeVideoId}/sddefault.jpg`}
-                    />
-                  }
-                >
-                  <Box h="80vh">
-                    <iframe
-                      src={`https://www.youtube.com/embed/${youtubeVideoId}?autoplay=1`}
-                      title="YouTube video player"
-                      height="100%"
-                      width="100%"
-                      frameborder="0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-                      objectFit="cover"
-                    ></iframe>
-                  </Box>
-                </ModalDialog>
-              </Box>
-              <Flex ml="10px" direction="column">
-                <Heading size="xs" as={RouterLink} to={`/user/${user?.id}`}>
-                  {user?.display_name || 'Unnamed user'}
-                </Heading>
-                <Linkify>{betaVideo.timestamp}</Linkify>
-              </Flex>
-            </Flex>
-          </Flex>
           <Box>
             {user?.id === useCurrentUser().user?.id ? (
-              <VStack align="right" mt="5px">
-                <Box>
-                  <Button size="xs">Like</Button>
-                </Box>
-                <ModalDialog
-                  button={
-                    <Box>
-                      <Button size="xs">Edit</Button>
-                    </Box>
-                  }
-                ></ModalDialog>
-              </VStack>
+              <Menu>
+                <MenuButton
+                  ml="5px"
+                  as={IconButton}
+                  size="sm"
+                  icon={<ChevronDownIcon />}
+                ></MenuButton>
+                <MenuList fontSize="md">
+                  <ModalDialog button={<MenuItem>Edit</MenuItem>}>
+                    <AddAscent ascent={ascent} />
+                  </ModalDialog>
+                  <ModalDialog button={<MenuItem>Remove</MenuItem>}>
+                    <RemovePage
+                      item={ascent}
+                      itemType="ascent"
+                      itemPath="ascents"
+                    />
+                  </ModalDialog>
+                </MenuList>
+              </Menu>
             ) : (
-              <Box>
-                <Button size="xs">Like</Button>
-              </Box>
+              ''
             )}
           </Box>
         </Flex>
@@ -832,11 +713,4 @@ function ImageWithLines({ line }) {
       <LineImage image={image} lines={[line]} />
     </Box>
   )
-}
-
-function youtube_parser(url) {
-  var regExp =
-    /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/
-  var match = url.match(regExp)
-  return match && match[7].length == 11 ? match[7] : false
 }

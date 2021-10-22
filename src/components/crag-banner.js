@@ -10,6 +10,10 @@ import {
   Heading,
   Button,
   Wrap,
+  HStack,
+  Tag,
+  TagLabel,
+  TagCloseButton,
 } from '@chakra-ui/react'
 import React from 'react'
 import { Link as RouterLink, useParams } from 'react-router-dom'
@@ -66,7 +70,6 @@ function CragBannerMenu({ children }) {
   const { cragId } = useParams()
   const { crag, error: cragError } = useCrag(cragId)
   const { sectors, error: errorSectors } = useSectors({ crag_id: cragId }, 100)
-  console.log(crag)
   return (
     <Box
       position={{ base: 'relative', xxs: 'sticky' }}
@@ -124,7 +127,7 @@ function CragBannerMenu({ children }) {
             </CragBannerMenuButton>
             <CragBannerMenuDivider />
             <CragBannerMenuButton
-              to={`/crags/${cragId}#photos`}
+              to={`/crags/${cragId}/photos`}
               display={{ base: 'none', xs: 'block' }}
             >
               Photos
@@ -238,11 +241,19 @@ function CragFrontPageBanner({
           position="sticky"
           zIndex="1"
           top="60px"
+          ml="10px"
+          textAlign="right"
+        ></Box>
+        <Box
+          height="0px"
+          position="sticky"
+          zIndex="1"
+          top="60px"
           width="100%"
           textAlign="right"
         >
           <LinkBox as={RouterLink} to={`/crags/${cragId}/vote-banner`}>
-            <EditButton size="lg" />
+            <EditButton color="blackAlpha" size="lg" />
             <VoteConflictWarning votes={crag.banner_votes} />
           </LinkBox>
         </Box>
@@ -282,7 +293,6 @@ function CragBannerSectors({}) {
   const { cragId } = useParams()
   const { crag, error: cragError } = useCrag(cragId)
   const { sectors, error: errorSectors } = useSectors({ crag_id: cragId }, 100)
-
   return (
     <Box>
       {sectors.length > 0 ? (

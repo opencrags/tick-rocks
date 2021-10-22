@@ -31,7 +31,8 @@
         "react-scripts": "4.0.3",
         "react-scroll-parallax": "^2.4.0",
         "react-star-ratings": "^2.3.0",
-        "swr": "^0.5.6",
+        "recharts": "^2.1.4",
+        "swr": "^1.0.1",
         "web-vitals": "^1.1.2"
     },
     "scripts": {

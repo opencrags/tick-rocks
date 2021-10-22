@@ -160,9 +160,8 @@ export function NavBar() {
                     link={`/crags/${result.sector.crag_id}/sectors/${result.sector.id}`}
                     displayName={
                       <>
-                        <Wrap>
+                        <Wrap align="center">
                           <Box lineHeight="15px">
-                            {' '}
                             {mostVoted(result.sector.name_votes)}
                           </Box>
 
@@ -186,9 +185,7 @@ export function NavBar() {
                     displayName={
                       <>
                         <Wrap align="center">
-                          <Box lineHeight="15px">
-                            {mostVoted(result.climb.name_votes)}
-                          </Box>
+                          <Box>{mostVoted(result.climb.name_votes)}</Box>
                           <Grade gradeId={result.climb.most_voted_grade} />
                           {result.climb.average_rating >= 1 ? (
                             <StarRatings
@@ -202,7 +199,7 @@ export function NavBar() {
                             />
                           ) : (
                             ''
-                          )}{' '}
+                          )}
                           <SectorBreadcrumb
                             fontSize="xs"
                             sectorId={result.climb.sector_id}
@@ -271,7 +268,12 @@ export function NavBar() {
               minW={{ sm: '10vw', md: '12vw', lg: '350px' }}
             />
           </InputGroup>
-          <Modal isOpen={isOpen} onClose={onClose} size="2xl">
+          <Modal
+            isOpen={isOpen}
+            onClose={onClose}
+            size="2xl"
+            preserveScrollBarGap={1}
+          >
             <ModalOverlay marginTop={{ base: '0px', md: '0px' }} />
             <ModalContent
               backgroundColor="brand.100"
@@ -316,7 +318,12 @@ export function NavBar() {
           display={{ base: 'block', md: 'none', lg: 'none' }}
           color="white"
         />
-        <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
+        <Drawer
+          placement="left"
+          onClose={onClose}
+          isOpen={isOpen}
+          preserveScrollBarGap={1}
+        >
           <DrawerOverlay />
           <DrawerContent background="brand.100">
             <DrawerBody padding="0px">
@@ -370,6 +377,7 @@ export function NavBar() {
                 <PhoneMenuItems textAlign="left" to="/search">
                   Map
                 </PhoneMenuItems>
+                <PhoneMenuItems to="/feed">Feed</PhoneMenuItems>
                 <PhoneMenuItems to="/crags">Crags</PhoneMenuItems>
                 <PhoneMenuItems to="/add-crag">Add crag</PhoneMenuItems>
 
@@ -382,7 +390,9 @@ export function NavBar() {
                         <Text>{user?.display_name}</Text>
                       </HStack>
                     </PhoneMenuItems>
-                    <PhoneMenuItems to="/ticklist">Ticklist</PhoneMenuItems>
+                    <PhoneMenuItems to={`/user/${user?.id}/ticks`}>
+                      Ticklist
+                    </PhoneMenuItems>
                     <PhoneMenuItems to="/settings">Settings</PhoneMenuItems>
                     <Box
                       onClick={logout}
@@ -434,7 +444,6 @@ export function NavBar() {
   return (
     <Box>
       <Box h="55px" display={{ base: 'block', md: 'block' }} />
-
       <Box height="100%">
         <Flex
           width="100%"
@@ -448,6 +457,7 @@ export function NavBar() {
           justify="space-between"
           height="55px"
           bg="gray.700"
+          boxShadow="md"
         >
           <HStack display={{ base: 'flex', md: 'none' }}>
             <MenuDrawer />
@@ -499,22 +509,31 @@ export function NavBar() {
               justify={['center', 'space-between', 'flex-end', 'flex-end']}
               direction={['column', 'row', 'row', 'row']}
             >
-              <Button as={RouterLink} to="/search">
-                Map
-              </Button>
-              <Box mx="5px">
-                <ModalDialog
-                  button={
-                    <Button colorScheme="brand" color="white">
-                      Add Crag
-                    </Button>
-                  }
+              <Box mx="2px">
+                <Button as={RouterLink} to="/search">
+                  Map
+                </Button>
+              </Box>
+              <Box mx="2px">
+                <Button
+                  colorScheme="brand"
+                  color="white"
+                  as={RouterLink}
+                  to="/feed"
                 >
+                  Feed
+                </Button>
+              </Box>
+              <Box mx="2px">
+                <ModalDialog button={<Button>Add Crag</Button>}>
                   <AddCrag />
                 </ModalDialog>
               </Box>
 
               <Button
+                mx="2.5px"
+                py="7px"
+                px="16px"
                 color={buttonColor}
                 bgColor="gray.700"
                 onClick={toggleColorMode}
@@ -524,20 +543,35 @@ export function NavBar() {
 
               {isAuthenticated ? (
                 <Menu>
-                  <Avatar
+                  <Button
+                    variant="ghost"
                     as={MenuButton}
-                    display={{ base: 'none', md: 'block' }}
-                    margin="5"
-                    name={user?.display_name}
-                    src="..."
-                    size="xs"
-                  ></Avatar>
-                  <MenuList>
+                    mx="2.5px"
+                    py="7px"
+                    px="16px"
+                  >
+                    <Avatar
+                      display={{ base: 'none', md: 'block' }}
+                      name={user?.display_name}
+                      src="..."
+                      size="xs"
+                    ></Avatar>
+                  </Button>
+                  <MenuList width="200px" fontSize="sm">
                     <MenuItem as={RouterLink} to={`/user/${user?.id}`}>
                       {user?.display_name || 'No display name set'}
                     </MenuItem>
-                    <MenuItem as={RouterLink} to="/ticklist">
-                      Ticklist{' '}
+                    <MenuItem as={RouterLink} to={`/user/${user?.id}/ticks`}>
+                      Ticks
+                    </MenuItem>
+                    <MenuItem
+                      as={RouterLink}
+                      to={`/user/${user?.id}/pre-ticks`}
+                    >
+                      Pre-ticks
+                    </MenuItem>
+                    <MenuItem as={RouterLink} to={`/user/${user?.id}/photos`}>
+                      Photos
                     </MenuItem>
                     <MenuDivider />
                     <MenuItem as={RouterLink} to="/settings">
@@ -599,10 +633,15 @@ const QuickSearchResultItem = ({
         }}
       >
         <Flex direction="row" align="center">
-          <Flex direction="row" minW="70px">
+          <Flex direction="row" minW="70px" align="center">
             <Tag>{resultType}</Tag>
           </Flex>
-          <Wrap color="white" fontFamily="sans-serif" fontWeight="bold">
+          <Wrap
+            color="white"
+            fontFamily="sans-serif"
+            fontWeight="bold"
+            align="center"
+          >
             {displayName}
           </Wrap>
           {children}

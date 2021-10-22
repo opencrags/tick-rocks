@@ -25,6 +25,7 @@ import {
   CloseButton,
   IconButton,
   Wrap,
+  Tooltip,
 } from '@chakra-ui/react'
 import { useColorMode, useColorModeValue } from '@chakra-ui/color-mode'
 import { Link as RouterLink, useParams } from 'react-router-dom'
@@ -54,16 +55,20 @@ import {
   useImages,
   useLines,
   mostVoted,
+  useBetaVideos,
 } from '../utils/backend.js'
 import { useState } from 'react'
 import { PageFooter } from '../components/page-footer.js'
 import { isEmpty } from 'lodash'
 import ModalDialog from '../components/modal-dialog.js'
 import { Comments } from '../pages/comments.js'
+import DateBadge from '../components/date-badge.js'
+import { VideoIcon } from '../components/icons.js'
 
 export default function Sector() {
-  const bg = useColorModeValue('offwhite', 'gray.700')
-  const boxBg = useColorModeValue('gray.300', 'gray.600')
+  const bg = useColorModeValue('gray.100', 'gray.700')
+  const boxBg = useColorModeValue('offwhite', 'gray.800')
+  const buttonBg = useColorModeValue('gray.200', 'gray.600')
 
   const headingShadow = ('3px 3px 3px rgba(0, 0, 0, 0.2)', 'none')
   const { cragId, sectorId } = useParams()
@@ -477,7 +482,11 @@ function ImageWithLines({ cragId, sectorId, image, sectorName }) {
 }
 
 function Climb({ cragId, sectorId, climbId }) {
+  const textColor = useColorModeValue('black', 'white')
   const { climb, error } = useClimb(climbId)
+  const { betaVideos, error: errorBetaVideos } = useBetaVideos({
+    climb_id: climbId,
+  })
 
   if (error) {
     return <Text margin="20px">Failed to load climb.</Text>
@@ -486,7 +495,7 @@ function Climb({ cragId, sectorId, climbId }) {
   if (climb === undefined) {
     return <Loader />
   }
-
+  console.log(climb)
   return (
     <Link
       as={RouterLink}
@@ -506,17 +515,30 @@ function Climb({ cragId, sectorId, climbId }) {
             ]}
           />
         </HStack>
-        {climb.rating_votes.length >= 1 && (
-          <StarRatings
-            rating={mostVoted(climb.rating_votes)}
-            starRatedColor="gold"
-            numberOfStars={5}
-            name="rating"
-            starEmptyColor="none"
-            starDimension="20px"
-            starSpacing="1px"
-          />
-        )}
+        <HStack>
+          <Box>
+            {betaVideos?.length >= 1 && (
+              <Box>
+                <VideoIcon color={textColor} />
+              </Box>
+            )}
+          </Box>
+          <Box>
+            {climb.rating_votes.length >= 1 && (
+              <StarRatings
+                rating={mostVoted(climb.rating_votes)}
+                starRatedColor={
+                  climb.rating_votes.length >= 3 ? 'gold' : 'gray'
+                }
+                numberOfStars={5}
+                name="rating"
+                starEmptyColor="none"
+                starDimension="20px"
+                starSpacing="1px"
+              />
+            )}
+          </Box>
+        </HStack>
       </Flex>
     </Link>
   )

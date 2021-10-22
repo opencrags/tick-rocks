@@ -1,26 +1,33 @@
-import { Link as RouterLink } from 'react-router-dom'
 import React from 'react'
 import { useDisclosure } from '@chakra-ui/hooks'
-import { Button } from '@chakra-ui/button'
 import {
   Modal,
   ModalOverlay,
   ModalContent,
   ModalCloseButton,
   Box,
+  Button,
 } from '@chakra-ui/react'
 
-import AddCrag from '../pages/add-crag.js'
-
-export default function ModalDialog({ button, children, ...props }) {
+export default function ModalDialog({
+  padding = '20px',
+  button,
+  children,
+  ...props
+}) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   return (
     <>
       <Box onClick={onOpen}>{button}</Box>
 
-      <Modal {...props} isOpen={isOpen} onClose={onClose}>
+      <Modal
+        {...props}
+        isOpen={isOpen}
+        onClose={onClose}
+        preserveScrollBarGap={1}
+      >
         <ModalOverlay />
-        <ModalContent marginTop="10vh" py="20px">
+        <ModalContent marginTop="10vh" py={padding}>
           <ModalCloseButton />
           {children}
         </ModalContent>
