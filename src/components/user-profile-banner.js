@@ -14,19 +14,20 @@ import {
   VStack,
   Avatar,
   Spacer,
+  IconButton,
+  Button,
 } from '@chakra-ui/react'
-import { CragPhotoGrid } from '../components/crag-photo-grid.js'
 import { Link as RouterLink, useParams } from 'react-router-dom'
 import Loader from '../components/loader.js'
 import { useUser } from '../utils/backend.js'
 import { useColorModeValue } from '@chakra-ui/color-mode'
 import { useCragPhotos } from '../utils/backend.js'
 import { PageFooter } from '../components/page-footer.js'
-export default function UserProfileBanner({ children, ...props }) {
+import { StarIcon } from '@chakra-ui/icons'
+export default function UserProfileBanner({ userId, ...props }) {
   const bannerColor = useColorModeValue('gray.300', 'gray.800')
-  const { userId } = useParams()
+  const bg = useColorModeValue('offwhite', 'gray.700')
   const { user, error: erroruser } = useUser(userId)
-  const { cragPhotos, error } = useCragPhotos({ userId })
 
   return (
     <>
@@ -73,6 +74,16 @@ export default function UserProfileBanner({ children, ...props }) {
                 <VStack></VStack>
               </Flex>
             </Box>
+            <Box
+              position="absolute"
+              right={{ base: '20px', md: '15vw' }}
+              top="20px"
+            >
+              <Button colorScheme="yellow">
+                <StarIcon />
+                <Text mx="4px">Follow</Text>
+              </Button>
+            </Box>
           </Box>
         </Box>
         <Box
@@ -99,18 +110,20 @@ export default function UserProfileBanner({ children, ...props }) {
                 position="relative"
                 w="100%"
               >
-                <MenuButton to={`/user/${user?.id}`}>Latest updates</MenuButton>{' '}
-                <MenuButton>Ticks</MenuButton>
-                <MenuButton>Pre-ticks</MenuButton>{' '}
-                <MenuButton>Photos</MenuButton>
+                <MenuButton to={`/user/${user?.id}`}>Latest updates</MenuButton>
+                <MenuButton to={`/user/${user?.id}/ticks`}>
+                  Ticks (1234)
+                </MenuButton>
+                <MenuButton>Pre-ticks (123)</MenuButton>
+                <MenuButton to={`/user/${user?.id}/photos`}>
+                  Photos (12)
+                </MenuButton>
                 <Spacer />
                 <MenuButton to="/settings">Settings</MenuButton>
               </Flex>
             </Box>
           </Box>
         </Box>
-        <Box minH="60vh">{children}</Box>
-        <PageFooter />
       </Box>
     </>
   )

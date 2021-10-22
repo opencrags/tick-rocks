@@ -88,6 +88,7 @@ function CragGrades({ selection, children, ...props }) {
             const height = (grade[1] / numberOfClimbs) * 15
             return (
               <Flex
+                key={grade}
                 minWidth="40px"
                 width="20vw"
                 direction="column"
@@ -140,7 +141,7 @@ function SectorGrades({ sectorId, selection, children, ...props }) {
 
   if (climbs.length < 1) {
     return (
-      <Center padding="5px" bg="blackAlpha.600">
+      <Center padding="5px" bg="blackAlpha.600" borderBottomRadius="15px">
         This crag does not yet have any climbs.
       </Center>
     )
@@ -198,7 +199,7 @@ function SectorGrades({ sectorId, selection, children, ...props }) {
           {Object.entries(reducedGrades).map((grade) => {
             const height = (grade[1] / numberOfClimbs) * 10
             return (
-              <Flex flexGrow="1" direction="column">
+              <Flex key={grade} flexGrow="1" direction="column">
                 <Box>
                   <Box
                     borderColor="brand.100"

@@ -1,4 +1,11 @@
-import { useCragPhoto, mostVoted, useUser, useCrag } from '../utils/backend'
+import {
+  useCragPhoto,
+  mostVoted,
+  useUser,
+  useCrag,
+  useCurrentUser,
+  authorizedFetcher,
+} from '../utils/backend'
 import {
   Box,
   Text,
@@ -7,6 +14,7 @@ import {
   Heading,
   LinkBox,
   Center,
+  Button,
 } from '@chakra-ui/react'
 import React from 'react'
 
@@ -23,8 +31,14 @@ export default function CragPhotoPage({ cragPhotoId }) {
   const { cragPhoto, error } = useCragPhoto(cragPhotoId)
   const { crag, error: errorCrag } = useCrag(cragId)
   const { user } = useUser(cragPhoto?.user_id)
+  const { user: currentUser } = useCurrentUser()
   const bg = useColorModeValue('offwhite', 'gray.700')
   const boxBg = useColorModeValue('gray.300', 'gray.600')
+  console.log(cragPhotoId)
+  const deleteImage = () =>
+    authorizedFetcher(`/crag_photos/${cragPhotoId}}`, {
+      method: 'DELETE',
+    })
 
   if (cragPhoto === undefined || user === undefined) {
     return ''
@@ -35,8 +49,17 @@ export default function CragPhotoPage({ cragPhotoId }) {
   }
   return (
     <Box pb="10px">
-      <Center>
-        <Text>Uploaded by: {user.display_name}</Text>
+      <Center mb="10px">
+        <Text>Uploaded by: {user?.display_name}</Text>
+        <Box ml="10px">
+          {user?.id === currentUser.id ? (
+            <Button onClick={deleteImage} size="xs">
+              Delete
+            </Button>
+          ) : (
+            ''
+          )}
+        </Box>
       </Center>
       <Center>
         <Image maxH="100vh" src={cragPhoto.base64_image} />

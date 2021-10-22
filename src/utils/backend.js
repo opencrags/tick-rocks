@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import useSwr, { mutate } from 'swr'
+import useSwr, { mutate, useSWRConfig } from 'swr'
 import { useAuth0 } from '@auth0/auth0-react'
 
 const useToken = () => {
@@ -304,6 +304,28 @@ const useBetaVideos = (query, limit = 20, offset = 0) => {
   return { betaVideos, error }
 }
 
+function useBackendMatchMutate() {
+  const { cache, mutate } = useSWRConfig()
+  return (matcher, ...args) => {
+    if (!(cache instanceof Map)) {
+      throw new Error(
+        'matchMutate requires the cache provider to be a Map instance'
+      )
+    }
+
+    const keys = []
+
+    for (const key of cache.keys()) {
+      if (matcher.test(key)) {
+        keys.push(key)
+      }
+    }
+
+    const mutations = keys.map((key) => mutate(key, ...args))
+    return Promise.all(mutations)
+  }
+}
+
 export {
   useToken,
   fetcher,
@@ -337,4 +359,5 @@ export {
   useSearchClimbs,
   useAscents,
   useBetaVideos,
+  useBackendMatchMutate,
 }

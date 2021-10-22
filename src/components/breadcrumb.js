@@ -8,6 +8,8 @@ import {
   Tag,
   useColorModeValue,
   Button,
+  Flex,
+  Box,
 } from '@chakra-ui/react'
 import { Link as RouterLink } from 'react-router-dom'
 
@@ -103,12 +105,14 @@ function RockBreadcrumb({ breadcrumbs, ...props }) {
         <BreadcrumbItem key={`${breadcrumb.text}&${breadcrumb.link}`}>
           {breadcrumb.link && index !== breadcrumbs.length - 1 ? (
             <BreadcrumbLink as={RouterLink} to={breadcrumb.link}>
-              <Button fontSize="md" color={textColor}>
+              <Tag fontWeight="medium" fontSize="md" color={textColor}>
                 {breadcrumb.text}
-              </Button>
+              </Tag>
             </BreadcrumbLink>
           ) : (
-            <Text>{breadcrumb.text}</Text>
+            <Box px="8px" fontWeight="medium" fontSize="md" color="white">
+              {breadcrumb.text}
+            </Box>
           )}
         </BreadcrumbItem>
       ))}

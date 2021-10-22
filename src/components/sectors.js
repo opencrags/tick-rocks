@@ -13,8 +13,9 @@ import {
 } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import { Link as RouterLink } from 'react-router-dom'
-import { useImages } from '../utils/backend.js'
+import { useImages, useSector } from '../utils/backend.js'
 import { CragGrades, SectorGrades } from './crag-grades.js'
+import DateBadge from './date-badge.js'
 function SectorGrid({ sectors, children, ...props }) {
   const [show, setShow] = React.useState(false)
   const handleToggle = () => setShow(!show)
@@ -67,7 +68,9 @@ function SectorGrid({ sectors, children, ...props }) {
 
 function Sector({ cragId, sectorId, children, ...props }) {
   const { images, error: errorImages } = useImages({ sector_id: sectorId })
+  const { sector, error: errorSector } = useSector(sectorId)
   const { isOpen, onToggle } = useDisclosure()
+
   return (
     <Box
       onPointerEnter={onToggle}
@@ -158,7 +161,9 @@ function SectorList({ sectors, children, ...props }) {
 
 function SectorListItem({ cragId, sectorId, children, ...props }) {
   const { images, error: errorImages } = useImages({ sector_id: sectorId })
+  const { sector, error: errorSector } = useSector(sectorId)
   const { isOpen, onToggle } = useDisclosure()
+
   return (
     <Box
       onPointerEnter={onToggle}

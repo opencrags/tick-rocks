@@ -13,9 +13,7 @@ import React, { useCallback, useState } from 'react'
 import { useCragPhotos, useUser } from '../utils/backend'
 import ModalDialog from './modal-dialog'
 import CragPhotoPage from '../pages/crag-photo'
-function CragPhotoGrid({ userId, cragId, children, ...props }) {
-  const { cragPhotos, error } = useCragPhotos({ crag_id: cragId })
-
+function PhotoGrid({ cragPhotos, error, children, ...props }) {
   if (cragPhotos === undefined) {
     return ''
   }
@@ -57,7 +55,6 @@ function CragPhoto({ img, cragId, imgId, userId, ...props }) {
       <ModalDialog
         button={
           <Box
-            FlexGrow="1"
             h={{ base: '40vh', md: '60vh' }}
             width="100%"
             objectFit="cover"
@@ -105,4 +102,4 @@ function CragPhoto({ img, cragId, imgId, userId, ...props }) {
   )
 }
 
-export { CragPhotoGrid }
+export { PhotoGrid }

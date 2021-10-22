@@ -17,36 +17,63 @@ import {
   Textarea,
   useBoolean,
 } from '@chakra-ui/react'
+import { useSWRConfig } from 'swr'
 import { useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import Loader from '../components/loader.js'
-import { useAuthorizedFetcher, useCurrentUser } from '../utils/backend.js'
+import {
+  useAuthorizedFetcher,
+  useBackend,
+  useCurrentUser,
+  useBackendMatchMutate,
+} from '../utils/backend.js'
 import { useColorMode, useColorModeValue } from '@chakra-ui/color-mode'
 
-export default function AddComment({}) {
+export default function AddComment({ commentId }) {
   const boxBg = useColorModeValue('gray.200', 'gray.800')
   const { authorizedFetcher, isLoading, error } = useAuthorizedFetcher()
   const history = useHistory()
   const [comment, setComment] = useState('')
   const [attemptedEmptyComment, setAttemptedEmptyComment] = useState(false)
   const { user } = useCurrentUser()
-  const relatedIds = useParams()
   const [expand, setExpand] = useBoolean()
+  const relatedIds = useParams()
+  const relatedType = Object.keys(relatedIds).at(-1).replace('Id', '')
+  const backendMatchMutate = useBackendMatchMutate()
+
   const addComment = () =>
     authorizedFetcher('/comments', {
       method: 'POST',
       body: JSON.stringify({
         comment: comment,
-        related_ids: Object.values(relatedIds),
+        related_id: Object.values(relatedIds).at(-1),
+        related_type: relatedType,
+        all_related_ids: Object.values(relatedIds),
+        created: Date(),
+        last_edited: Date(),
+        last_activity: Date(),
+      }),
+    })
+
+  const addReply = () =>
+    authorizedFetcher(`/comments/${commentId}/replies`, {
+      method: 'POST',
+      body: JSON.stringify({
+        reply: comment,
+        comment_id: commentId,
       }),
     })
 
   const handleSubmit = () => {
     if (comment === '') {
       setAttemptedEmptyComment(true)
+    }
+    if (commentId != null) {
+      setAttemptedEmptyComment(false)
+      addReply().then(() => backendMatchMutate(/^.*\/comments.*$/))
     } else {
       setAttemptedEmptyComment(false)
-      addComment()
+      addComment().then(() => backendMatchMutate(/^.*\/comments.*$/))
     }
   }
 
@@ -73,7 +100,6 @@ export default function AddComment({}) {
   if (!authorizedFetcher && isLoading) {
     return <Loader />
   }
-
   return (
     <Box>
       <FormControl id="comment" isRequired>
