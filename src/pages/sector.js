@@ -243,6 +243,7 @@ export default function Sector() {
                                     <Text overflowWrap="anywhere">
                                       {mostVoted(climb.name_votes)}
                                     </Text>
+                                    &nbsp;
                                     {climb.grade_votes.length >= 1 && (
                                       <Grade
                                         gradeId={mostVoted(climb.grade_votes)}
