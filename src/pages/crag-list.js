@@ -1,14 +1,14 @@
-import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons'
-import { Box, Flex, Heading, LinkBox, Text } from '@chakra-ui/layout'
-import { Link, Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react'
 import { useState } from 'react'
-import { Link as RouterLink, useParams } from 'react-router-dom'
+import { Table, Tbody, Td, Th, Thead, Tr, Link } from '@chakra-ui/react'
 import { CragBanner, CragBannerMenu } from '../components/crag-banner'
-import StarRatings from 'react-star-ratings'
+import { useColorMode, useColorModeValue } from '@chakra-ui/color-mode'
+import { Box, Flex, LinkBox, Heading, Text } from '@chakra-ui/layout'
+import { Link as RouterLink, useParams } from 'react-router-dom'
+import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons'
 import {
+  useCrag,
   mostVoted,
   useClimbs,
-  useCrag,
   useGradeSystemGrades,
   useSector,
 } from '../utils/backend'
