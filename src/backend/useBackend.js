@@ -41,8 +41,7 @@ export const useBackend = (endpoint, kwargs = {}) => {
       ? endpoint
       : `${endpoint}?${queryString(query)}`
 
-  console.log('user', user)
-  const key = [uri, user.subject]
+  const key = [uri, user?.sub]
 
   const backend = useSWR(
     authorizedFetcher && uri ? key : null,
