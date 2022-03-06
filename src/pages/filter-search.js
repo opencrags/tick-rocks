@@ -1,18 +1,16 @@
-import { HStack } from '@chakra-ui/layout'
-import { Flex } from '@chakra-ui/layout'
-import { Heading } from '@chakra-ui/layout'
+import { useColorModeValue } from '@chakra-ui/color-mode'
+import { Flex, Heading, HStack } from '@chakra-ui/layout'
+import { Box, Center, Container, Text } from '@chakra-ui/react'
 import { Select } from '@chakra-ui/select'
-import { useCallback, useEffect, useState } from 'react'
-import { climbTypes } from '../utils/constants'
-import SearchMap from '../components/search-map'
-import RangeSlider from '../components/range-slider'
-import { Box, Center, Container, DarkMode, Text } from '@chakra-ui/react'
-import { useGradeSystemGrades, useSearchClimbs } from '../utils/backend'
-import Loader from '../components/loader'
-import FilterSlider from '../components/filter-slider'
 import circleToPolygon from 'circle-to-polygon'
+import { useCallback, useEffect, useState } from 'react'
+import FilterSlider from '../components/filter-slider'
+import Loader from '../components/loader'
+import RangeSlider from '../components/range-slider'
+import SearchMap from '../components/search-map'
 import SearchResults from '../components/search-results'
-import { useColorMode, useColorModeValue } from '@chakra-ui/color-mode'
+import { useGradeSystemGrades, useSearchClimbs } from '../utils/backend'
+import { climbTypes } from '../utils/constants'
 
 export default function FilterSearch({ ...props }) {
   const [climbType, setClimbType] = useState('')
@@ -77,7 +75,6 @@ export default function FilterSearch({ ...props }) {
   }
 
   const boxBg = useColorModeValue('offwhite', 'blackAlpha.700')
-  const bg = useColorModeValue('offwhite', 'gray.700')
   const { climbs, searchClimbError } = useSearchClimbs(
     {
       ...(fontGrades && {

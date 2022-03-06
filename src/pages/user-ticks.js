@@ -1,31 +1,27 @@
-import React from 'react'
+import { useColorModeValue } from '@chakra-ui/color-mode'
 import {
-  Container,
-  Center,
-  Heading,
-  Link,
-  LinkBox,
-  Text,
-  UnorderedList,
-  ListItem,
   Box,
-  HStack,
-  Image,
-  Flex,
-  VStack,
-  Avatar,
-  Spacer,
+  Button,
+  Center,
+  Container,
+  Heading,
   Table,
-  TableCaption,
-  Thead,
-  Tr,
-  Th,
   Tbody,
   Td,
-  Button,
+  Text,
+  Th,
+  Thead,
+  Tr,
 } from '@chakra-ui/react'
+import React from 'react'
 import { Link as RouterLink, useParams } from 'react-router-dom'
+import AscentType from '../components/ascent-type.js'
+import { CragComponentBox } from '../components/crag-component-box.js'
+import Grade from '../components/grade.js'
 import Loader from '../components/loader.js'
+import ModalDialog from '../components/modal-dialog.js'
+import { PageFooter } from '../components/page-footer.js'
+import UserProfileBanner from '../components/user-profile-banner.js'
 import {
   mostVoted,
   useAscents,
@@ -34,20 +30,12 @@ import {
   useCurrentUser,
   useUser,
 } from '../utils/backend.js'
-import { useColorModeValue } from '@chakra-ui/color-mode'
-import { PageFooter } from '../components/page-footer.js'
-import UserProfileBanner from '../components/user-profile-banner.js'
-import AscentType from '../components/ascent-type.js'
-import Grade from '../components/grade.js'
-import { CragComponentBox } from '../components/crag-component-box.js'
-import ModalDialog from '../components/modal-dialog.js'
 import AddAscent from './add-ascent.js'
 
 export default function UserTicks() {
-  const bannerColor = useColorModeValue('gray.300', 'gray.800')
   const { userId } = useParams()
-  const { user, error: erroruser } = useUser(userId)
-  const { ascents, error: errorAscents } = useAscents({})
+  const { error: erroruser } = useUser(userId)
+  const { ascents } = useAscents({})
 
   const bg = useColorModeValue('gray.50', 'gray.700')
   const table = useColorModeValue('gray.50', 'gray.600')

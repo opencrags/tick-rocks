@@ -1,85 +1,73 @@
+import { useColorModeValue } from '@chakra-ui/color-mode'
+import { ChevronDownIcon, EditIcon } from '@chakra-ui/icons'
 import {
-  Container,
-  Center,
-  Heading,
-  Link,
-  Text,
-  UnorderedList,
-  OrderedList,
-  ListItem,
-  Button,
-  VStack,
-  HStack,
-  Box,
-  LinkBox,
-  Flex,
-  Menu,
-  MenuList,
-  MenuButton,
-  MenuItem,
-  Spacer,
   Alert,
+  AlertDescription,
   AlertIcon,
   AlertTitle,
-  AlertDescription,
+  Box,
+  Button,
+  Center,
   CloseButton,
+  Container,
+  Flex,
+  Heading,
+  HStack,
   IconButton,
-  Wrap,
-  Tooltip,
+  Link,
+  LinkBox,
+  ListItem,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  OrderedList,
+  Spacer,
+  Text,
+  UnorderedList,
 } from '@chakra-ui/react'
-import { useColorMode, useColorModeValue } from '@chakra-ui/color-mode'
+import { isEmpty } from 'lodash'
+import { useState } from 'react'
 import { Link as RouterLink, useParams } from 'react-router-dom'
-import Loader from '../components/loader.js'
+import StarRatings from 'react-star-ratings'
+import { SectorBreadcrumb } from '../components/breadcrumb.js'
+import { CalcDistance } from '../components/cordinate-distance-calc.js'
+import { CragBanner, CragBannerMenu } from '../components/crag-banner.js'
 import EditButton from '../components/edit-button.js'
 import Grade from '../components/grade.js'
+import { VideoIcon } from '../components/icons.js'
 import LineImage from '../components/line-image.js'
-import { SectorBreadcrumb } from '../components/breadcrumb.js'
+import Loader from '../components/loader.js'
+import ModalDialog from '../components/modal-dialog.js'
+import { PageFooter } from '../components/page-footer.js'
 import VoteConflictWarning from '../components/vote-conflict-warning.js'
+import { Comments } from '../pages/comments.js'
 import {
-  CragBanner,
-  CragBannerMenu,
-  CragBannerMenuButton,
-} from '../components/crag-banner.js'
-import { CalcDistance } from '../components/cordinate-distance-calc.js'
-import StarRatings from 'react-star-ratings'
-import { ChevronDownIcon, EditIcon } from '@chakra-ui/icons'
-import ModalLink from '../components/modal-link.js'
-import AddClimb from './add-climb.js'
-import AddImage from './add-image.js'
-import {
-  useCrag,
-  useSectors,
-  useSector,
+  mostVoted,
+  useBetaVideos,
   useClimb,
   useClimbs,
   useImages,
   useLines,
-  mostVoted,
-  useBetaVideos,
+  useSector,
+  useSectors,
 } from '../utils/backend.js'
-import { useState } from 'react'
-import { PageFooter } from '../components/page-footer.js'
-import { isEmpty } from 'lodash'
-import ModalDialog from '../components/modal-dialog.js'
-import { Comments } from '../pages/comments.js'
-import DateBadge from '../components/date-badge.js'
-import { VideoIcon } from '../components/icons.js'
+import AddClimb from './add-climb.js'
+import AddImage from './add-image.js'
 
 export default function Sector() {
   const bg = useColorModeValue('gray.100', 'gray.700')
   const boxBg = useColorModeValue('offwhite', 'gray.800')
-  const buttonBg = useColorModeValue('gray.200', 'gray.600')
 
-  const headingShadow = ('3px 3px 3px rgba(0, 0, 0, 0.2)', 'none')
+  const headingShadow = '3px 3px 3px rgba(0, 0, 0, 0.2)'
   const { cragId, sectorId } = useParams()
-  const { crag, error: errorCrag } = useCrag(cragId)
   const { sectors, error: errorSectors } = useSectors({ crag_id: cragId }, 100)
   const { sector, error: errorSector } = useSector(sectorId)
   const { climbs, error: errorClimbs } = useClimbs({ sector_id: sectorId })
   const { lines, error: errorLines } = useLines({ sector_id: sectorId })
   const { images, error: errorImages } = useImages({ sector_id: sectorId })
 
-  if (errorSector || errorClimbs || errorLines || errorImages) {
+  if (errorSector || errorClimbs || errorLines || errorImages || errorSectors) {
     return (
       <Container maxWidth="container.md">
         <Center>
@@ -107,7 +95,7 @@ export default function Sector() {
     (nearbySector) =>
       nearbySector.name_votes.length >= 1 &&
       nearbySector.coordinate_votes.length >= 1 &&
-      sector.id != nearbySector.id
+      sector.id !== nearbySector.id
   )
 
   return (
@@ -488,7 +476,7 @@ function Climb({ cragId, sectorId, climbId }) {
     climb_id: climbId,
   })
 
-  if (error) {
+  if (error || errorBetaVideos) {
     return <Text margin="20px">Failed to load climb.</Text>
   }
 

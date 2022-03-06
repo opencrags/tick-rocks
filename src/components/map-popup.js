@@ -1,9 +1,9 @@
+import { IconButton } from '@chakra-ui/button'
+import { useColorModeValue } from '@chakra-ui/color-mode'
 import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons'
 import { Flex, Text, VStack } from '@chakra-ui/layout'
 import { useState } from 'react'
-import { IconButton } from '@chakra-ui/button'
 import SearchResult from './search-result'
-import { useColorMode, useColorModeValue } from '@chakra-ui/color-mode'
 export default function MapPopup({ climbs }) {
   const [climbIndex, setClimbIndex] = useState(0)
   const textColor = useColorModeValue('black', 'black')

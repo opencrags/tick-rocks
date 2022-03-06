@@ -1,18 +1,16 @@
 import {
-  Box,
-  Text,
-  SimpleGrid,
-  useDisclosure,
-  SlideFade,
-  LinkBox,
-  Fade,
   Avatar,
+  Box,
+  Fade,
+  SimpleGrid,
+  Text,
+  useDisclosure,
 } from '@chakra-ui/react'
-import { Link as RouterLink, useParams } from 'react-router-dom'
-import React, { useCallback, useState } from 'react'
-import { useCragPhotos, useUser } from '../utils/backend'
-import ModalDialog from './modal-dialog'
+import React from 'react'
 import CragPhotoPage from '../pages/crag-photo'
+import { useUser } from '../utils/backend'
+import ModalDialog from './modal-dialog'
+
 function PhotoGrid({ cragPhotos, error, children, ...props }) {
   if (cragPhotos === undefined) {
     return ''

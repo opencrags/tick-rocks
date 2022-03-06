@@ -1,22 +1,22 @@
 import {
-  Container,
+  Box,
+  Button,
   Center,
+  Container,
   Heading,
   HStack,
   Link,
   Skeleton,
+  StackDivider,
   Stat,
   StatLabel,
   StatNumber,
-  VStack,
-  Box,
   Text,
-  StackDivider,
-  Button,
+  VStack,
 } from '@chakra-ui/react'
 import { Link as RouterLink } from 'react-router-dom'
 import Loader from '../components/loader.js'
-import { useCrags, useSectors, useClimbs, mostVoted } from '../utils/backend.js'
+import { mostVoted, useClimbs, useCrags, useSectors } from '../utils/backend.js'
 
 export default function Crags() {
   const { crags, error } = useCrags({})

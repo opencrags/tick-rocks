@@ -1,24 +1,21 @@
-import { AgGridColumn, AgGridReact } from 'ag-grid-react'
-import { CragBanner, CragBannerMenu } from '../components/crag-banner'
-import { useColorMode, useColorModeValue } from '@chakra-ui/color-mode'
-import { Box, Flex, LinkBox, Heading, Text } from '@chakra-ui/layout'
-import { Link as RouterLink, useParams } from 'react-router-dom'
-import { useCrag, mostVoted, useClimbs } from '../utils/backend'
+import { Box, Flex, Heading, LinkBox, Text } from '@chakra-ui/layout'
 import 'ag-grid-community/dist/styles/ag-grid.css'
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css'
+import { AgGridColumn, AgGridReact } from 'ag-grid-react'
+import { Link as RouterLink, useParams } from 'react-router-dom'
+import { CragBanner, CragBannerMenu } from '../components/crag-banner'
+import { mostVoted, useClimbs, useCrag } from '../utils/backend'
 
 export default function CragList() {
   const { cragId } = useParams()
   const { crag, error: errorCrag } = useCrag(cragId)
-  const bg = useColorModeValue('offwhite', 'gray.700')
-  const boxBg = useColorModeValue('gray.300', 'gray.600')
   const { climbs, error: errorClimbs } = useClimbs({ crag_id: cragId })
-  console.log(climbs)
+
   if (crag === undefined) {
     return ''
   }
 
-  if (errorCrag) {
+  if (errorCrag || errorClimbs) {
     return <Text>Error</Text>
   }
   return (

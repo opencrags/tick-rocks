@@ -1,4 +1,4 @@
-import { Container, Center, CircularProgress, Flex } from '@chakra-ui/react'
+import { CircularProgress, Container, Flex } from '@chakra-ui/react'
 
 export default function Loader() {
   return (

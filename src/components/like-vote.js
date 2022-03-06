@@ -1,39 +1,8 @@
-import {
-  Container,
-  Center,
-  Heading,
-  Text,
-  Input,
-  FormControl,
-  FormLabel,
-  Button,
-  Checkbox,
-  Box,
-  Flex,
-  useColorModeValue,
-  Stack,
-  Radio,
-  RadioGroup,
-} from '@chakra-ui/react'
-import { useState, useEffect } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
-import Loader from './loader.js'
-import {
-  useClimb,
-  useAuthorizedFetcher,
-  useUserVote,
-  mostVoted,
-} from '../utils/backend.js'
+import { Box, Button } from '@chakra-ui/react'
+import { useEffect, useState } from 'react'
+import { useAuthorizedFetcher, useUserVote } from '../utils/backend.js'
 
-import { ClimbBreadcrumb } from './breadcrumb.js'
-import Votes from './votes.js'
-import {
-  CragBanner,
-  CragBannerMenu,
-  CragBannerMenuButton,
-} from './crag-banner.js'
 export default function LikeVote({ item, votes, voteUrl, itemId, fetcher }) {
-  console.log(item.id)
   const { userVote, error: errorUserVote } = useUserVote(item?.voteUrl)
   const [likeVotes, setLikeVotes] = useState(true)
   const {
@@ -65,7 +34,14 @@ export default function LikeVote({ item, votes, voteUrl, itemId, fetcher }) {
   }
   const handleSubmit = () => likeVoteContent(itemId)
 
-  console.log(userVote)
+  if (isLoading) {
+    return null
+  }
+
+  if (errorUserVote || authError) {
+    return null
+  }
+
   return (
     <Box>
       <Button size="xs" onClick={handleSubmit}>

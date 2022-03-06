@@ -1,9 +1,9 @@
-import { Container, Center, Heading, Box, Text } from '@chakra-ui/react'
+import { Box, Center, Container, Heading, Text } from '@chakra-ui/react'
 import Dropzone from 'react-dropzone'
 import { useHistory, useParams } from 'react-router-dom'
 import { SectorBreadcrumb } from '../components/breadcrumb.js'
 import Loader from '../components/loader.js'
-import { useSector, useAuthorizedFetcher } from '../utils/backend.js'
+import { useAuthorizedFetcher, useSector } from '../utils/backend.js'
 
 export default function AddImage() {
   const { cragId, sectorId } = useParams()

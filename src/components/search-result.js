@@ -1,6 +1,6 @@
 import { Box, Link, Skeleton, Text } from '@chakra-ui/react'
 import { Link as RouterLink } from 'react-router-dom'
-import { mostVoted, useClimb, useGradeSystemGrade } from '../utils/backend'
+import { mostVoted, useGradeSystemGrade } from '../utils/backend'
 
 export default function SearchResult({ climb }) {
   const { grade, error } = useGradeSystemGrade(mostVoted(climb.grade_votes))

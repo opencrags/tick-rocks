@@ -1,58 +1,52 @@
 import { useAuth0 } from '@auth0/auth0-react'
+import { useColorMode, useColorModeValue } from '@chakra-ui/color-mode'
+import { HamburgerIcon, MoonIcon, SearchIcon, SunIcon } from '@chakra-ui/icons'
 import {
-  Box,
-  Center,
-  Flex,
-  Heading,
-  Spacer,
-  Image,
-  HStack,
-  show,
-  Text,
   Avatar,
-  Menu,
-  MenuItem,
-  MenuButton,
-  MenuList,
-  Input,
-  MenuDivider,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalBody,
-  ModalCloseButton,
-  useDisclosure,
+  Box,
+  Button,
+  Center,
   Drawer,
   DrawerBody,
-  DrawerOverlay,
   DrawerContent,
-  ModalHeader,
-  Tag,
-  Button,
-  UnorderedList,
-  ListItem,
-  Icon,
+  DrawerOverlay,
+  Flex,
+  Heading,
+  HStack,
+  Input,
   InputGroup,
   InputLeftElement,
-  Tooltip,
-  Wrap,
-  LinkBox,
   Link,
+  ListItem,
+  Menu,
+  MenuButton,
+  MenuDivider,
+  MenuItem,
+  MenuList,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  show,
+  Spacer,
+  Tag,
+  Text,
+  Tooltip,
+  UnorderedList,
+  useDisclosure,
+  Wrap,
 } from '@chakra-ui/react'
-import StarRatings from 'react-star-ratings'
-
-import { Link as RouterLink } from 'react-router-dom'
 import React, { useEffect, useState } from 'react'
-import { SearchIcon, HamburgerIcon, MoonIcon, SunIcon } from '@chakra-ui/icons'
-import { useCurrentUser, useQuickSearch, mostVoted } from '../utils/backend'
+import { Link as RouterLink } from 'react-router-dom'
+import StarRatings from 'react-star-ratings'
 import Grade from '../components/grade'
-import { useColorMode, useColorModeValue } from '@chakra-ui/color-mode'
-import { TickRocksLogo } from './tick-rocks-logo'
-import { ClimbBreadcrumb, CragBreadcrumb, SectorBreadcrumb } from './breadcrumb'
-import AddCragModal from './modal-dialog'
-import { BoxZoomHandler } from 'mapbox-gl'
-import ModalDialog from './modal-dialog'
 import AddCrag from '../pages/add-crag'
+import { mostVoted, useCurrentUser, useQuickSearch } from '../utils/backend'
+import { CragBreadcrumb, SectorBreadcrumb } from './breadcrumb'
+import ModalDialog from './modal-dialog'
+import { TickRocksLogo } from './tick-rocks-logo'
 
 export function NavBar() {
   const { isAuthenticated, loginWithRedirect, logout } = useAuth0()
@@ -61,28 +55,6 @@ export function NavBar() {
   const { colorMode, toggleColorMode } = useColorMode()
 
   const buttonColor = useColorModeValue('white', 'gold')
-  const MenuItems = ({ children, isLast, to = '/', ...props }) => {
-    return (
-      <Box
-        as={RouterLink}
-        to={to}
-        _hover={{
-          background: 'brand.300',
-        }}
-        color="white"
-        width="100%"
-        minWidth="100px"
-        pt="4"
-        pb="4"
-        paddingRight={{ base: 0, sm: 1 }}
-        paddingLeft={{ base: 0, sm: 1 }}
-        fontWeight="semibold"
-        {...props}
-      >
-        <Center>{children}</Center>
-      </Box>
-    )
-  }
   const PhoneMenuItems = ({ children, isLast, to = '/', ...props }) => {
     return (
       <Box
@@ -110,8 +82,7 @@ export function NavBar() {
   function SearchModal() {
     const [searchText, setSearchText] = useState(null)
     const { quickSearch, error: errorQuickSearch } = useQuickSearch(searchText)
-    const [oldQuickSearch, setOldQuickSearch, link, displayName] =
-      useState(undefined)
+    const [oldQuickSearch, setOldQuickSearch] = useState(undefined)
     useEffect(() => {
       if (quickSearch !== undefined && quickSearch.length >= 1) {
         setOldQuickSearch(quickSearch)
@@ -153,8 +124,7 @@ export function NavBar() {
                     onClose={onClose}
                   />
                 )
-              }
-              if (result.type === 'sector') {
+              } else if (result.type === 'sector') {
                 return (
                   <QuickSearchResultItem
                     link={`/crags/${result.sector.crag_id}/sectors/${result.sector.id}`}
@@ -177,8 +147,7 @@ export function NavBar() {
                     onClose={onClose}
                   ></QuickSearchResultItem>
                 )
-              }
-              if (result.type === 'climb') {
+              } else if (result.type === 'climb') {
                 return (
                   <QuickSearchResultItem
                     link={`/crags/${result.climb.crag_id}/sectors/${result.climb.sector_id}/climbs/${result.climb.id}`}
@@ -232,6 +201,8 @@ export function NavBar() {
                     </Box>
                   </QuickSearchResultItem>
                 )
+              } else {
+                return 'Unknown result type'
               }
             })}
           </UnorderedList>

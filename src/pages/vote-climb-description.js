@@ -1,34 +1,34 @@
 import {
-  Container,
+  Box,
+  Button,
   Center,
-  Heading,
-  Text,
-  Input,
+  Checkbox,
+  Container,
+  Flex,
   FormControl,
   FormLabel,
-  Button,
-  Checkbox,
-  Box,
-  Flex,
+  Heading,
+  Input,
+  Text,
   useColorModeValue,
 } from '@chakra-ui/react'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import Loader from '../components/loader.js'
-import {
-  useClimb,
-  useAuthorizedFetcher,
-  useUserVote,
-  mostVoted,
-} from '../utils/backend.js'
-
 import { ClimbBreadcrumb } from '../components/breadcrumb.js'
-import Votes from '../components/votes.js'
 import {
   CragBanner,
   CragBannerMenu,
   CragBannerMenuButton,
 } from '../components/crag-banner.js'
+import Loader from '../components/loader.js'
+import Votes from '../components/votes.js'
+import {
+  mostVoted,
+  useAuthorizedFetcher,
+  useClimb,
+  useUserVote,
+} from '../utils/backend.js'
+
 export default function VoteClimbDescription() {
   const { cragId, sectorId, climbId } = useParams()
   const { climb, error: errorClimb } = useClimb(climbId)

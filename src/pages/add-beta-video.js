@@ -1,34 +1,30 @@
 import {
-  Container,
-  Center,
-  Heading,
-  Text,
-  Input,
-  FormControl,
-  FormLabel,
-  Button,
-  Select,
-  Box,
   Alert,
   AlertIcon,
   AspectRatio,
+  Box,
+  Button,
+  Center,
+  Container,
+  FormControl,
+  FormLabel,
+  Heading,
+  Input,
+  Text,
 } from '@chakra-ui/react'
 import { useState } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
-import { ClimbBreadcrumb, SectorBreadcrumb } from '../components/breadcrumb.js'
+import { useParams } from 'react-router-dom'
+import { ClimbBreadcrumb } from '../components/breadcrumb.js'
 import Loader from '../components/loader.js'
 import {
-  useClimb,
   useAuthorizedFetcher,
   useBackendMatchMutate,
   useUserVote,
 } from '../utils/backend.js'
 
 export default function AddBetaVideo({ betaVideo }) {
-  const { cragId, sectorId, climbId } = useParams()
-  const { climb, error: errorClimb } = useClimb(climbId)
+  const { climbId } = useParams()
   const backendMatchMutate = useBackendMatchMutate()
-  const history = useHistory()
   const { authorizedFetcher, isLoading, authError } = useAuthorizedFetcher()
   const [videoUrl, setVideoUrl] = useState('')
   const [editVideoUrl, setEditVideoUrl] = useState(betaVideo?.video_url)
@@ -73,9 +69,6 @@ export default function AddBetaVideo({ betaVideo }) {
         })
   }
 
-  const navigateToClimb = (climbId) =>
-    history.replace(`/crags/${cragId}/sectors/${sectorId}/climbs/${climbId}`)
-
   const handleSubmit = () => {
     if (youtubeVideoId === false) {
       setAttemptedWrongVideo(true)
@@ -92,7 +85,7 @@ export default function AddBetaVideo({ betaVideo }) {
     }
   }
 
-  if (authError || errorClimb) {
+  if (authError || errorUserVote) {
     return (
       <Container maxWidth="container.md">
         <Center>
@@ -189,5 +182,5 @@ function youtube_parser(url) {
   var regExp =
     /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/
   var match = url.match(regExp)
-  return match && match[7].length == 11 ? match[7] : false
+  return match && match[7].length === 11 ? match[7] : false
 }

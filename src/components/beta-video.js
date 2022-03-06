@@ -1,31 +1,23 @@
+import { ChevronDownIcon } from '@chakra-ui/icons'
 import {
   Box,
-  Button,
   Flex,
   Heading,
+  IconButton,
   Image,
-  Skeleton,
-  VStack,
   Menu,
   MenuButton,
-  MenuList,
   MenuItem,
-  MenuDivider,
-  IconButton,
+  MenuList,
+  Skeleton,
 } from '@chakra-ui/react'
-import {
-  authorizedFetcher,
-  useCurrentUser,
-  useUser,
-  useUserVote,
-} from '../utils/backend'
-import ModalDialog from './modal-dialog'
 import Linkify from 'react-linkify'
-import { Link as RouterLink, useParams } from 'react-router-dom'
-import { AddIcon, ChevronDownIcon, SunIcon } from '@chakra-ui/icons'
-import RemovePage from '../pages/remove-page'
+import { Link as RouterLink } from 'react-router-dom'
 import AddBetaVideo from '../pages/add-beta-video'
+import RemovePage from '../pages/remove-page'
+import { useCurrentUser, useUser } from '../utils/backend'
 import LikeVote from './like-vote'
+import ModalDialog from './modal-dialog'
 export default function BetaVideo({ betaVideo }) {
   const { user } = useUser(betaVideo.user_id)
   const youtubeVideoId = youtube_parser(betaVideo.video_url)
@@ -119,7 +111,7 @@ function youtube_parser(url) {
   var regExp =
     /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/
   var match = url.match(regExp)
-  return match && match[7].length == 11 ? match[7] : false
+  return match && match[7].length === 11 ? match[7] : false
 }
 
 export { BetaVideo, youtube_parser }

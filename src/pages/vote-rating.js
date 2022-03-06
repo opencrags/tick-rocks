@@ -1,31 +1,29 @@
 import {
-  Container,
+  Box,
+  Button,
   Center,
-  Heading,
-  Text,
-  Input,
+  Checkbox,
+  Container,
+  Flex,
   FormControl,
   FormLabel,
-  Button,
-  Checkbox,
+  Heading,
   Slider,
-  SliderTrack,
-  Box,
   SliderFilledTrack,
   SliderThumb,
-  HStack,
-  Flex,
+  SliderTrack,
+  Text,
 } from '@chakra-ui/react'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
+import { ClimbBreadcrumb } from '../components/breadcrumb.js'
 import Loader from '../components/loader.js'
+import Votes from '../components/votes.js'
 import {
-  useClimb,
   useAuthorizedFetcher,
+  useClimb,
   useUserVote,
 } from '../utils/backend.js'
-import { ClimbBreadcrumb } from '../components/breadcrumb.js'
-import Votes from '../components/votes.js'
 
 export default function VoteRating() {
   const { cragId, sectorId, climbId } = useParams()

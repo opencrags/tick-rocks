@@ -1,4 +1,4 @@
-import { Container, Center, Heading, Box, Text } from '@chakra-ui/react'
+import { Box, Center, Container, Heading, Text } from '@chakra-ui/react'
 import Dropzone from 'react-dropzone'
 import { useHistory, useParams } from 'react-router-dom'
 import { CragBreadcrumb } from '../components/breadcrumb.js'

@@ -1,19 +1,9 @@
-import {
-  Box,
-  Grid,
-  Heading,
-  Center,
-  Flex,
-  Button,
-  Spacer,
-  Container,
-  Text,
-} from '@chakra-ui/react'
-import React, { useState } from 'react'
+import { Box, Center, Container, Flex, Text } from '@chakra-ui/react'
+import React from 'react'
 import { Link as RouterLink, useParams } from 'react-router-dom'
 import Grade from '../components/grade'
-import { useClimbs, useCrag } from '../utils/backend'
-const climbId = ''
+import { useClimbs } from '../utils/backend'
+
 function CragGrades({ selection, children, ...props }) {
   const { cragId } = useParams()
   const { climbs, error: errorClimbs } = useClimbs({ crag_id: cragId })
@@ -50,35 +40,6 @@ function CragGrades({ selection, children, ...props }) {
     .reduce(reducer, {})
 
   const numberOfClimbs = Object.keys(climbs).length + 1
-
-  const gradeColorScheme = [
-    ['1', 'Green'],
-    ['2', 'Green'],
-    ['3', 'Green'],
-    ['4', 'Green'],
-    ['4+', 'Green'],
-    ['5', 'Green'],
-    ['5+', 'Green'],
-    ['6A', 'Green'],
-    ['6A+', 'Green'],
-    ['6B', 'Green'],
-    ['6B+', 'Green'],
-    ['6C', 'Green'],
-    ['6C+', 'Green'],
-    ['7A', 'Green'],
-    ['7A+', 'Green'],
-    ['7B', 'Green'],
-    ['7B+', 'Green'],
-    ['7C', 'Green'],
-    ['7C+', 'Green'],
-    ['8A', 'Green'],
-    ['8A+', 'Green'],
-    ['8B', 'Green'],
-    ['8B+', 'Green'],
-    ['8C', 'Green'],
-    ['8C+', 'Green'],
-    ['9A', 'Green'],
-  ]
 
   return (
     <Box id="cragGrades" mt="5px" mb="5px">
@@ -162,35 +123,6 @@ function SectorGrades({ sectorId, selection, children, ...props }) {
     .reduce(reducer, {})
 
   const numberOfClimbs = Object.keys(climbs).length + 1
-
-  const gradeColorScheme = [
-    ['1', 'Green'],
-    ['2', 'Green'],
-    ['3', 'Green'],
-    ['4', 'Green'],
-    ['4+', 'Green'],
-    ['5', 'Green'],
-    ['5+', 'Green'],
-    ['6A', 'Green'],
-    ['6A+', 'Green'],
-    ['6B', 'Green'],
-    ['6B+', 'Green'],
-    ['6C', 'Green'],
-    ['6C+', 'Green'],
-    ['7A', 'Green'],
-    ['7A+', 'Green'],
-    ['7B', 'Green'],
-    ['7B+', 'Green'],
-    ['7C', 'Green'],
-    ['7C+', 'Green'],
-    ['8A', 'Green'],
-    ['8A+', 'Green'],
-    ['8B', 'Green'],
-    ['8B+', 'Green'],
-    ['8C', 'Green'],
-    ['8C+', 'Green'],
-    ['9A', 'Green'],
-  ]
 
   return (
     <Box id="cragGrades" mt="5px" mb="5px">

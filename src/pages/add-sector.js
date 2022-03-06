@@ -1,21 +1,21 @@
 import {
-  Container,
+  Button,
   Center,
-  Heading,
-  Text,
-  Input,
+  Container,
   FormControl,
   FormLabel,
-  Button,
+  Heading,
+  HStack,
+  Input,
   NumberInput,
   NumberInputField,
-  HStack,
+  Text,
 } from '@chakra-ui/react'
-import Loader from '../components/loader.js'
 import { useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { useAuthorizedFetcher } from '../utils/backend.js'
 import { CragBreadcrumb } from '../components/breadcrumb.js'
+import Loader from '../components/loader.js'
+import { useAuthorizedFetcher } from '../utils/backend.js'
 
 export default function AddSector() {
   const { cragId } = useParams()

@@ -1,14 +1,14 @@
 import {
-  Container,
-  Center,
-  Heading,
-  Text,
-  Input,
-  FormControl,
-  FormLabel,
-  Button,
   Alert,
   AlertIcon,
+  Button,
+  Center,
+  Container,
+  FormControl,
+  FormLabel,
+  Heading,
+  Input,
+  Text,
 } from '@chakra-ui/react'
 import { useState } from 'react'
 import { useHistory } from 'react-router-dom'

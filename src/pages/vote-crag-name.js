@@ -1,20 +1,20 @@
 import {
-  Container,
+  Button,
   Center,
-  Heading,
-  Text,
-  Input,
+  Checkbox,
+  Container,
   FormControl,
   FormLabel,
-  Button,
-  Checkbox,
+  Heading,
+  Input,
+  Text,
 } from '@chakra-ui/react'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { CragBreadcrumb } from '../components/breadcrumb.js'
 import Loader from '../components/loader.js'
 import Votes from '../components/votes.js'
-import { useCrag, useAuthorizedFetcher, useUserVote } from '../utils/backend.js'
+import { useAuthorizedFetcher, useCrag, useUserVote } from '../utils/backend.js'
 
 export default function VoteCragName() {
   const { cragId } = useParams()

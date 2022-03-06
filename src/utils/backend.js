@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import useSwr, { mutate, useSWRConfig } from 'swr'
+import useSwr, { useSWRConfig } from 'swr'
 import { useAuth0 } from '@auth0/auth0-react'
 
 const useToken = () => {

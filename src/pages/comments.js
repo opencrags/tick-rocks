@@ -1,49 +1,38 @@
+import { useColorModeValue } from '@chakra-ui/color-mode'
+import { ChevronDownIcon } from '@chakra-ui/icons'
 import {
-  Box,
-  Heading,
-  Flex,
   Avatar,
-  Text,
-  Tooltip,
-  Spacer,
+  Box,
   Button,
-  Stack,
-  LinkBox,
-  useDisclosure,
   Collapse,
-  Wrap,
+  Flex,
+  IconButton,
   Menu,
   MenuButton,
-  MenuList,
   MenuItem,
-  MenuDivider,
-  IconButton,
+  MenuList,
+  Spacer,
+  Text,
+  useDisclosure,
+  Wrap,
 } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import React from 'react'
+import ModalDialog from '../components/modal-dialog'
 import AddComment from '../pages/add-comment'
-import { useColorMode, useColorModeValue } from '@chakra-ui/color-mode'
 import {
-  mostVoted,
   useAuthorizedFetcher,
-  useBackend,
-  useClimb,
   useComments,
-  useCrag,
   useCurrentUser,
-  useSector,
   useUser,
 } from '../utils/backend'
-import {
-  ClimbBreadcrumb,
-  CragBreadcrumb,
-  SectorBreadcrumb,
-} from '../components/breadcrumb'
-import ModalDialog from '../components/modal-dialog'
-
-import { AddIcon, ChevronDownIcon, SunIcon } from '@chakra-ui/icons'
 import RemovePage from './remove-page'
-export default function Comments({ relatedId, children, wrap }) {
+
+export default function Comments({ relatedId, wrap }) {
   const { comments, error: errorComments } = useComments(relatedId)
+
+  if (errorComments) {
+    return 'Error loading comments'
+  }
 
   if (comments === undefined) {
     return ''
@@ -87,9 +76,9 @@ function Comment({ comment }) {
   const { isAuthenticated } = useAuthorizedFetcher()
   const { isOpen, onToggle } = useDisclosure()
   const { user } = useUser(comment?.user_id)
-  const { crag } = useCrag(comment?.all_related_ids[0])
-  const { sector } = useSector(comment?.all_related_ids[1])
-  const { climb } = useClimb(comment?.all_related_ids[2])
+  // const { crag } = useCrag(comment?.all_related_ids[0])
+  // const { sector } = useSector(comment?.all_related_ids[1])
+  // const { climb } = useClimb(comment?.all_related_ids[2])
 
   return (
     <Box padding="2px" maxW="750px">

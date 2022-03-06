@@ -1,38 +1,31 @@
-import { useState, useEffect } from 'react'
+import { useColorModeValue } from '@chakra-ui/color-mode'
 import {
-  Container,
-  Center,
-  Heading,
-  Text,
-  Input,
-  FormControl,
-  FormLabel,
-  Button,
+  Avatar,
   Box,
+  Button,
+  Center,
+  Container,
   Flex,
-  SimpleGrid,
-  HStack,
-  VStack,
+  FormLabel,
   Grid,
   GridItem,
-  Avatar,
+  HStack,
+  Input,
+  Text,
   Textarea,
 } from '@chakra-ui/react'
-import Loader from '../components/loader.js'
-import { useCurrentUser, useAuthorizedFetcher } from '../utils/backend.js'
-import UserProfileBanner from '../components/user-profile-banner.js'
+import { useEffect, useState } from 'react'
 import { CragComponentBox } from '../components/crag-component-box.js'
-
-import { useColorModeValue } from '@chakra-ui/color-mode'
+import Loader from '../components/loader.js'
 import { PageFooter } from '../components/page-footer.js'
-import { useParams } from 'react-router'
+import UserProfileBanner from '../components/user-profile-banner.js'
+import { useAuthorizedFetcher, useCurrentUser } from '../utils/backend.js'
+
 export default function Settings() {
   const { user, userError, mutate } = useCurrentUser()
   const { authorizedFetcher, isLoading, authError } = useAuthorizedFetcher()
   const [displayName, setDisplayName] = useState(null)
-  const userId = user?.id
   const bg = useColorModeValue('offwhite', 'gray.700')
-  const boxBg = useColorModeValue('gray.300', 'gray.900')
 
   useEffect(() => {
     if (displayName === null && user) {

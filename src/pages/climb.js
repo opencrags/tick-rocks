@@ -1,81 +1,64 @@
+import { useColorModeValue } from '@chakra-ui/color-mode'
+import { ChevronDownIcon } from '@chakra-ui/icons'
 import {
-  Container,
-  Center,
-  Heading,
-  Text,
-  VStack,
-  HStack,
-  Box,
-  Progress,
-  Link,
-  LinkBox,
-  Flex,
-  Button,
-  Spacer,
-  AspectRatio,
-  OrderedList,
-  ListItem,
-  Skeleton,
-  Avatar,
-  Tag,
-  TagLeftIcon,
-  TagLabel,
-  Icon,
-  TagRightIcon,
-  Tooltip,
-  Wrap,
   Alert,
   AlertIcon,
-  CloseButton,
-  Image,
+  AspectRatio,
+  Avatar,
+  Box,
+  Button,
+  Center,
   Collapse,
+  Container,
+  Flex,
+  Heading,
+  HStack,
+  IconButton,
+  Link,
+  LinkBox,
+  ListItem,
   Menu,
   MenuButton,
-  MenuList,
   MenuItem,
-  MenuDivider,
-  IconButton,
+  MenuList,
+  OrderedList,
+  Progress,
+  Skeleton,
+  Spacer,
+  Text,
 } from '@chakra-ui/react'
+import React from 'react'
 import Linkify from 'react-linkify'
 import { Link as RouterLink, useParams } from 'react-router-dom'
-import Loader from '../components/loader.js'
-import EditButton from '../components/edit-button.js'
-import VoteConflictWarning from '../components/vote-conflict-warning.js'
-import { BetaVideo, youtube_parser } from '../components/beta-video.js'
+import StarRatings from 'react-star-ratings'
 import AscentType from '../components/ascent-type.js'
+import { BetaVideo, youtube_parser } from '../components/beta-video.js'
+import { ClimbBreadcrumb } from '../components/breadcrumb.js'
+import { CragBanner, CragBannerMenu } from '../components/crag-banner.js'
+import EditButton from '../components/edit-button.js'
 import Grade from '../components/grade.js'
+import LineImage from '../components/line-image.js'
+import Loader from '../components/loader.js'
+import ModalDialog from '../components/modal-dialog.js'
+import { PageFooter } from '../components/page-footer.js'
+import { TickRocksLogo } from '../components/tick-rocks-logo.js'
+import VoteConflictWarning from '../components/vote-conflict-warning.js'
 import {
-  useClimb,
-  useLines,
-  useImage,
-  useAscents,
-  useBetaVideos,
   countVotes,
   mostVoted,
-  useUser,
+  useAscents,
+  useBetaVideos,
+  useClimb,
   useCurrentUser,
+  useImage,
+  useLines,
+  useUser,
 } from '../utils/backend.js'
-import LineImage from '../components/line-image.js'
-import { ClimbBreadcrumb } from '../components/breadcrumb.js'
-import StarRatings from 'react-star-ratings'
-import {
-  CragBanner,
-  CragBannerMenu,
-  CragBannerMenuButton,
-} from '../components/crag-banner.js'
-import { CragLatestDiscussions } from '../components/crag-latestdiscussions.js'
-import { PageFooter } from '../components/page-footer.js'
-import { CragComponentBox } from '../components/crag-component-box.js'
-import { TickRocksLogo } from '../components/tick-rocks-logo.js'
-import { useColorMode, useColorModeValue } from '@chakra-ui/color-mode'
-import { AddIcon, ChevronDownIcon, SunIcon } from '@chakra-ui/icons'
-import ModalDialog from '../components/modal-dialog.js'
 import AddAscent from './add-ascent.js'
-import Comments from './comments.js'
 import AddBetaVideo from './add-beta-video.js'
-import React from 'react'
-import VoteClimbBroken from './vote-climb-broken.js'
+import Comments from './comments.js'
 import RemovePage from './remove-page.js'
+import VoteClimbBroken from './vote-climb-broken.js'
 
 export default function Climb() {
   const { cragId, sectorId, climbId } = useParams()

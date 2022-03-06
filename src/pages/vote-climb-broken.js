@@ -1,37 +1,24 @@
 import {
-  Container,
+  Box,
+  Button,
   Center,
-  Heading,
-  Text,
-  Input,
+  Checkbox,
+  Container,
   FormControl,
   FormLabel,
-  Button,
-  Checkbox,
-  Box,
-  Flex,
-  useColorModeValue,
-  Stack,
-  Radio,
-  RadioGroup,
+  Text,
 } from '@chakra-ui/react'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import Loader from '../components/loader.js'
-import {
-  useClimb,
-  useAuthorizedFetcher,
-  useUserVote,
-  mostVoted,
-} from '../utils/backend.js'
-
-import { ClimbBreadcrumb } from '../components/breadcrumb.js'
 import Votes from '../components/votes.js'
 import {
-  CragBanner,
-  CragBannerMenu,
-  CragBannerMenuButton,
-} from '../components/crag-banner.js'
+  mostVoted,
+  useAuthorizedFetcher,
+  useClimb,
+  useUserVote,
+} from '../utils/backend.js'
+
 export default function VoteClimbBroken() {
   const { cragId, sectorId, climbId } = useParams()
   const { climb, error: errorClimb } = useClimb(climbId)
@@ -44,9 +31,6 @@ export default function VoteClimbBroken() {
   const history = useHistory()
   const [climbBroken, setClimbBroken] = useState(true)
   const [publicVote, setPublicVote] = useState(true)
-  const bg = useColorModeValue('offwhite', 'gray.700')
-  const boxBg = useColorModeValue('gray.100', 'gray.800')
-  const inputBg = useColorModeValue('gray.300', 'gray.700')
 
   useEffect(() => {
     if (climbBroken === null && userVote) {
