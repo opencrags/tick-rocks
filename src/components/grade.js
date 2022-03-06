@@ -1,5 +1,4 @@
-import { Text, Skeleton } from '@chakra-ui/react'
-
+import { Skeleton } from '@chakra-ui/react'
 import { useGradeSystemGrade } from '../utils/backend.js'
 
 export default function Grade({ gradeId }) {

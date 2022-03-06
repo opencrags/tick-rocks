@@ -1,26 +1,25 @@
 import {
-  Container,
+  Button,
   Center,
+  Container,
+  FormControl,
+  FormLabel,
   Heading,
   Select,
   Text,
-  FormControl,
-  FormLabel,
-  Button,
 } from '@chakra-ui/react'
 import { useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
+import { ImageBreadcrumb } from '../components/breadcrumb.js'
 import Loader from '../components/loader.js'
+import TopoPlotter from '../components/topo-plotter.js'
 import {
+  mostVoted,
   useAuthorizedFetcher,
   useClimbs,
   useImage,
   useLines,
-  mostVoted,
 } from '../utils/backend.js'
-import { ImageBreadcrumb } from '../components/breadcrumb.js'
-
-import TopoPlotter from '../components/topo-plotter.js'
 
 export default function AddLine() {
   const { cragId, sectorId, imageId } = useParams()

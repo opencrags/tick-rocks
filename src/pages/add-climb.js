@@ -1,22 +1,22 @@
 import {
-  Container,
+  Button,
   Center,
-  Heading,
-  Text,
-  Input,
+  Container,
   FormControl,
   FormLabel,
-  Button,
+  Heading,
+  Input,
   Select,
+  Text,
 } from '@chakra-ui/react'
 import { useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { SectorBreadcrumb } from '../components/breadcrumb.js'
 import Loader from '../components/loader.js'
 import {
-  useSector,
-  useGradeSystemGrades,
   useAuthorizedFetcher,
+  useGradeSystemGrades,
+  useSector,
 } from '../utils/backend.js'
 
 export default function AddClimb() {

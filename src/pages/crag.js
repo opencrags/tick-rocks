@@ -1,64 +1,60 @@
+import { useColorModeValue } from '@chakra-ui/color-mode'
+import { AddIcon, ChevronDownIcon, EditIcon } from '@chakra-ui/icons'
 import {
-  Container,
-  Center,
-  Heading,
-  LinkBox,
-  Text,
-  Button,
-  Box,
-  Flex,
-  AvatarGroup,
-  Avatar,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  Stack,
-  Link,
-  Spacer,
-  IconButton,
-  Grid,
-  Wrap,
   Alert,
   AlertIcon,
-  CloseButton,
   AlertTitle,
+  Avatar,
+  AvatarGroup,
+  Box,
+  Button,
+  Center,
+  CloseButton,
+  Container,
+  Flex,
+  Heading,
+  IconButton,
+  Link,
+  LinkBox,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Spacer,
+  Stack,
   Tag,
+  Text,
+  Wrap,
 } from '@chakra-ui/react'
 import Linkify from 'react-linkify'
-
 import { Link as RouterLink, useParams } from 'react-router-dom'
-import Loader from '../components/loader.js'
+import {
+  CragBannerMenu,
+  CragFrontPageBanner,
+} from '../components/crag-banner.js'
+import { CragComponentBox } from '../components/crag-component-box'
+import { CragGrades } from '../components/crag-grades.js'
 import EditButton from '../components/edit-button.js'
+import Loader from '../components/loader.js'
+import ModalDialog from '../components/modal-dialog.js'
+import { PageFooter } from '../components/page-footer.js'
+import { PhotoGrid } from '../components/photo-grid.js'
+import { Sector, SectorGrid } from '../components/sectors.js'
 import VoteConflictWarning from '../components/vote-conflict-warning.js'
 import {
-  useCrag,
-  useSectors,
-  mostVoted,
-  useCragPhotos,
   countVotes,
+  mostVoted,
+  useCrag,
+  useCragPhotos,
+  useSectors,
 } from '../utils/backend.js'
-import {
-  CragFrontPageBannerMenu,
-  CragFrontPageBanner,
-  CragBannerMenu,
-} from '../components/crag-banner.js'
-import { PhotoGrid } from '../components/photo-grid.js'
-import { CragComponentBox } from '../components/crag-component-box'
-import { SectorGrid, Sector } from '../components/sectors.js'
-import { CragGrades } from '../components/crag-grades.js'
-import { ChevronDownIcon, EditIcon, AddIcon } from '@chakra-ui/icons'
-import { PageFooter } from '../components/page-footer.js'
-import { useColorMode, useColorModeValue } from '@chakra-ui/color-mode'
-import ModalDialog from '../components/modal-dialog.js'
-import AddSector from './add-sector.js'
 import AddCragPhoto from './add-crag-photo.js'
+import AddSector from './add-sector.js'
 import Comments from './comments.js'
-import { ParallaxBanner } from 'react-scroll-parallax'
+
 export default function Crag() {
   const bg = useColorModeValue('gray.200', 'gray.700')
   const boxBg = useColorModeValue('offwhite', 'gray.600')
-  const buttonBg = useColorModeValue('gray.200', 'gray.600')
   const headingColor = useColorModeValue('gray.900', 'gray.100')
   const headingShadow = useColorModeValue(
     'none',

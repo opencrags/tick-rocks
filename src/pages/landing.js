@@ -1,29 +1,22 @@
 import { useAuth0 } from '@auth0/auth0-react'
 import {
-  Container,
-  Center,
-  Text,
+  Avatar,
   Box,
-  LinkBox,
+  Button,
+  Center,
+  Container,
   Flex,
   Heading,
   HStack,
-  Input,
-  Button,
-  SimpleGrid,
   Link,
-  Avatar,
-  Wrap,
+  SimpleGrid,
+  Text,
 } from '@chakra-ui/react'
+import { Link as RouterLink } from 'react-router-dom'
 import Loader from '../components/loader.js'
 import { PageFooter } from '../components/page-footer.js'
-import { ParallaxBanner } from 'react-scroll-parallax'
 import { TickRocksLogo } from '../components/tick-rocks-logo.js'
-import { useDisclosure } from '@chakra-ui/hooks'
-import { SearchIcon } from '@chakra-ui/icons'
-
-import { useCurrentUser, useQuickSearch, mostVoted } from '../utils/backend'
-import { Link as RouterLink } from 'react-router-dom'
+import { useCurrentUser } from '../utils/backend'
 
 export default function Landing() {
   return (
@@ -114,27 +107,6 @@ export default function Landing() {
       </Box>
 
       <PageFooter position="relative" zIndex="docked" />
-    </Box>
-  )
-}
-
-function LandingPageSlider({ imageUrl }) {
-  return (
-    <Box>
-      <ParallaxBanner
-        className="your-class"
-        layers={[
-          {
-            image: imageUrl,
-            amount: 0.7,
-          },
-        ]}
-        style={{
-          height: '50vh',
-        }}
-      >
-        <h1>Banner Children</h1>
-      </ParallaxBanner>
     </Box>
   )
 }

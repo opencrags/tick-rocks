@@ -1,23 +1,22 @@
 import {
   Box,
-  SimpleGrid,
-  Center,
-  Flex,
-  useDisclosure,
-  SlideFade,
-  LinkBox,
-  Fade,
-  Collapse,
   Button,
+  Center,
+  Collapse,
+  Fade,
+  Flex,
+  LinkBox,
+  SimpleGrid,
   useBreakpointValue,
+  useDisclosure,
 } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Link as RouterLink } from 'react-router-dom'
-import { useImages, useSector } from '../utils/backend.js'
-import { CragGrades, SectorGrades } from './crag-grades.js'
-import DateBadge from './date-badge.js'
+import { useImages } from '../utils/backend.js'
+import { SectorGrades } from './crag-grades.js'
+
 function SectorGrid({ sectors, children, ...props }) {
-  const [show, setShow] = React.useState(false)
+  const [show, setShow] = useState(false)
   const handleToggle = () => setShow(!show)
   const responsiveColumns = useBreakpointValue({
     base: 3,
@@ -68,8 +67,11 @@ function SectorGrid({ sectors, children, ...props }) {
 
 function Sector({ cragId, sectorId, children, ...props }) {
   const { images, error: errorImages } = useImages({ sector_id: sectorId })
-  const { sector, error: errorSector } = useSector(sectorId)
   const { isOpen, onToggle } = useDisclosure()
+
+  if (errorImages) {
+    return null
+  }
 
   return (
     <Box
@@ -138,9 +140,6 @@ function Sector({ cragId, sectorId, children, ...props }) {
 }
 
 function SectorList({ sectors, children, ...props }) {
-  const [show, setShow] = React.useState(false)
-  const handleToggle = () => setShow(!show)
-
   return (
     <Box>
       <SimpleGrid
@@ -161,8 +160,11 @@ function SectorList({ sectors, children, ...props }) {
 
 function SectorListItem({ cragId, sectorId, children, ...props }) {
   const { images, error: errorImages } = useImages({ sector_id: sectorId })
-  const { sector, error: errorSector } = useSector(sectorId)
   const { isOpen, onToggle } = useDisclosure()
+
+  if (errorImages) {
+    return null
+  }
 
   return (
     <Box

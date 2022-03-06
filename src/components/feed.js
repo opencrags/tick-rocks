@@ -1,30 +1,14 @@
-import { useState, useEffect } from 'react'
-import {
-  Container,
-  Center,
-  Heading,
-  Text,
-  Input,
-  FormControl,
-  FormLabel,
-  Button,
-  Box,
-  Flex,
-  SimpleGrid,
-  HStack,
-  VStack,
-  Grid,
-  GridItem,
-  Avatar,
-  Textarea,
-  Image,
-} from '@chakra-ui/react'
-import Loader from '../components/loader.js'
-import { useCurrentUser, useAuthorizedFetcher } from '../utils/backend.js'
-import UserProfileBanner from '../components/user-profile-banner.js'
-import { CragComponentBox } from '../components/crag-component-box.js'
 import { useColorModeValue } from '@chakra-ui/color-mode'
-import BetaVideo from './beta-video.js'
+import {
+  Avatar,
+  Box,
+  Button,
+  HStack,
+  Image,
+  Text,
+  VStack,
+} from '@chakra-ui/react'
+
 export default function Feed(filter) {
   return (
     <Box>

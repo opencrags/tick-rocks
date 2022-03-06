@@ -1,61 +1,28 @@
+import { useColorModeValue } from '@chakra-ui/color-mode'
+import { AddIcon } from '@chakra-ui/icons'
 import {
-  Container,
-  Center,
-  Heading,
-  LinkBox,
-  Text,
-  Button,
   Box,
+  Button,
+  Container,
   Flex,
-  AvatarGroup,
-  Avatar,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  Stack,
+  Heading,
+  IconButton,
   Link,
   Spacer,
-  IconButton,
-  Grid,
-  Wrap,
-  Alert,
-  AlertIcon,
-  CloseButton,
-  AlertTitle,
+  Stack,
+  Text,
 } from '@chakra-ui/react'
-import Linkify from 'react-linkify'
-
-import { Link as RouterLink, useParams } from 'react-router-dom'
-import Loader from '../components/loader.js'
-import EditButton from '../components/edit-button.js'
-import VoteConflictWarning from '../components/vote-conflict-warning.js'
-import {
-  useCrag,
-  useSectors,
-  mostVoted,
-  useCragPhotos,
-} from '../utils/backend.js'
-import {
-  CragFrontPageBannerMenu,
-  CragFrontPageBanner,
-  CragBannerMenu,
-} from '../components/crag-banner.js'
-import { CragComponentBox } from '../components/crag-component-box'
-import { CragGrades } from '../components/crag-grades.js'
-import { ChevronDownIcon, EditIcon, AddIcon } from '@chakra-ui/icons'
-import { PageFooter } from '../components/page-footer.js'
-import { useColorMode, useColorModeValue } from '@chakra-ui/color-mode'
-import ModalDialog from '../components/modal-dialog.js'
-import AddSector from './add-sector.js'
-import AddCragPhoto from './add-crag-photo.js'
-import Comments from './comments.js'
+import { Link as RouterLink } from 'react-router-dom'
 import { ParallaxBanner } from 'react-scroll-parallax'
+import { CragComponentBox } from '../components/crag-component-box'
+import ModalDialog from '../components/modal-dialog.js'
+import { PageFooter } from '../components/page-footer.js'
+import AddSector from './add-sector.js'
+import Comments from './comments.js'
 
 export default function Area() {
   const bg = useColorModeValue('offwhite', 'gray.700')
   const boxBg = useColorModeValue('gray.100', 'gray.600')
-  const buttonBg = useColorModeValue('gray.200', 'gray.600')
   const headingColor = useColorModeValue('gray.900', 'gray.100')
   const headingShadow = useColorModeValue(
     'none',
@@ -301,7 +268,7 @@ export default function Area() {
         </Box>
       </CragComponentBox>
       <CragComponentBox>
-        <Box mt="10px" mt="5px" pb="5px">
+        <Box mt="5px" pb="5px">
           <Flex>
             <Heading
               color={headingColor}

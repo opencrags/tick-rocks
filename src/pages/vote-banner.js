@@ -1,28 +1,26 @@
 import {
-  Container,
+  Box,
+  Button,
   Center,
-  Heading,
-  Text,
-  Input,
+  Checkbox,
+  Container,
   FormControl,
   FormLabel,
-  Button,
-  Checkbox,
-  Box,
-  Progress,
+  Heading,
   Image,
+  Progress,
+  Text,
 } from '@chakra-ui/react'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { CragBreadcrumb } from '../components/breadcrumb.js'
 import Loader from '../components/loader.js'
-import Votes from '../components/votes.js'
 import {
-  useCrag,
-  useAuthorizedFetcher,
-  useUserVote,
-  useCragPhotos,
   countVotes,
+  useAuthorizedFetcher,
+  useCrag,
+  useCragPhotos,
+  useUserVote,
 } from '../utils/backend.js'
 
 export default function VoteBanner() {

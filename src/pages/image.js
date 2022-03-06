@@ -1,9 +1,9 @@
-import { Container, Center, Link, Text, Button } from '@chakra-ui/react'
-import Loader from '../components/loader.js'
+import { Button, Center, Container, Link, Text } from '@chakra-ui/react'
 import { Link as RouterLink, useParams } from 'react-router-dom'
-import { useImage, useLines } from '../utils/backend.js'
-import LineImage from '../components/line-image.js'
 import { ImageBreadcrumb } from '../components/breadcrumb.js'
+import LineImage from '../components/line-image.js'
+import Loader from '../components/loader.js'
+import { useImage, useLines } from '../utils/backend.js'
 
 export default function RockImage() {
   const { cragId, sectorId, imageId } = useParams()

@@ -1,9 +1,9 @@
-import { Container, Center, Text, Code } from '@chakra-ui/react'
+import { Center, Code, Container, Text } from '@chakra-ui/react'
 import { useParams } from 'react-router-dom'
-import Loader from '../components/loader.js'
-import { useLine, useImage } from '../utils/backend.js'
-import LineImage from '../components/line-image.js'
 import { ImageBreadcrumb } from '../components/breadcrumb.js'
+import LineImage from '../components/line-image.js'
+import Loader from '../components/loader.js'
+import { useImage, useLine } from '../utils/backend.js'
 
 export default function Line() {
   const { lineId } = useParams()

@@ -1,42 +1,34 @@
+import { useColorModeValue } from '@chakra-ui/color-mode'
 import {
-  Container,
-  Center,
-  Heading,
-  Text,
-  Input,
-  FormControl,
-  FormLabel,
-  Button,
   Alert,
   AlertIcon,
-  InputRightElement,
-  Flex,
   Avatar,
   Box,
+  Button,
+  Center,
+  Container,
+  Flex,
+  FormControl,
+  Input,
   InputGroup,
-  Textarea,
-  useBoolean,
+  InputRightElement,
+  Text,
 } from '@chakra-ui/react'
-import { useSWRConfig } from 'swr'
 import { useState } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import Loader from '../components/loader.js'
 import {
   useAuthorizedFetcher,
-  useBackend,
-  useCurrentUser,
   useBackendMatchMutate,
+  useCurrentUser,
 } from '../utils/backend.js'
-import { useColorMode, useColorModeValue } from '@chakra-ui/color-mode'
 
 export default function AddComment({ commentId }) {
   const boxBg = useColorModeValue('gray.200', 'gray.800')
   const { authorizedFetcher, isLoading, error } = useAuthorizedFetcher()
-  const history = useHistory()
   const [comment, setComment] = useState('')
   const [attemptedEmptyComment, setAttemptedEmptyComment] = useState(false)
   const { user } = useCurrentUser()
-  const [expand, setExpand] = useBoolean()
   const relatedIds = useParams()
   const relatedType = Object.keys(relatedIds).at(-1).replace('Id', '')
   const backendMatchMutate = useBackendMatchMutate()

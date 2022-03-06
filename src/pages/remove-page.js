@@ -1,27 +1,20 @@
 import {
-  Container,
-  Center,
-  Heading,
-  Text,
-  Button,
   Box,
+  Button,
+  Center,
+  Container,
+  Heading,
   HStack,
+  Text,
 } from '@chakra-ui/react'
-import { useState } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
 import Loader from '../components/loader.js'
 import {
   useAuthorizedFetcher,
-  useBackend,
   useBackendMatchMutate,
-  useCurrentUser,
 } from '../utils/backend.js'
-import { useColorMode, useColorModeValue } from '@chakra-ui/color-mode'
 
 export default function RemovePage({ item, itemType, itemPath }) {
-  const boxBg = useColorModeValue('gray.200', 'gray.800')
   const { authorizedFetcher, isLoading, error } = useAuthorizedFetcher()
-  const history = useHistory()
   const backendMatchMutate = useBackendMatchMutate()
 
   const handleRemove = () => {

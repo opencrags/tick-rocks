@@ -1,24 +1,20 @@
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import {
+  Box,
   Breadcrumb,
-  Text,
   BreadcrumbItem,
   BreadcrumbLink,
   Code,
   Tag,
   useColorModeValue,
-  Button,
-  Flex,
-  Box,
 } from '@chakra-ui/react'
 import { Link as RouterLink } from 'react-router-dom'
-
 import {
-  useCrag,
-  useSector,
-  useClimb,
-  useImage,
   mostVoted,
+  useClimb,
+  useCrag,
+  useImage,
+  useSector,
 } from '../utils/backend.js'
 
 const useCragBreadcrumbs = (cragId) => {

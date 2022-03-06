@@ -1,29 +1,29 @@
 import {
-  Container,
+  Button,
   Center,
-  Heading,
-  Text,
-  Select,
+  Checkbox,
+  Container,
   FormControl,
   FormLabel,
-  Button,
+  Heading,
   HStack,
-  Checkbox,
+  Select,
+  Text,
 } from '@chakra-ui/react'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
+import { ClimbBreadcrumb } from '../components/breadcrumb.js'
+import Grade from '../components/grade.js'
 import Loader from '../components/loader.js'
 import Votes from '../components/votes.js'
-import Grade from '../components/grade.js'
 import {
+  mostVoted,
+  useAuthorizedFetcher,
   useClimb,
   useGradeSystemGrade,
   useGradeSystemGrades,
-  useAuthorizedFetcher,
-  mostVoted,
   useUserVote,
 } from '../utils/backend.js'
-import { ClimbBreadcrumb } from '../components/breadcrumb.js'
 
 export default function VoteClimbGrade() {
   const { cragId, sectorId, climbId } = useParams()

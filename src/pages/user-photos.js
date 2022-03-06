@@ -1,32 +1,14 @@
-import {
-  Container,
-  Center,
-  Heading,
-  Link,
-  LinkBox,
-  Text,
-  UnorderedList,
-  ListItem,
-  Box,
-  HStack,
-  Image,
-  Flex,
-  VStack,
-  Avatar,
-  Spacer,
-} from '@chakra-ui/react'
-import { PhotoGrid } from '../components/photo-grid.js'
-import { Link as RouterLink, useParams } from 'react-router-dom'
-import Loader from '../components/loader.js'
-import { useUser } from '../utils/backend.js'
 import { useColorModeValue } from '@chakra-ui/color-mode'
-import { useCragPhotos } from '../utils/backend.js'
-import { PageFooter } from '../components/page-footer.js'
-import UserProfileBanner from '../components/user-profile-banner.js'
-import Feed from '../components/feed.js'
+import { Box, Center, Container, Text } from '@chakra-ui/react'
+import { useParams } from 'react-router-dom'
 import { CragComponentBox } from '../components/crag-component-box.js'
+import Loader from '../components/loader.js'
+import { PageFooter } from '../components/page-footer.js'
+import { PhotoGrid } from '../components/photo-grid.js'
+import UserProfileBanner from '../components/user-profile-banner.js'
+import { useCragPhotos, useUser } from '../utils/backend.js'
+
 export default function UserPhotos() {
-  const bannerColor = useColorModeValue('gray.300', 'gray.800')
   const { userId } = useParams()
   const { user, error: erroruser } = useUser(userId)
   const { cragPhotos, error: errorphotos } = useCragPhotos({ user_id: userId })

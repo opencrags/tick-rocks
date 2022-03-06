@@ -1,23 +1,23 @@
 import {
-  Container,
+  Button,
   Center,
-  Heading,
-  Text,
+  Checkbox,
+  Container,
   FormControl,
   FormLabel,
-  Button,
-  Checkbox,
+  Heading,
   NumberInput,
   NumberInputField,
+  Text,
 } from '@chakra-ui/react'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { SectorBreadcrumb } from '../components/breadcrumb.js'
 import Loader from '../components/loader.js'
 import Votes from '../components/votes.js'
 import {
-  useSector,
   useAuthorizedFetcher,
+  useSector,
   useUserVote,
 } from '../utils/backend.js'
 

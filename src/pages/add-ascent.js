@@ -1,46 +1,37 @@
 import {
-  Container,
+  Button,
   Center,
-  Heading,
-  Text,
-  Input,
+  Checkbox,
+  Container,
   FormControl,
   FormLabel,
-  Button,
-  Select,
-  Checkbox,
+  Heading,
+  HStack,
+  Input,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
   NumberInput,
   NumberInputField,
   NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
-  Alert,
-  AlertIcon,
-  Box,
-  HStack,
-  RadioGroup,
   Radio,
-  Stack,
+  RadioGroup,
+  Text,
   VStack,
-  Textarea,
 } from '@chakra-ui/react'
-import { useState } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
+import React, { useState } from 'react'
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
+import { useParams } from 'react-router-dom'
 import { ClimbBreadcrumb } from '../components/breadcrumb.js'
 import Loader from '../components/loader.js'
+import { TickRocksLogo } from '../components/tick-rocks-logo.js'
 import {
   useAuthorizedFetcher,
   useBackendMatchMutate,
 } from '../utils/backend.js'
-import DatePicker from 'react-datepicker'
-import 'react-datepicker/dist/react-datepicker.css'
-import StarRatings from 'react-star-ratings'
-import React from 'react'
-import { TickRocksLogo } from '../components/tick-rocks-logo.js'
 
 export default function AddAscent({ ascent }, onClose) {
-  const { cragId, sectorId, climbId } = useParams()
-  const history = useHistory()
+  const { climbId } = useParams()
   const { authorizedFetcher, isLoading, authError } = useAuthorizedFetcher()
   const [ascentDate, setAscentDate] = useState(Date.now())
   const [editAscentDate, setEditAscentDate] = useState(
@@ -80,9 +71,6 @@ export default function AddAscent({ ascent }, onClose) {
         public: !anonymous,
       }),
     })
-
-  const navigateToClimb = () =>
-    history.replace(`/crags/${cragId}/sectors/${sectorId}/climbs/${climbId}`)
 
   const handleSubmit = () => {
     if (ascent != null) {

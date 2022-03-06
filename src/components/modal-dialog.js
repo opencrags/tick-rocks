@@ -1,13 +1,12 @@
-import React from 'react'
 import { useDisclosure } from '@chakra-ui/hooks'
 import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalCloseButton,
   Box,
-  Button,
+  Modal,
+  ModalCloseButton,
+  ModalContent,
+  ModalOverlay,
 } from '@chakra-ui/react'
+import React from 'react'
 
 export default function ModalDialog({
   padding = '20px',

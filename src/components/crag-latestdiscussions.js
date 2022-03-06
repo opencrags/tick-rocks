@@ -1,21 +1,19 @@
+import { useColorModeValue } from '@chakra-ui/color-mode'
+import { AddIcon } from '@chakra-ui/icons'
 import {
-  Box,
-  Heading,
-  Flex,
   Avatar,
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Spacer,
+  Stack,
   Text,
   Tooltip,
-  Spacer,
-  Button,
-  Stack,
 } from '@chakra-ui/react'
 import React from 'react'
-import { AddIcon } from '@chakra-ui/icons'
-import { useColorMode, useColorModeValue } from '@chakra-ui/color-mode'
 function CragLatestDiscussions({ children, ...props }) {
-  const bg = useColorModeValue('offwhite', 'gray.700')
   const boxBg = useColorModeValue('gray.100', 'gray.800')
-  const buttonBg = useColorModeValue('gray.200', 'gray.600')
   const headingShadow = ('3px 3px 3px rgba(0, 0, 0, 0.2)', 'none')
   return (
     <Box id="cragForum" mt="10px" mb="5px">

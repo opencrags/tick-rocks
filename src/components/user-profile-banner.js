@@ -1,33 +1,27 @@
-import {
-  Container,
-  Center,
-  Heading,
-  Link,
-  LinkBox,
-  Text,
-  UnorderedList,
-  ListItem,
-  Box,
-  HStack,
-  Image,
-  Flex,
-  VStack,
-  Avatar,
-  Spacer,
-  IconButton,
-  Button,
-} from '@chakra-ui/react'
-import { Link as RouterLink, useParams } from 'react-router-dom'
-import Loader from '../components/loader.js'
-import { useUser } from '../utils/backend.js'
 import { useColorModeValue } from '@chakra-ui/color-mode'
-import { useCragPhotos } from '../utils/backend.js'
-import { PageFooter } from '../components/page-footer.js'
 import { StarIcon } from '@chakra-ui/icons'
+import {
+  Avatar,
+  Box,
+  Button,
+  Center,
+  Flex,
+  Heading,
+  Image,
+  LinkBox,
+  Spacer,
+  Text,
+  VStack,
+} from '@chakra-ui/react'
+import { Link as RouterLink } from 'react-router-dom'
+import { useUser } from '../utils/backend.js'
 export default function UserProfileBanner({ userId, ...props }) {
   const bannerColor = useColorModeValue('gray.300', 'gray.800')
-  const bg = useColorModeValue('offwhite', 'gray.700')
-  const { user, error: erroruser } = useUser(userId)
+  const { user, error: errorUser } = useUser(userId)
+
+  if (errorUser) {
+    return null
+  }
 
   return (
     <>

@@ -1,32 +1,26 @@
+import { useColorModeValue } from '@chakra-ui/color-mode'
 import {
   Box,
-  Image,
-  Flex,
-  VStack,
-  Spacer,
-  Center,
-  Text,
-  LinkBox,
-  Heading,
   Button,
+  Center,
+  Flex,
+  Heading,
+  Image,
+  LinkBox,
+  Spacer,
+  Text,
+  VStack,
   Wrap,
-  HStack,
-  Tag,
-  TagLabel,
-  TagCloseButton,
 } from '@chakra-ui/react'
 import React from 'react'
 import { Link as RouterLink, useParams } from 'react-router-dom'
 import { ParallaxBanner } from 'react-scroll-parallax'
-import { useCrag, useCragPhoto, mostVoted, useSectors } from '../utils/backend'
-import { CragComponentBox } from './crag-component-box'
+import { mostVoted, useCrag, useCragPhoto, useSectors } from '../utils/backend'
+import DrawerDialog from './drawer-dialog'
 import EditButton from './edit-button'
+import { SectorList, SectorListItem } from './sectors'
 import VoteConflictWarning from './vote-conflict-warning'
 
-import { useColorMode, useColorModeValue } from '@chakra-ui/color-mode'
-import { Sector, SectorGrid, SectorList, SectorListItem } from './sectors'
-import ModalDialog from './modal-dialog'
-import DrawerDialog from './drawer-dialog'
 function CragBannerMenuButton({ children, to, buttonicon, ...props }) {
   const bg = useColorModeValue('gray.200', 'white')
   return (
@@ -69,7 +63,11 @@ function CragBannerMenu({ children }) {
   const bannerColor = useColorModeValue('gray.600', 'gray.800')
   const { cragId } = useParams()
   const { crag, error: cragError } = useCrag(cragId)
-  const { sectors, error: errorSectors } = useSectors({ crag_id: cragId }, 100)
+
+  if (cragError) {
+    return null
+  }
+
   return (
     <Box
       position={{ base: 'relative', xxs: 'sticky' }}
@@ -143,7 +141,6 @@ function CragBannerMenu({ children }) {
 }
 
 function CragBanner({ children, cragId, ...props }) {
-  const bannerColor = useColorModeValue('offwhite', 'gray.700')
   const { crag, error: cragError } = useCrag(cragId)
   const { cragPhoto, error: cragPhotoError } = useCragPhoto(
     crag && crag.banner_votes.length >= 1 ? mostVoted(crag.banner_votes) : null
@@ -288,11 +285,16 @@ function CragFrontPageBanner({
     </Box>
   )
 }
-function CragBannerSectors({}) {
-  const bannerColor = useColorModeValue('gray.600', 'gray.800')
+
+function CragBannerSectors() {
   const { cragId } = useParams()
   const { crag, error: cragError } = useCrag(cragId)
   const { sectors, error: errorSectors } = useSectors({ crag_id: cragId }, 100)
+
+  if (cragError || errorSectors) {
+    return null
+  }
+
   return (
     <Box>
       {sectors.length > 0 ? (

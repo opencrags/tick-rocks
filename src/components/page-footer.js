@@ -1,18 +1,5 @@
-import {
-  Box,
-  Link,
-  LinkBox,
-  LinkOverlay,
-  Text,
-  Flex,
-  HStack,
-  Spacer,
-  Image,
-  Heading,
-  propNames,
-} from '@chakra-ui/react'
-import { CragComponentBox } from './crag-component-box'
-import { Link as RouterLink, useParams } from 'react-router-dom'
+import { Box, Flex, Heading, Image, Link, Spacer, Text } from '@chakra-ui/react'
+import { Link as RouterLink } from 'react-router-dom'
 import { TickRocksLogo } from './tick-rocks-logo'
 
 export function PageFooter({ ...props }) {
