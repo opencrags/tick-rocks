@@ -12,7 +12,7 @@ import {
 } from '@chakra-ui/react'
 import { useState } from 'react'
 import { Link as RouterLink } from 'react-router-dom'
-import { useImages } from '../utils/backend.js'
+import { useImages } from '../../utils/backend.js'
 import { SectorGrades } from './crag-grades.js'
 
 function SectorGrid({ sectors, children, ...props }) {

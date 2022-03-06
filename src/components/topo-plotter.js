@@ -10,7 +10,7 @@ import {
 import CanvasOverlay from './canvas-overlay'
 
 export default function TopoPlotter({ image, linePath, setLinePath, lines }) {
-  const parsedLines = lines.map((line) => mostVoted(line.line_path_votes))
+  const parsedLines = lines?.map((line) => mostVoted(line.line_path_votes))
 
   const draw = useCallback(
     (ctx) => {

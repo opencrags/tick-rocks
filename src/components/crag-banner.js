@@ -18,7 +18,7 @@ import { ParallaxBanner } from 'react-scroll-parallax'
 import { mostVoted, useCrag, useCragPhoto, useSectors } from '../utils/backend'
 import DrawerDialog from './drawer-dialog'
 import EditButton from './edit-button'
-import { SectorList, SectorListItem } from './sectors'
+import { SectorList, SectorListItem } from '../pages/crag/sectors'
 import VoteConflictWarning from './vote-conflict-warning'
 
 function CragBannerMenuButton({ children, to, buttonicon, ...props }) {
@@ -111,6 +111,10 @@ function CragBannerMenu({ children }) {
             >
               <CragBannerSectors />
             </DrawerDialog>
+            <CragBannerMenuDivider />
+            <CragBannerMenuButton to={`/crags/${cragId}/list`}>
+              Problems
+            </CragBannerMenuButton>
             <CragBannerMenuDivider />
             <CragBannerMenuButton to={`/crags/${cragId}/map`}>
               Map
@@ -297,7 +301,7 @@ function CragBannerSectors() {
 
   return (
     <Box>
-      {sectors.length > 0 ? (
+      {sectors && sectors.length > 0 ? (
         <SectorList sectors={sectors}>
           {sectors
             .filter((sector) => sector.name_votes.length >= 1 && sector)

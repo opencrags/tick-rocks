@@ -31,26 +31,26 @@ import { Link as RouterLink, useParams } from 'react-router-dom'
 import {
   CragBannerMenu,
   CragFrontPageBanner,
-} from '../components/crag-banner.js'
-import { CragComponentBox } from '../components/crag-component-box'
-import { CragGrades } from '../components/crag-grades.js'
-import EditButton from '../components/edit-button.js'
-import Loader from '../components/loader.js'
-import ModalDialog from '../components/modal-dialog.js'
-import { PageFooter } from '../components/page-footer.js'
-import { PhotoGrid } from '../components/photo-grid.js'
-import { Sector, SectorGrid } from '../components/sectors.js'
-import VoteConflictWarning from '../components/vote-conflict-warning.js'
+} from '../../components/crag-banner.js'
+import { CragComponentBox } from '../../components/crag-component-box'
+import { CragGrades } from './crag-grades.js'
+import EditButton from '../../components/edit-button.js'
+import Loader from '../../components/loader.js'
+import ModalDialog from '../../components/modal-dialog.js'
+import { PageFooter } from '../../components/page-footer.js'
+import { PhotoGrid } from '../../components/photo-grid.js'
+import { Sector, SectorGrid } from './sectors.js'
+import VoteConflictWarning from '../../components/vote-conflict-warning.js'
 import {
   countVotes,
   mostVoted,
   useCrag,
   useCragPhotos,
   useSectors,
-} from '../utils/backend.js'
-import AddCragPhoto from './add-crag-photo.js'
-import AddSector from './add-sector.js'
-import Comments from './comments.js'
+} from '../../utils/backend.js'
+import AddCragPhoto from '../add-crag-photo.js'
+import AddSector from '../add-sector.js'
+import Comments from '../comments.js'
 
 export default function Crag() {
   const bg = useColorModeValue('gray.200', 'gray.700')
@@ -362,7 +362,7 @@ export default function Crag() {
                           color="white"
                         >
                           <Flex align="center" direction="row">
-                            <AddIcon /> <Text ml="5px">New sector </Text>
+                            <AddIcon /> <Text ml="5px">Add sector </Text>
                           </Flex>
                         </Button>
                       </Box>
