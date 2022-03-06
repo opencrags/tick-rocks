@@ -4,6 +4,7 @@ import { CragBanner, CragBannerMenu } from '../components/crag-banner'
 import { useColorMode, useColorModeValue } from '@chakra-ui/color-mode'
 import { Box, Flex, LinkBox, Heading, Text } from '@chakra-ui/layout'
 import { Link as RouterLink, useParams } from 'react-router-dom'
+import StarRatings from 'react-star-ratings'
 import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons'
 import {
   useCrag,
