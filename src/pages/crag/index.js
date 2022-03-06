@@ -51,6 +51,7 @@ import {
 import AddCragPhoto from '../add-crag-photo.js'
 import AddSector from '../add-sector.js'
 import Comments from '../comments.js'
+import { useClimbs } from '../../backend/useClimbs.js'
 
 export default function Crag() {
   const bg = useColorModeValue('gray.200', 'gray.700')
@@ -67,6 +68,23 @@ export default function Crag() {
     crag_id: cragId,
   })
   const { sectors, error: errorSectors } = useSectors({ crag_id: cragId }, 100)
+
+  const climbs = useClimbs(cragId ? { crag_id: cragId } : null, 100)
+  const boulderClimbs = climbs.data?.filter(
+    (climb) =>
+      climb.climb_type_votes.filter((vote) => vote.value === 'boulder')
+        .length >= 1
+  )?.length
+  const sportClimbs = climbs.data?.filter(
+    (climb) =>
+      climb.climb_type_votes.filter((vote) => vote.value === 'sport').length >=
+      1
+  )
+  const traditionalClimbs = climbs.data?.filter(
+    (climb) =>
+      climb.climb_type_votes.filter((vote) => vote.value === 'traditional')
+        .length >= 1
+  )?.length
 
   if (errorCrag || errorSectors) {
     return (
@@ -123,21 +141,21 @@ export default function Crag() {
               </Link>
             </Text>
             <Wrap spacing={2}>
-              <Tag size="md" h={9} borderRadius="full" colorScheme="yellow">
-                193 Boulders
-              </Tag>
-              <Tag size="md" h={9} borderRadius="full" colorScheme="orange">
-                The Watchtower 7C
-              </Tag>
-              <Tag size="md" h={9} borderRadius="full" colorScheme="blue">
-                Close to lake
-              </Tag>
-              <Tag size="md" h={9} borderRadius="full" colorScheme="green">
-                {'< 5 min approach'}
-              </Tag>
-              <Tag size="md" h={9} borderRadius="full" colorScheme="red">
-                ★★★★★ Granite
-              </Tag>
+              {boulderClimbs >= 1 && (
+                <Tag size="md" h={9} borderRadius="full" colorScheme="yellow">
+                  {boulderClimbs} Boulders
+                </Tag>
+              )}
+              {sportClimbs >= 1 && (
+                <Tag size="md" h={9} borderRadius="full" colorScheme="orange">
+                  {sportClimbs} Sport routes
+                </Tag>
+              )}
+              {traditionalClimbs >= 1 && (
+                <Tag size="md" h={9} borderRadius="full" colorScheme="blue">
+                  {traditionalClimbs} Trad routes
+                </Tag>
+              )}
             </Wrap>
           </Box>
         </Box>
@@ -504,7 +522,7 @@ export default function Crag() {
                             color="white"
                           >
                             <Flex align="center" direction="row">
-                              <AddIcon /> <Text ml="5px">Add image</Text>
+                              <AddIcon /> <Text ml="5px">Add photo</Text>
                             </Flex>
                           </Button>
                         </Box>

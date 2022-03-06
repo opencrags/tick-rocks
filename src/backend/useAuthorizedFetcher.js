@@ -1,5 +1,4 @@
-import config from '../../utils/config'
-import { useToken } from '../utils/backend'
+import { useToken } from './useToken'
 
 const checkResponseStatus = (response) => {
   if (response.status >= 400) {
@@ -13,7 +12,7 @@ export const useAuthorizedFetcher = () => {
 
   if (token) {
     return (endpoint, requestOptions = {}) =>
-      fetch(`${config.backend}${endpoint}`, {
+      fetch(`${process.env.REACT_APP_BACKEND}${endpoint}`, {
         ...requestOptions,
         method: requestOptions?.method ? requestOptions.method : 'get',
         headers: {

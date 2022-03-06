@@ -97,6 +97,10 @@ function CragBannerMenu({ children }) {
             position="relative"
             w="100%"
           >
+            <CragBannerMenuButton to={`/crags/${cragId}`}>
+              Overview
+            </CragBannerMenuButton>
+            <CragBannerMenuDivider />
             <DrawerDialog
               placement="top"
               button={<CragBannerMenuButton>Sectors</CragBannerMenuButton>}
@@ -119,20 +123,12 @@ function CragBannerMenu({ children }) {
             <CragBannerMenuButton to={`/crags/${cragId}/map`}>
               Map
             </CragBannerMenuButton>
-            <CragBannerMenuDivider />
-            <CragBannerMenuButton to={`/crags/${cragId}/discussion`}>
-              Discuss
-            </CragBannerMenuButton>
-            <CragBannerMenuDivider />
-            <CragBannerMenuButton to={`/crags/${cragId}#access`}>
-              Access
-            </CragBannerMenuButton>
-            <CragBannerMenuDivider />
+            <CragBannerMenuDivider display={{ base: 'none', xs: 'block' }} />
             <CragBannerMenuButton
-              to={`/crags/${cragId}/photos`}
+              to={`/crags/${cragId}#access`}
               display={{ base: 'none', xs: 'block' }}
             >
-              Photos
+              Access
             </CragBannerMenuButton>
             <Spacer />
 
