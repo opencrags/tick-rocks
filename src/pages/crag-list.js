@@ -171,6 +171,7 @@ const SortableColumn = ({
           setSortAscending(defaultSortAscending)
         }
       }}
+      cursor="pointer"
     >
       {name}&nbsp;
       {sortKey === currentSortKey ? (
@@ -180,7 +181,7 @@ const SortableColumn = ({
           <TriangleDownIcon aria-label="sorted ascending" />
         )
       ) : (
-        ''
+        <TriangleUpIcon visibility="hidden" />
       )}
     </Th>
   )
@@ -221,6 +222,15 @@ const SectorCell = ({ climb }) => {
   if (sector === undefined || error) {
     return null
   }
-  const sectorName = mostVoted(sector.name_votes)
-  return <Td>{sectorName}</Td>
+  return (
+    <Td>
+      <Link
+        fontWeight="600"
+        color="blue.400"
+        href={`/crags/${climb.crag_id}/sectors/${sector.id}`}
+      >
+        {mostVoted(sector.name_votes)}
+      </Link>{' '}
+    </Td>
+  )
 }
