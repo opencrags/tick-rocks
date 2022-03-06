@@ -4,6 +4,7 @@ import { Link, Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react'
 import { useState } from 'react'
 import { Link as RouterLink, useParams } from 'react-router-dom'
 import { CragBanner, CragBannerMenu } from '../components/crag-banner'
+import StarRatings from 'react-star-ratings'
 import {
   mostVoted,
   useClimbs,
@@ -139,7 +140,7 @@ const RouteTable = ({ climbs }) => {
             <Tr key={climb.id}>
               <NameCell climb={climb} />
               <Td>{gradeMap[climb.most_voted_grade]?.grade}</Td>
-              <Td>{mostVoted(climb.rating_votes)}</Td>
+              <RatingCell climb={climb} />
               <SectorCell climb={climb} />
             </Tr>
           ))}
@@ -213,6 +214,26 @@ const NameCell = ({ climb }) => {
       >
         {mostVoted(climb.name_votes)}
       </Link>{' '}
+    </Td>
+  )
+}
+
+const RatingCell = ({ climb }) => {
+  console.log(climb)
+  return (
+    <Td>
+      {climb.rating_votes.length >= 1 ? (
+        <StarRatings
+          rating={mostVoted(climb.rating_votes)}
+          starRatedColor="gold"
+          numberOfStars={5}
+          name="rating"
+          starEmptyColor="gray"
+          starDimension="20px"
+        />
+      ) : (
+        'No rating votes'
+      )}
     </Td>
   )
 }
