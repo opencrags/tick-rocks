@@ -39,7 +39,7 @@ export function PageFooter({ ...props }) {
           >
             open-source
           </Link>{' '}
-          project for catalogueing, finding and ticking off climbing problems
+          project for catalogueing, finding, and ticking off climbing problems
           and routes. Please help us grow by adding your local crag, pre-tick a
           couple of projects and join our community. tick.rocks is built on top
           of our open climbing database:{' '}

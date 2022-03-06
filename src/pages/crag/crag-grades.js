@@ -1,8 +1,8 @@
 import { Box, Center, Container, Flex, Text } from '@chakra-ui/react'
 import React from 'react'
 import { Link as RouterLink, useParams } from 'react-router-dom'
-import Grade from '../components/grade'
-import { useClimbs } from '../utils/backend'
+import Grade from '../../components/grade'
+import { useClimbs } from '../../utils/backend'
 
 function CragGrades({ selection, children, ...props }) {
   const { cragId } = useParams()

@@ -1,5 +1,5 @@
 import { useColorModeValue } from '@chakra-ui/color-mode'
-import { ChevronDownIcon, EditIcon } from '@chakra-ui/icons'
+import { AddIcon, ChevronDownIcon, EditIcon } from '@chakra-ui/icons'
 import {
   Alert,
   AlertDescription,
@@ -8,7 +8,6 @@ import {
   Box,
   Button,
   Center,
-  CloseButton,
   Container,
   Flex,
   Heading,
@@ -22,38 +21,35 @@ import {
   MenuItem,
   MenuList,
   OrderedList,
-  Spacer,
+  Stack,
   Text,
   UnorderedList,
 } from '@chakra-ui/react'
 import { isEmpty } from 'lodash'
 import { useState } from 'react'
 import { Link as RouterLink, useParams } from 'react-router-dom'
-import StarRatings from 'react-star-ratings'
-import { SectorBreadcrumb } from '../components/breadcrumb.js'
-import { CalcDistance } from '../components/cordinate-distance-calc.js'
-import { CragBanner, CragBannerMenu } from '../components/crag-banner.js'
-import EditButton from '../components/edit-button.js'
-import Grade from '../components/grade.js'
-import { VideoIcon } from '../components/icons.js'
-import LineImage from '../components/line-image.js'
-import Loader from '../components/loader.js'
-import ModalDialog from '../components/modal-dialog.js'
-import { PageFooter } from '../components/page-footer.js'
-import VoteConflictWarning from '../components/vote-conflict-warning.js'
-import { Comments } from '../pages/comments.js'
+import { SectorBreadcrumb } from '../../components/breadcrumb.js'
+import { CalcDistance } from '../../components/cordinate-distance-calc.js'
+import { CragBanner, CragBannerMenu } from '../../components/crag-banner.js'
+import EditButton from '../../components/edit-button.js'
+import Grade from '../../components/grade.js'
+import LineImage from '../../components/line-image.js'
+import Loader from '../../components/loader.js'
+import ModalDialog from '../../components/modal-dialog.js'
+import { PageFooter } from '../../components/page-footer.js'
+import VoteConflictWarning from '../../components/vote-conflict-warning.js'
 import {
   mostVoted,
-  useBetaVideos,
-  useClimb,
   useClimbs,
   useImages,
   useLines,
   useSector,
   useSectors,
-} from '../utils/backend.js'
-import AddClimb from './add-climb.js'
-import AddImage from './add-image.js'
+} from '../../utils/backend.js'
+import AddClimb from '../add-climb.js'
+import AddImage from '../add-image.js'
+import { Comments } from '../comments.js'
+import { Climb } from './climb.js'
 
 export default function Sector() {
   const bg = useColorModeValue('gray.100', 'gray.700')
@@ -160,26 +156,81 @@ export default function Sector() {
               </Center>
             </MenuButton>
             <MenuList>
+              <ModalDialog button={<MenuItem>Add topo image</MenuItem>}>
+                <AddImage />
+              </ModalDialog>
               <ModalDialog button={<MenuItem>Add climb</MenuItem>}>
                 <AddClimb />
-              </ModalDialog>
-
-              <ModalDialog button={<MenuItem>Add topo</MenuItem>}>
-                <AddImage />
               </ModalDialog>
             </MenuList>
           </Menu>
         </CragBannerMenu>
 
+        <Center>
+          <Stack direction="row" align="center">
+            <Box mx="5px">
+              <ModalDialog
+                button={
+                  <Box>
+                    <IconButton
+                      icon={<AddIcon />}
+                      display={{ base: 'block', md: 'none' }}
+                      boxShadow="xl"
+                      colorScheme="brand"
+                      color="white"
+                    ></IconButton>
+                    <Button
+                      display={{ base: 'none', md: 'block' }}
+                      boxShadow="xl"
+                      pr={4}
+                      pl={4}
+                      colorScheme="brand"
+                      color="white"
+                    >
+                      <Flex align="center" direction="row">
+                        <AddIcon /> <Text ml="5px">Add topo image</Text>
+                      </Flex>
+                    </Button>
+                  </Box>
+                }
+              >
+                <AddImage />
+              </ModalDialog>
+            </Box>
+            <Box mx="5px">
+              <ModalDialog
+                button={
+                  <Box>
+                    <IconButton
+                      icon={<AddIcon />}
+                      display={{ base: 'block', md: 'none' }}
+                      boxShadow="xl"
+                      colorScheme="brand"
+                      color="white"
+                    ></IconButton>
+                    <Button
+                      display={{ base: 'none', md: 'block' }}
+                      boxShadow="xl"
+                      pr={4}
+                      pl={4}
+                      colorScheme="brand"
+                      color="white"
+                    >
+                      <Flex align="center" direction="row">
+                        <AddIcon /> <Text ml="5px">Add climb</Text>
+                      </Flex>
+                    </Button>
+                  </Box>
+                }
+              >
+                <AddClimb />
+              </ModalDialog>
+            </Box>
+          </Stack>
+        </Center>
+
         <Flex display={{ base: 'wrap', md: 'flex' }} justify="Center">
           <Flex direction="column" mb="10px">
-            <Box>
-              <Alert status="info">
-                <AlertIcon />
-                New comment! Rasmus: Kul och så men va i hela jäv... View now{' '}
-                <CloseButton position="absolute" right="8px" top="8px" />
-              </Alert>
-            </Box>
             <Box>
               {images &&
                 images.map((image) => (
@@ -214,14 +265,6 @@ export default function Sector() {
                                 Please edit and add topo to contribute.
                               </Text>
                             </Box>
-                            <Button
-                              size="sm"
-                              as={RouterLink}
-                              to={`${sector.id}/list`}
-                            >
-                              List all problems of{' '}
-                              {mostVoted(sector.name_votes)}
-                            </Button>
                           </Flex>
                         </AlertTitle>
                       </Flex>
@@ -398,31 +441,14 @@ function ImageWithLines({ cragId, sectorId, image, sectorName }) {
         >
           <Box alignSelf="baseline">
             <LineImage
-              as={LineImage}
               image={image}
               lines={lines}
               selectedIndex={selectedIndex}
               onMouseMove={handleMouseMove}
             />
           </Box>
-          <Box flexGrow="1">
+          <Box flexGrow="1" margin="10px 0">
             <Flex direction="column">
-              <Flex padding="10px" justify="space-between" alignItems="center">
-                <Box>
-                  <Text size="sm">{sectorName}</Text>
-                </Box>
-                <Spacer />
-                <Box>
-                  <IconButton
-                    colorScheme="brand"
-                    color="white"
-                    as={RouterLink}
-                    to={`/crags/${cragId}/sectors/${sectorId}/images/${image.id}/add-line`}
-                    size="sm"
-                    icon={<EditIcon />}
-                  />
-                </Box>
-              </Flex>
               <Box>
                 <Box
                   overflow="auto"
@@ -467,68 +493,5 @@ function ImageWithLines({ cragId, sectorId, image, sectorName }) {
         </Flex>
       </Flex>
     </Box>
-  )
-}
-
-function Climb({ cragId, sectorId, climbId }) {
-  const textColor = useColorModeValue('black', 'white')
-  const { climb, error } = useClimb(climbId)
-  const { betaVideos, error: errorBetaVideos } = useBetaVideos({
-    climb_id: climbId,
-  })
-
-  if (error || errorBetaVideos) {
-    return <Text margin="20px">Failed to load climb.</Text>
-  }
-
-  if (climb === undefined) {
-    return <Loader />
-  }
-  console.log(climb)
-  return (
-    <Link
-      as={RouterLink}
-      to={`/crags/${cragId}/sectors/${sectorId}/climbs/${climbId}`}
-    >
-      <Flex direction="column">
-        <HStack>
-          <Text>{mostVoted(climb.name_votes)}</Text>
-          {climb.grade_votes.length >= 1 && (
-            <Grade gradeId={mostVoted(climb.grade_votes)} />
-          )}
-          <VoteConflictWarning
-            anyVotes={[
-              climb.name_votes,
-              climb.grade_votes,
-              climb.line_path_votes,
-            ]}
-          />
-        </HStack>
-        <HStack>
-          <Box>
-            {betaVideos?.length >= 1 && (
-              <Box>
-                <VideoIcon color={textColor} />
-              </Box>
-            )}
-          </Box>
-          <Box>
-            {climb.rating_votes.length >= 1 && (
-              <StarRatings
-                rating={mostVoted(climb.rating_votes)}
-                starRatedColor={
-                  climb.rating_votes.length >= 3 ? 'gold' : 'gray'
-                }
-                numberOfStars={5}
-                name="rating"
-                starEmptyColor="none"
-                starDimension="20px"
-                starSpacing="1px"
-              />
-            )}
-          </Box>
-        </HStack>
-      </Flex>
-    </Link>
   )
 }

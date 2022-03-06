@@ -40,7 +40,7 @@ export default function AscentType({ ascent }) {
       >
         <Tag size="sm" variant="subtle" colorScheme="red">
           <TagLeftIcon boxSize="15px" as={RedPoint} color="red" />
-          <TagLabel size="sm">Rotpunkt</TagLabel>
+          <TagLabel size="sm">Redpoint</TagLabel>
         </Tag>
       </Tooltip>
     )

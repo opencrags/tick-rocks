@@ -5,7 +5,10 @@ import {
   LINE_COLOR,
   SELECTED_COLOR,
 } from '../utils/splines'
-
+import { Flex, Box } from '@chakra-ui/react'
+import { IconButton } from '@chakra-ui/react'
+import { EditIcon } from '@chakra-ui/icons'
+import { Link as RouterLink } from 'react-router-dom'
 import { mostVoted } from '../utils/backend'
 import CanvasOverlay from './canvas-overlay'
 
@@ -30,5 +33,26 @@ export default function LineImage({ image, lines, selectedIndex, ...props }) {
     [parsedLines, selectedIndex]
   )
 
-  return <CanvasOverlay image={image} draw={draw} {...props} />
+  return (
+    <Box style={{ position: 'relative' }}>
+      <CanvasOverlay image={image} draw={draw} {...props} />
+      <Flex
+        padding="10px"
+        justify="space-between"
+        alignItems="center"
+        style={{ position: 'absolute', top: 0, right: 0 }}
+      >
+        <Box>
+          <IconButton
+            colorScheme="brand"
+            color="white"
+            as={RouterLink}
+            to={`/crags/${image.id}/sectors/${image.id}/images/${image.id}/add-line`}
+            size="sm"
+            icon={<EditIcon />}
+          />
+        </Box>
+      </Flex>
+    </Box>
+  )
 }
