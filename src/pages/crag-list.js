@@ -59,6 +59,7 @@ export default function CragList() {
           }}
           position="relative"
           justify="space-between"
+          marginTop="5"
         >
           <div
             className="ag-theme-alpine"
@@ -78,7 +79,7 @@ const RouteTable = ({ climbs }) => {
 
   const { gradeSystemGrades, error } = useGradeSystemGrades()
   if (gradeSystemGrades === undefined || error) {
-    return null // todo: return a loader
+    return null // TODO: return a loader
   }
   const gradeMap = Object.assign(
     {},
@@ -120,8 +121,16 @@ const RouteTable = ({ climbs }) => {
             currentSortAscending={sortAscending}
             setSortAscending={setSortAscending}
           />
-          <Th>Ascents</Th>
-          <Th>Sector</Th>
+          <ColumnHeading>Ascents</ColumnHeading>
+          <SortableColumn
+            name={'Type'}
+            sortKey={'type'}
+            currentSortKey={sortKey}
+            setSortKey={setSortKey}
+            currentSortAscending={sortAscending}
+            setSortAscending={setSortAscending}
+          />
+          <ColumnHeading>Sector</ColumnHeading>
         </Tr>
       </Thead>
       <Tbody>
@@ -142,14 +151,24 @@ const RouteTable = ({ climbs }) => {
           .map((climb) => (
             <Tr key={climb.id}>
               <NameCell climb={climb} />
+              {/* TODO: should display grade, not most voted */}
               <Td>{gradeMap[climb.most_voted_grade]?.grade}</Td>
               <RatingCell climb={climb} />
               <AscentsCell climb={climb} />
+              <ClimbTypeCell climb={climb} />
               <SectorCell climb={climb} />
             </Tr>
           ))}
       </Tbody>
     </Table>
+  )
+}
+
+const ColumnHeading = ({ children, onClick, cursor }) => {
+  return (
+    <Th fontSize="15px" onClick={onClick} cursor={cursor}>
+      {children}
+    </Th>
   )
 }
 
@@ -162,7 +181,7 @@ const SortableColumn = ({
   setSortAscending,
 }) => {
   return (
-    <Th
+    <ColumnHeading
       onClick={() => {
         if (currentSortKey === sortKey) {
           if (currentSortAscending !== defaultSortAscending) {
@@ -188,7 +207,7 @@ const SortableColumn = ({
       ) : (
         <TriangleUpIcon visibility="hidden" />
       )}
-    </Th>
+    </ColumnHeading>
   )
 }
 
@@ -197,10 +216,14 @@ const sortField = (climb, sortKey, gradeMap) => {
     return mostVoted(climb.name_votes)
   }
   if (sortKey === 'grade') {
+    // TODO: should be average grade, not most voted
     return gradeMap[climb.most_voted_grade].fuzzyUnifiedRank
   }
   if (sortKey === 'rating') {
-    return mostVoted(climb.rating_votes)
+    return climb.average_rating
+  }
+  if (sortKey === 'type') {
+    return mostVoted(climb.climb_type_votes)
   }
 }
 
@@ -228,15 +251,16 @@ const RatingCell = ({ climb }) => {
     <Td>
       {climb.rating_votes.length >= 1 ? (
         <StarRatings
-          rating={mostVoted(climb.rating_votes)}
+          rating={climb.average_rating}
           starRatedColor="gold"
           numberOfStars={5}
           name="rating"
-          starEmptyColor="gray"
+          starEmptyColor="grey"
           starDimension="20px"
+          starSpacing="0px"
         />
       ) : (
-        'No rating votes'
+        'No votes yet'
       )}
     </Td>
   )
@@ -246,6 +270,17 @@ const AscentsCell = ({ climb }) => {
   const { ascents, error: errorAscents } = useAscents({ climb_id: climb.id })
   return (
     <Td>{ascents !== undefined && ascents.length > 0 ? ascents.length : 0}</Td>
+  )
+}
+
+const ClimbTypeCell = ({ climb }) => {
+  const climbType = mostVoted(climb.climb_type_votes)
+  return (
+    <Td>
+      {(climbType !== undefined) & (climbType !== null)
+        ? climbType.value
+        : 'No votes yet'}
+    </Td>
   )
 }
 
