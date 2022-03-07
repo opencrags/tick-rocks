@@ -12,6 +12,7 @@ import {
   useClimbs,
   useGradeSystemGrades,
   useSector,
+  useAscents,
 } from '../utils/backend'
 
 const defaultSortAscending = false
@@ -119,6 +120,7 @@ const RouteTable = ({ climbs }) => {
             currentSortAscending={sortAscending}
             setSortAscending={setSortAscending}
           />
+          <Th>Ascents</Th>
           <Th>Sector</Th>
         </Tr>
       </Thead>
@@ -142,6 +144,7 @@ const RouteTable = ({ climbs }) => {
               <NameCell climb={climb} />
               <Td>{gradeMap[climb.most_voted_grade]?.grade}</Td>
               <RatingCell climb={climb} />
+              <AscentsCell climb={climb} />
               <SectorCell climb={climb} />
             </Tr>
           ))}
@@ -236,6 +239,13 @@ const RatingCell = ({ climb }) => {
         'No rating votes'
       )}
     </Td>
+  )
+}
+
+const AscentsCell = ({ climb }) => {
+  const { ascents, error: errorAscents } = useAscents({ climb_id: climb.id })
+  return (
+    <Td>{ascents !== undefined && ascents.length > 0 ? ascents.length : 0}</Td>
   )
 }
 
