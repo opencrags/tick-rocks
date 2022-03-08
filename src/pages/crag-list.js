@@ -1,17 +1,20 @@
 import { useState } from 'react'
-import { Table, Tbody, Td, Th, Thead, Tr, Link } from '@chakra-ui/react'
+import { Table, Tbody, Td, Th, Thead, Tr, Link, HStack } from '@chakra-ui/react'
 import { CragBanner, CragBannerMenu } from '../components/crag-banner'
 import { useColorMode, useColorModeValue } from '@chakra-ui/color-mode'
 import { Box, Flex, LinkBox, Heading, Text } from '@chakra-ui/layout'
 import { Link as RouterLink, useParams } from 'react-router-dom'
 import StarRatings from 'react-star-ratings'
 import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons'
+import { FaCommentDots, FaVideo, FaHeartBroken } from 'react-icons/fa'
 import {
   useCrag,
   mostVoted,
   useClimbs,
   useGradeSystemGrades,
   useSector,
+  useBetaVideos,
+  useComments,
   useAscents,
 } from '../utils/backend'
 
@@ -234,14 +237,60 @@ const NameCell = ({ climb }) => {
   }
   return (
     <Td>
-      <Link
-        fontWeight="600"
-        color="blue.400"
-        href={`/crags/${climb.crag_id}/sectors/${sector.id}/climbs/${climb.id}`}
-      >
-        {mostVoted(climb.name_votes)}
-      </Link>{' '}
+      <HStack>
+        <Link
+          fontWeight="600"
+          color="blue.400"
+          href={`/crags/${climb.crag_id}/sectors/${sector.id}/climbs/${climb.id}`}
+        >
+          {mostVoted(climb.name_votes)}
+        </Link>{' '}
+        <ClimbTagIcons climb={climb} />
+      </HStack>
     </Td>
+  )
+}
+
+const ClimbTagIcons = ({ climb }) => {
+  const { betaVideos, error: errorBetaVideos } = useBetaVideos({
+    climb_id: climb.id,
+  })
+  const { comments, error: errorComments } = useComments(climb.id)
+  return (
+    <HStack>
+      {comments !== undefined && comments.length >= 1 ? (
+        <FaCommentDots
+          color="#3182CE"
+          title={
+            comments.length >= 2
+              ? `${comments.length} comments`
+              : `${comments.length} comment`
+          }
+        />
+      ) : (
+        ''
+      )}
+      {betaVideos !== undefined && betaVideos.length >= 1 ? (
+        <FaVideo
+          color="#38A169"
+          title={
+            betaVideos.length >= 2
+              ? `${betaVideos.length} beta videos`
+              : `${betaVideos.length} beta video`
+          }
+        />
+      ) : (
+        ''
+      )}
+      {climb.broken_votes !== undefined && climb.broken_votes.length >= 1 ? (
+        <FaHeartBroken
+          color="#FF6B6B"
+          title={`${climb.broken_votes.length} voted broken`}
+        />
+      ) : (
+        ''
+      )}
+    </HStack>
   )
 }
 
