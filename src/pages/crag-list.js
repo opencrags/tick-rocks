@@ -66,7 +66,7 @@ export default function CragList() {
         >
           <div
             className="ag-theme-alpine"
-            style={{ height: 400, width: '100%' }}
+            style={{ width: '100%', paddingBottom: '300px' }}
           >
             <RouteTable climbs={climbs} />
           </div>
