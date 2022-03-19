@@ -7,6 +7,7 @@ import { Link as RouterLink, useParams } from 'react-router-dom'
 import StarRatings from 'react-star-ratings'
 import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons'
 import { FaCommentDots, FaVideo, FaHeartBroken } from 'react-icons/fa'
+import { TickRocksLogo } from '../components/tick-rocks-logo.js'
 import {
   useCrag,
   mostVoted,
@@ -136,6 +137,7 @@ const RouteTable = ({ climbs }) => {
             setSortAscending={setSortAscending}
           />
           <ColumnHeading>Sector</ColumnHeading>
+          <ColumnHeading>Ticked</ColumnHeading>
         </Tr>
       </Thead>
       <Tbody>
@@ -162,6 +164,7 @@ const RouteTable = ({ climbs }) => {
               <AscentsCell climb={climb} />
               <ClimbTypeCell climb={climb} />
               <SectorCell climb={climb} />
+              <TickedCell climb={climb} />
             </TableRow>
           ))}
       </Tbody>
@@ -369,6 +372,28 @@ const SectorCell = ({ climb }) => {
       >
         {mostVoted(sector.name_votes)}
       </Link>{' '}
+    </Td>
+  )
+}
+
+const TickedCell = ({ climb }) => {
+  const currentUserId = useCurrentUser().user?.id
+  const { ascents, error: errorAscents } = useAscents({ climb_id: climb.id })
+  if (ascents === undefined || errorAscents) {
+    return null
+  }
+  const isTicked =
+    ascents.filter((ascent) => ascent.user_id === currentUserId).length >= 1
+  return (
+    <Td>
+      <TickRocksLogo
+        colorGreen={isTicked ? '#3CAB70' : '#D8D8D8'}
+        colorWhite={isTicked ? '#fff' : '#fff'}
+        h="20px"
+        w="30px"
+        mr="5px"
+        props={{ title: isTicked ? 'Ticked!' : 'Not ticked yet' }}
+      />
     </Td>
   )
 }
