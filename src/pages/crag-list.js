@@ -16,9 +16,11 @@ import {
   useBetaVideos,
   useComments,
   useAscents,
+  useCurrentUser,
 } from '../utils/backend'
 
 const defaultSortAscending = false
+const linkColor = 'blue.500'
 
 export default function CragList() {
   const { cragId } = useParams()
@@ -152,7 +154,7 @@ const RouteTable = ({ climbs }) => {
               : 0
           )
           .map((climb) => (
-            <Tr key={climb.id}>
+            <TableRow climb={climb}>
               <NameCell climb={climb} />
               {/* TODO: should display grade, not most voted */}
               <Td>{gradeMap[climb.most_voted_grade]?.grade}</Td>
@@ -160,10 +162,32 @@ const RouteTable = ({ climbs }) => {
               <AscentsCell climb={climb} />
               <ClimbTypeCell climb={climb} />
               <SectorCell climb={climb} />
-            </Tr>
+            </TableRow>
           ))}
       </Tbody>
     </Table>
+  )
+}
+
+const TableRow = ({ children, climb }) => {
+  const { colorMode } = useColorMode()
+  const currentUserId = useCurrentUser().user?.id
+  const { ascents, error: errorAscents } = useAscents({ climb_id: climb.id })
+  if (ascents === undefined || errorAscents || colorMode === undefined) {
+    return null
+  }
+  const isTicked =
+    ascents.filter((ascent) => ascent.user_id === currentUserId).length >= 1
+  return (
+    <Tr
+      key={climb.id}
+      background={
+        isTicked &&
+        (colorMode === 'light' ? 'rgba(0, 100, 20, 0.2)' : 'teal.900')
+      }
+    >
+      {children}
+    </Tr>
   )
 }
 
@@ -240,7 +264,7 @@ const NameCell = ({ climb }) => {
       <HStack>
         <Link
           fontWeight="600"
-          color="blue.400"
+          color={linkColor}
           href={`/crags/${climb.crag_id}/sectors/${sector.id}/climbs/${climb.id}`}
         >
           {mostVoted(climb.name_votes)}
@@ -295,7 +319,6 @@ const ClimbTagIcons = ({ climb }) => {
 }
 
 const RatingCell = ({ climb }) => {
-  console.log(climb)
   return (
     <Td>
       {climb.rating_votes.length >= 1 ? (
@@ -342,7 +365,7 @@ const SectorCell = ({ climb }) => {
     <Td>
       <Link
         fontWeight="600"
-        color="blue.400"
+        color={linkColor}
         href={`/crags/${climb.crag_id}/sectors/${sector.id}`}
       >
         {mostVoted(sector.name_votes)}
