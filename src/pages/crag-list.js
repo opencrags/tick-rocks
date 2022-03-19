@@ -220,7 +220,7 @@ const sortField = (climb, sortKey, gradeMap) => {
   }
   if (sortKey === 'grade') {
     // TODO: should be average grade, not most voted
-    return gradeMap[climb.most_voted_grade].fuzzyUnifiedRank
+    return gradeMap[climb.most_voted_grade]?.fuzzyUnifiedRank
   }
   if (sortKey === 'rating') {
     return climb.average_rating
