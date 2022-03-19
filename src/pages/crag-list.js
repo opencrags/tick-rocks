@@ -182,8 +182,7 @@ const TableRow = ({ children, climb }) => {
     <Tr
       key={climb.id}
       background={
-        isTicked &&
-        (colorMode === 'light' ? 'rgba(0, 100, 20, 0.2)' : 'teal.900')
+        isTicked && (colorMode === 'light' ? 'rgba(0, 70, 0, 0.1)' : 'gray.700')
       }
     >
       {children}
