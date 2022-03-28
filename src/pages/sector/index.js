@@ -24,6 +24,7 @@ import {
   Stack,
   Text,
   UnorderedList,
+  Spacer,
 } from '@chakra-ui/react'
 import { isEmpty } from 'lodash'
 import { useState } from 'react'
@@ -161,6 +162,9 @@ export default function Sector() {
               </ModalDialog>
               <ModalDialog button={<MenuItem>Add climb</MenuItem>}>
                 <AddClimb />
+              </ModalDialog>
+              <ModalDialog button={<MenuItem>Rearrange topos</MenuItem>}>
+                <AddImage />
               </ModalDialog>
             </MenuList>
           </Menu>
@@ -432,7 +436,7 @@ function ImageWithLines({ cragId, sectorId, image, sectorName }) {
   }
 
   return (
-    <Box pt={{ base: '0px', md: '2' }}>
+    <Box py="5px">
       <Flex direction="column">
         <Flex
           direction={{ base: 'column', md: 'row' }}
@@ -449,6 +453,55 @@ function ImageWithLines({ cragId, sectorId, image, sectorName }) {
           </Box>
           <Box flexGrow="1" margin="10px 0">
             <Flex direction="column">
+              <Flex
+                px="8px"
+                py="5px"
+                justify="space-between"
+                alignItems="center"
+              >
+                <Box>
+                  <Text size="sm">Sector: {sectorName}</Text>
+                </Box>
+                <Spacer />
+                <Box>
+                  <Menu>
+                    <MenuButton
+                      px={2}
+                      py={1}
+                      transition="all 0.2s"
+                      borderRadius="md"
+                      borderWidth="1px"
+                      _hover={{ bg: 'gray.400' }}
+                      _expanded={{ bg: 'brand.300' }}
+                      _focus={{ boxShadow: 'outline' }}
+                    >
+                      Edit <ChevronDownIcon />
+                    </MenuButton>
+                    <MenuList>
+                      <MenuItem
+                        as={RouterLink}
+                        to={`/crags/${cragId}/sectors/${sectorId}/images/${image.id}/add-line`}
+                      >
+                        Draw line
+                      </MenuItem>
+
+                      <MenuItem
+                        as={RouterLink}
+                        to={`/crags/${cragId}/sectors/${sectorId}/images/${image.id}/add-line`}
+                      >
+                        Rearrange climbs
+                      </MenuItem>
+
+                      <MenuItem
+                        as={RouterLink}
+                        to={`/crags/${cragId}/sectors/${sectorId}/images/${image.id}/add-line`}
+                      >
+                        Delete topo image
+                      </MenuItem>
+                    </MenuList>
+                  </Menu>
+                </Box>
+              </Flex>
               <Box>
                 <Box
                   overflow="auto"
@@ -466,9 +519,10 @@ function ImageWithLines({ cragId, sectorId, image, sectorName }) {
                   }}
                 >
                   <OrderedList
-                    pr="10px"
+                    pr="15px"
                     pl="10px"
                     pt="2px"
+                    pb="5px"
                     wordBreak="noraml"
                     whitespace="normal"
                   >

@@ -197,18 +197,7 @@ export default function Climb() {
                       {betaVideos?.length > 0 ? (
                         <Box>
                           <Box mt="10px">
-                            <Box
-                              display={{ base: 'none', md: 'block' }}
-                              position="absolute"
-                              transform="translate(-110%, 0%)"
-                            >
-                              <Heading size="sm">#1 Beta video</Heading>
-                            </Box>
-                            <Box
-                              display={{ base: 'block', md: 'none' }}
-                              pl="10px"
-                              pb="10px"
-                            >
+                            <Box pl="10px" pb="10px">
                               <Heading size="sm">
                                 Most popular beta video
                               </Heading>
@@ -315,6 +304,7 @@ export default function Climb() {
                         </HStack>
                         <Menu>
                           <MenuButton
+                            minW="70px"
                             px={2}
                             py={1}
                             transition="all 0.2s"

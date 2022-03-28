@@ -16,16 +16,24 @@ import {
   useDisclosure,
   Wrap,
 } from '@chakra-ui/react'
-import React from 'react'
 import ModalDialog from '../components/modal-dialog'
+import { Link as RouterLink } from 'react-router-dom'
 import AddComment from '../pages/add-comment'
 import {
   useAuthorizedFetcher,
   useComments,
   useCurrentUser,
   useUser,
+  useCrag,
+  useSector,
+  useClimb,
 } from '../utils/backend'
 import RemovePage from './remove-page'
+import {
+  CragBreadcrumb,
+  SectorBreadcrumb,
+  ClimbBreadcrumb,
+} from '../components/breadcrumb'
 
 export default function Comments({ relatedId, wrap }) {
   const { comments, error: errorComments } = useComments(relatedId)
@@ -76,40 +84,44 @@ function Comment({ comment }) {
   const { isAuthenticated } = useAuthorizedFetcher()
   const { isOpen, onToggle } = useDisclosure()
   const { user } = useUser(comment?.user_id)
-  // const { crag } = useCrag(comment?.all_related_ids[0])
-  // const { sector } = useSector(comment?.all_related_ids[1])
-  // const { climb } = useClimb(comment?.all_related_ids[2])
+  const { crag } = useCrag(comment?.all_related_ids[0])
+  const { sector } = useSector(comment?.all_related_ids[1])
+  const { climb } = useClimb(comment?.all_related_ids[2])
 
   return (
     <Box padding="2px" maxW="750px">
-      {/* <Box py="10px">
-        {comment.related_type === 'crag' ? (
-          <CragBreadcrumb cragId={crag?.id} />
-        ) : (
-          ''
-        )}
-        {comment.related_type === 'sector' ? (
-          <SectorBreadcrumb sectorId={sector?.id} />
-        ) : (
-          ''
-        )}
-        {comment.related_type === 'climb' ? (
-          <ClimbBreadcrumb climbId={climb?.id} />
-        ) : (
-          ''
-        )}
-      </Box> */}
+      {
+        <Box py="10px">
+          {comment.related_type === 'crag' ? (
+            <CragBreadcrumb cragId={crag?.id} />
+          ) : (
+            ''
+          )}
+          {comment.related_type === 'sector' ? (
+            <SectorBreadcrumb sectorId={sector?.id} />
+          ) : (
+            ''
+          )}
+          {comment.related_type === 'climb' ? (
+            <ClimbBreadcrumb climbId={climb?.id} />
+          ) : (
+            ''
+          )}
+        </Box>
+      }
       <Flex fontSize="sm">
         <Avatar
           size="sm"
           name={user?.display_name}
           mt="10px"
           mr="10px"
+          as={RouterLink}
+          to={`/user/${user?.id}`}
         ></Avatar>
         <Box>
           <Box minW="285px" px="14px" py="8px" borderRadius="15px" bg={boxBg}>
             <Flex>
-              <Text fontWeight="bold">
+              <Text fontWeight="bold" as={RouterLink} to={`/user/${user?.id}`}>
                 {user?.display_name || 'No display name'}
               </Text>
               <Spacer />
@@ -198,11 +210,13 @@ function Reply({ reply }) {
           name={user?.display_name}
           mt="10px"
           mr="10px"
+          as={RouterLink}
+          to={`/user/${user?.id}`}
         ></Avatar>
         <Box>
           <Box minW="285px" px="14px" py="8px" borderRadius="15px" bg={boxBg}>
             <Flex>
-              <Text fontWeight="bold">
+              <Text fontWeight="bold" as={RouterLink} to={`/user/${user?.id}`}>
                 {user?.display_name || 'No display name'}
               </Text>
               <Spacer />

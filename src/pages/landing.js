@@ -51,9 +51,12 @@ export default function Landing() {
                 <TickRocksLogo
                   h={{ base: '40px', md: '70px' }}
                   w={{ base: '70px', md: '100px' }}
-                ></TickRocksLogo>
+                />
                 <Box color="white">
-                  <Heading fontSize={{ base: '4xl', md: '6xl' }}>
+                  <Heading
+                    fontSize={{ base: '4xl', md: '6xl' }}
+                    lineHeight="1.0"
+                  >
                     tick.rocks
                   </Heading>
                   <Text fontSize={{ base: 'md', md: '2xl' }}>
@@ -61,13 +64,11 @@ export default function Landing() {
                   </Text>
                 </Box>
               </Flex>
-
               <SignedIn />
               <SimpleGrid columns="2" spacing="5px" mt="5px">
                 <Button
                   as={RouterLink}
                   to="/search"
-                  colorScheme="green"
                   bgColor="blackAlpha.500"
                   color="white"
                 >
@@ -76,7 +77,6 @@ export default function Landing() {
                 <Button
                   as={RouterLink}
                   to="/map"
-                  colorScheme="green"
                   bgColor="blackAlpha.500"
                   color="white"
                 >
@@ -85,7 +85,6 @@ export default function Landing() {
                 <Button
                   as={RouterLink}
                   to="/crags"
-                  colorScheme="green"
                   bgColor="blackAlpha.500"
                   color="white"
                 >
@@ -94,7 +93,6 @@ export default function Landing() {
                 <Button
                   as={RouterLink}
                   to="/add-crag"
-                  colorScheme="green"
                   bgColor="blackAlpha.500"
                   color="white"
                 >
@@ -143,17 +141,22 @@ function SignedIn() {
     )
   } else {
     return (
-      <Container bgColor="blackAlpha.500" borderRadius="6px" color="white">
-        <Center marginTop="5px">
-          <HStack>
+      <Container
+        bgColor="blackAlpha.500"
+        borderRadius="6px"
+        p="0px"
+        color="white"
+      >
+        <HStack py="10px">
+          <Box ml="16px" mr="8px">
             <Avatar name={user?.display_name} size="xs" />
-            <Text>
-              Welcome back {user?.display_name}
-              ! <br />
-              What would you like to do today?
-            </Text>
-          </HStack>
-        </Center>
+          </Box>
+          <Text>
+            Welcome back {user?.display_name}
+            ! <br />
+            What would you like to do today?
+          </Text>
+        </HStack>
       </Container>
     )
   }

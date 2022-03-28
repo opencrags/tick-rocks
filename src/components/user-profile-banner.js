@@ -106,11 +106,14 @@ export default function UserProfileBanner({ userId, ...props }) {
               >
                 <MenuButton to={`/user/${user?.id}`}>Latest updates</MenuButton>
                 <MenuButton to={`/user/${user?.id}/ticks`}>
-                  Ticks (1234)
+                  Ticks (3345)
                 </MenuButton>
-                <MenuButton>Pre-ticks (123)</MenuButton>
+                <MenuButton>Pre-ticks (534)</MenuButton>
                 <MenuButton to={`/user/${user?.id}/photos`}>
-                  Photos (12)
+                  Beta Videos (666)
+                </MenuButton>
+                <MenuButton to={`/user/${user?.id}/photos`}>
+                  Photos (32)
                 </MenuButton>
                 <Spacer />
                 <MenuButton to="/settings">Settings</MenuButton>
