@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Table, Tbody, Td, Th, Thead, Tr, Link, HStack } from '@chakra-ui/react'
 import { CragBanner, CragBannerMenu } from '../components/crag-banner'
-import { useColorMode, useColorModeValue } from '@chakra-ui/color-mode'
+import { useColorMode } from '@chakra-ui/color-mode'
 import { Box, Flex, LinkBox, Heading, Text } from '@chakra-ui/layout'
 import { Link as RouterLink, useParams } from 'react-router-dom'
 import StarRatings from 'react-star-ratings'
@@ -278,10 +278,10 @@ const NameCell = ({ climb }) => {
 }
 
 const ClimbTagIcons = ({ climb }) => {
-  const { betaVideos, error: errorBetaVideos } = useBetaVideos({
+  const { betaVideos } = useBetaVideos({
     climb_id: climb.id,
   })
-  const { comments, error: errorComments } = useComments(climb.id)
+  const { comments } = useComments(climb.id)
   return (
     <HStack>
       {comments !== undefined && comments.length >= 1 ? (
@@ -341,7 +341,7 @@ const RatingCell = ({ climb }) => {
 }
 
 const AscentsCell = ({ climb }) => {
-  const { ascents, error: errorAscents } = useAscents({ climb_id: climb.id })
+  const { ascents } = useAscents({ climb_id: climb.id })
   return (
     <Td>{ascents !== undefined && ascents.length > 0 ? ascents.length : 0}</Td>
   )

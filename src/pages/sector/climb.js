@@ -28,7 +28,7 @@ export function Climb({ cragId, sectorId, climbId }) {
       as={RouterLink}
       to={`/crags/${cragId}/sectors/${sectorId}/climbs/${climbId}`}
     >
-      <Flex direction="column">
+      <Flex direction="column" mb="5px">
         <HStack>
           <Text>{mostVoted(climb.name_votes)}</Text>
           {climb.grade_votes.length >= 1 && (
